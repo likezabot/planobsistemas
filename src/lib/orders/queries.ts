@@ -12,7 +12,10 @@ export type OrderItem = Database['public']['Tables']['order_items']['Row'] & {
 export type OrderWithItems = Order & {
   order_items: OrderItem[];
   delivery_zone?: { name: string } | null;
+  table?: { name: string } | null;
 };
+
+export type DiningTable = Database['public']['Tables']['dining_tables']['Row'];
 
 export const getRestaurantOrders = async (restaurantId: string) => {
   const { data, error } = await supabase
@@ -23,13 +26,95 @@ export const getRestaurantOrders = async (restaurantId: string) => {
         *,
         product:products (name)
       ),
-      delivery_zone:delivery_zones (name)
+      delivery_zone:delivery_zones (name),
+      table:dining_tables (name)
     `)
     .eq('restaurant_id', restaurantId)
     .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data as unknown as OrderWithItems[];
+};
+
+export const listDiningTables = async (restaurantId: string) => {
+  const { data, error } = await supabase
+    .from('dining_tables')
+    .select('*')
+    .eq('restaurant_id', restaurantId)
+    .eq('active', true)
+    .order('sort_order', { ascending: true });
+
+  if (error) throw error;
+  return data as DiningTable[];
+};
+
+export const getOpenTableOrders = async (restaurantId: string) => {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*, table:dining_tables(name)')
+    .eq('restaurant_id', restaurantId)
+    .eq('service_mode', 'table')
+    .eq('payment_status', 'open')
+    .neq('status', 'cancelled');
+
+  if (error) throw error;
+  return data;
+};
+
+export const openTableOrder = async (restaurantId: string, tableId: string) => {
+  const { data, error } = await supabase.rpc('open_table_order', {
+    _restaurant_id: restaurantId,
+    _table_id: tableId
+  });
+
+  if (error) throw error;
+  return data as string;
+};
+
+export const createCounterOrder = async (restaurantId: string) => {
+  const { data, error } = await supabase.rpc('create_counter_order', {
+    _restaurant_id: restaurantId
+  });
+
+  if (error) throw error;
+  return data as string;
+};
+
+export const addItemsToOrder = async (orderId: string, items: any[]) => {
+  const { data, error } = await supabase.rpc('add_items_to_order', {
+    _order_id: orderId,
+    _items: items
+  });
+
+  if (error) throw error;
+  return data;
+};
+
+export const sendOrderToKitchen = async (orderId: string) => {
+  const { data, error } = await supabase.rpc('send_order_to_kitchen', {
+    _order_id: orderId
+  });
+
+  if (error) throw error;
+  return data;
+};
+
+export const cancelOrderItem = async (orderItemId: string, reason: string) => {
+  const { error } = await supabase.rpc('cancel_order_item', {
+    _order_item_id: orderItemId,
+    _reason: reason
+  });
+
+  if (error) throw error;
+};
+
+export const closeOrder = async (orderId: string, paymentMethod: Order['payment_method']) => {
+  const { error } = await supabase.rpc('close_order', {
+    _order_id: orderId,
+    _payment_method: paymentMethod
+  });
+
+  if (error) throw error;
 };
 
 export const updateOrderStatus = async (orderId: string, newStatus: Order['status'], reason?: string) => {
