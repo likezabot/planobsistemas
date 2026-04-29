@@ -28,6 +28,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               {/* Cardápio público — sem ProtectedRoute, somente leitura via RPC segura */}
               <Route path="/menu/:restaurantSlug" element={<PublicMenu />} />
+              <Route path="/menu/:restaurantSlug/checkout" element={<PublicCheckout />} />
               <Route
                 path="/"
                 element={
