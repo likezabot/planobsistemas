@@ -339,6 +339,7 @@ export default function OrdersPage() {
             </Button>
           </DialogFooter>
         </DialogContent>
+      </Dialog>
 
       {/* Cancellation Dialog */}
       <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
