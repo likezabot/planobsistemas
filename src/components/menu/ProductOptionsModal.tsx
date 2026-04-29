@@ -24,12 +24,16 @@ interface ProductOptionsModalProps {
   product: PublicProduct | null;
   restaurantSlug: string | null;
   onClose: () => void;
+  inventoryEnabled?: boolean;
+  inventoryMode?: "simple" | "advanced";
 }
 
 export function ProductOptionsModal({ 
   product, 
   restaurantSlug, 
-  onClose 
+  onClose,
+  inventoryEnabled,
+  inventoryMode
 }: ProductOptionsModalProps) {
   const [details, setDetails] = useState<PublicProductDetails | null>(null);
   const [loading, setLoading] = useState(true);
