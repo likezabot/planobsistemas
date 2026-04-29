@@ -51,26 +51,11 @@ const App = () => (
                 path="/catalogo"
                 element={
                   <ProtectedRoute>
-                    <CatalogProducts />
+                    <Catalog />
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/catalogo/categorias"
-                element={
-                  <ProtectedRoute>
-                    <CatalogCategories />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/catalogo/pizzas"
-                element={
-                  <ProtectedRoute>
-                    <CatalogPizzas />
-                  </ProtectedRoute>
-                }
-              />
+
               <Route
                 path="/pedidos"
                 element={
