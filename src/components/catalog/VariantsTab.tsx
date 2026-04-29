@@ -75,11 +75,17 @@ export default function VariantsTab() {
   const [stockQuantity, setStockQuantity] = useState("0");
   const [lowStockAlert, setLowStockAlert] = useState("");
   const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+  const [diameterCm, setDiameterCm] = useState("");
+  const [slices, setSlices] = useState("");
   const [saving, setSaving] = useState(false);
 
   const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
   const inventoryMode = currentMembership?.restaurants.inventory_mode;
   const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
+
+  // Mostra campos de pizza só quando o produto selecionado é do tipo pizza
+  const selectedProduct = products.find((p) => p.id === selectedProductId);
+  const isPizzaProduct = selectedProduct?.type === "pizza";
 
   const canEdit = isAdminRole(currentMembership?.role);
 
