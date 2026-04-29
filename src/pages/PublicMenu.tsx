@@ -8,7 +8,7 @@ import {
   type PublicCategory,
   type PublicProduct,
 } from "@/lib/menu/publicQueries";
-import { formatBRL } from "@/lib/catalog/money";
+import { centsToBRL } from "@/lib/catalog/money";
 
 type State =
   | { status: "loading" }
@@ -158,7 +158,7 @@ function CategoryBlock({ title, items }: { title: string; items: PublicProduct[]
               )}
             </div>
             <p className="shrink-0 text-sm font-semibold tabular-nums">
-              {formatBRL(p.price_cents)}
+              {centsToBRL(p.price_cents)}
             </p>
           </li>
         ))}

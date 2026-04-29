@@ -101,7 +101,7 @@ describe("Cardápio Público — camada de aplicação", () => {
 
     const products = await getPublicProducts("burger-x");
     expect(products).toHaveLength(1);
-    const p = products[0] as Record<string, unknown>;
+    const p = products[0] as unknown as Record<string, unknown>;
     expect(p.price_cents).toBe(2500);
     expect("cost_cents" in p).toBe(false);
     expect("tenant_id" in p).toBe(false);
