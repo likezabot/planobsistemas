@@ -3,7 +3,19 @@ import { createClient } from '@supabase/supabase-js';
 import { rpcWithRetry, queryWithRetry } from './helpers/retry';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL!;
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY!;
+// Accept both naming conventions: VITE_SUPABASE_PUBLISHABLE_KEY (current) or
+// VITE_SUPABASE_ANON_KEY (legacy). Tests need *some* anon key to talk to PostgREST.
+const supabaseAnonKey =
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.VITE_SUPABASE_ANON_KEY ||
+  '';
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  // Fail fast with a clear message instead of silently producing empty error objects.
+  throw new Error(
+    'Checkout E2E: missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY in env.'
+  );
+}
 
 // Use anon client for public checkout tests
 const anonClient = createClient(supabaseUrl, supabaseAnonKey);
