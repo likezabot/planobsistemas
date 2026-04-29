@@ -418,9 +418,9 @@ function ProductSheet({
     }
     
     const res = product
-      ? await updateProduct(product.id, payload)
+      ? await updateProduct(product.id, payload as any)
       : await createProduct({
-          ...payload,
+          ...(payload as any),
           tenant_id: currentMembership.tenant_id,
           restaurant_id: currentRestaurantId,
         });
