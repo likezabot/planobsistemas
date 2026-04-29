@@ -18,6 +18,10 @@ export const variantSchema = z.object({
   cost_cents: z.number().int().min(0).optional().nullable(),
   active: z.boolean().optional().default(true),
   sort_order: z.number().int().optional().default(0),
+  track_stock: z.boolean().optional().default(false),
+  stock_quantity: z.number().optional().default(0),
+  low_stock_alert: z.number().optional().nullable(),
+  allow_out_of_stock_sale: z.boolean().optional().default(false),
 });
 
 export const priceOverrideSchema = z.object({
@@ -32,6 +36,10 @@ export const optionItemSchema = z.object({
   cost_cents: z.number().int().min(0).optional().nullable(),
   active: z.boolean().optional().default(true),
   sort_order: z.number().int().optional().default(0),
+  track_stock: z.boolean().optional().default(false),
+  stock_quantity: z.number().optional().default(0),
+  low_stock_alert: z.number().optional().nullable(),
+  allow_out_of_stock_sale: z.boolean().optional().default(false),
   // Override de preço por tamanho (ex: borda muda de preço por variant)
   price_overrides: z.array(priceOverrideSchema).optional().default([]),
 });
@@ -98,6 +106,10 @@ export const pizzaFlavorSchema = z.object({
   image_url: z.string().url().max(500).optional().nullable(),
   active: z.boolean().optional().default(true),
   sort_order: z.number().int().optional().default(0),
+  track_stock: z.boolean().optional().default(false),
+  stock_quantity: z.number().optional().default(0),
+  low_stock_alert: z.number().optional().nullable(),
+  allow_out_of_stock_sale: z.boolean().optional().default(false),
 });
 
 export const pizzaFlavorPriceSchema = z.object({
@@ -123,6 +135,10 @@ export const productSchema = z
     cost_cents: z.number().int().min(0).optional().default(0),
     active: z.boolean().optional().default(true),
     sort_order: z.number().int().optional().default(0),
+    track_stock: z.boolean().optional().default(false),
+    stock_quantity: z.number().optional().default(0),
+    low_stock_alert: z.number().optional().nullable(),
+    allow_out_of_stock_sale: z.boolean().optional().default(false),
     image_url: z.string().url().max(500).optional().nullable(),
     type: productTypeSchema.optional().default("simple"),
     variants: z.array(variantSchema).optional().default([]),
@@ -174,6 +190,8 @@ export const productSchema = z
 export const catalogPayloadSchema = z
   .object({
     version: z.string().default("1"),
+    inventory_enabled: z.boolean().optional().default(false),
+    inventory_mode: z.enum(["simple", "advanced"]).optional().default("simple"),
     categories: z.array(categorySchema).default([]),
     option_groups: z.array(optionGroupSchema).default([]),
     pizza_flavors: z.array(pizzaFlavorSchema).default([]),
