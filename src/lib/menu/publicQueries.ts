@@ -53,13 +53,24 @@ export interface PublicProductDetails {
       id: string;
       name: string;
       price_cents: number;
+      // override por variant_id (preço final substitui price_cents)
+      price_overrides?: Record<string, number>;
     }[];
   }[];
   pizza_config?: {
     max_flavors: number;
     price_rule: "max" | "average" | "sum";
     allow_edge_customization: boolean;
-  };
+  } | null;
+  pizza_flavors?: {
+    id: string;
+    name: string;
+    description: string | null;
+    category: string | null;
+    image_url: string | null;
+    // preço por variant_id (default 0 quando não listado)
+    prices: Record<string, number>;
+  }[];
 }
 
 function requireSlug(slug: string | null | undefined): string {
