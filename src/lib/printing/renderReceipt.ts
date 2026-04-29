@@ -53,6 +53,8 @@ export interface ReceiptPayload {
     notes?: string | null;
     total_cents?: number;
     created_at?: string;
+    delivery_fee_cents?: number | null;
+    delivery_zone_name?: string | null;
   };
   items?: ReceiptItem[];
 }
