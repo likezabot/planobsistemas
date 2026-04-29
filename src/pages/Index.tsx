@@ -19,6 +19,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getDashboardMetrics } from "@/lib/orders/queries";
+import { centsToBRL } from "@/lib/catalog/money";
 
 type AppRole = Database["public"]["Enums"]["app_role"];
 
@@ -51,6 +54,13 @@ export default function Index() {
         setLoadingMembers(false);
       });
   }, [currentRestaurantId]);
+
+  const { data: metrics, isLoading: loadingMetrics } = useQuery({
+    queryKey: ["dashboard-metrics", currentRestaurantId],
+    queryFn: () => getDashboardMetrics(currentRestaurantId!),
+    enabled: !!currentRestaurantId,
+    refetchInterval: 30000,
+  });
 
   if (loading) {
     return (
@@ -98,9 +108,11 @@ export default function Index() {
                 Abrir Cardápio
               </Link>
             </Button>
-            <Button className="rounded-lg h-10 shadow-sm font-bold">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Pedido
+            <Button asChild className="rounded-lg h-10 shadow-sm font-bold">
+              <Link to="/orders?novo=1">
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Pedido
+              </Link>
             </Button>
           </div>
         </div>
@@ -108,15 +120,14 @@ export default function Index() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <DashboardStat 
             label="Vendas Hoje" 
-            value="R$ 1.240,00" 
-            trend="+12%" 
+            value={loadingMetrics ? "..." : centsToBRL(metrics?.salesToday || 0)} 
+            trend={metrics?.trend} 
             icon={<TrendingUp className="w-5 h-5" />} 
             color="bg-primary" 
           />
           <DashboardStat 
             label="Pedidos" 
-            value="42" 
-            trend="+5" 
+            value={loadingMetrics ? "..." : (metrics?.ordersToday || 0).toString()} 
             icon={<ShoppingBag className="w-5 h-5" />} 
             color="bg-success" 
           />
@@ -128,8 +139,7 @@ export default function Index() {
           />
           <DashboardStat 
             label="Médio Preparo" 
-            value="18 min" 
-            trend="-2 min" 
+            value={loadingMetrics ? "..." : metrics?.avgPrepTime || "-- min"} 
             icon={<Clock className="w-5 h-5" />} 
             color="bg-warning" 
           />
