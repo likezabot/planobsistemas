@@ -11,9 +11,13 @@ import OptionsTab from "@/components/catalog/OptionsTab";
 import InventoryTab from "@/components/catalog/InventoryTab";
 import ImportExportTab from "@/components/catalog/ImportExportTab";
 
+import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "produtos";
+  const { currentMembership } = useRestaurant();
+  const pizzaEnabled = currentMembership?.restaurants.pizza_module_enabled ?? false;
 
   useEffect(() => {
     document.title = "Catálogo — Plano B";
