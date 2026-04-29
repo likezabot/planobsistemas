@@ -25,11 +25,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
 
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { isAdminRole } from "@/lib/catalog/money";
-import { listProducts } from "@/lib/catalog/queries";
 
 function InfoBalloon({ text }: { text: string }) {
   return (
@@ -55,7 +53,6 @@ export default function Catalog() {
   
   const pizzaEnabled = currentMembership?.restaurants.pizza_module_enabled ?? false;
   const isAdmin = isAdminRole(currentMembership?.role);
-  // Aba Pizzas visível quando o módulo está ligado, ou para owner/manager (para poder ligar)
   const showPizzaTab = pizzaEnabled || isAdmin;
 
   useEffect(() => {
@@ -65,6 +62,19 @@ export default function Catalog() {
   const handleTabChange = (value: string) => {
     setSearchParams({ tab: value });
   };
+
+  return (
+    <AppShell>
+      <div className="flex flex-col gap-6">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-secondary">Catálogo</h1>
+            <InfoBalloon text="O catálogo é o coração do seu sistema. Tudo o que você cadastrar aqui aparecerá no seu cardápio digital para seus clientes pedirem." />
+          </div>
+          <p className="text-muted-foreground text-sm mt-1">
+            Gerencie produtos, categorias, pizzas e complementos.
+          </p>
+        </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="bg-muted/50 p-1 h-auto flex-wrap justify-start gap-1">
