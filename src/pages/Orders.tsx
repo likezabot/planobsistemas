@@ -400,7 +400,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
           </div>
         </div>
 
-        <div className="p-6 bg-[#F8FAFC] border-t border-border">
+        <div className="p-6 bg-white border-t border-border">
           <div className="grid grid-cols-2 gap-3">
             {order.status === 'new' && (
               <Button className="h-10 rounded-lg font-bold bg-success text-white shadow-sm" onClick={() => onStatusChange(order.id, 'accepted')}>Aceitar Pedido</Button>
