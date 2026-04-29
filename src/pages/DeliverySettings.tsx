@@ -33,7 +33,7 @@ import {
   Loader2,
   AlertCircle
 } from "lucide-react";
-import { centsToBRL, brlToCents } from "@/lib/catalog/money";
+import { centsToBRL, parseBRLToCents } from "@/lib/catalog/money";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
