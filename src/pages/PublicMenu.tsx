@@ -376,7 +376,7 @@ function CenteredMessage({ title, description }: { title: string; description?: 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4">
       <div className="bg-white shadow-xl border border-border max-w-sm p-8 text-center rounded-2xl">
-        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mx-auto mb-4">
           <Info className="w-6 h-6 text-primary" />
         </div>
         <h1 className="text-xl font-bold text-secondary">{title}</h1>
