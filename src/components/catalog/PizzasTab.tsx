@@ -336,10 +336,11 @@ function FlavorDialog({
       return;
     }
     setSaving(true);
-    const payload = {
+    const payload: any = {
       name: name.trim(),
       description: description.trim() || null,
       category: category.trim() || null,
+      ingredients: ingredients.trim() || null,
       track_stock: trackStock,
       stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
       low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
