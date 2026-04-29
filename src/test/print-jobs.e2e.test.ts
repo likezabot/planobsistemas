@@ -29,8 +29,11 @@ describe('Print Jobs Security & Logic E2E', () => {
       tenant_id: testTenantId,
       restaurant_id: testRestaurantId,
       customer_name: 'Print Tester',
+      customer_phone: '11999999999',
+      order_type: 'pickup',
+      idempotency_key: 'test-print-' + Date.now(),
       total_cents: 1000,
-      status: 'pending'
+      status: 'new'
     }).select('id').single();
     testOrderId = order.id;
   });
