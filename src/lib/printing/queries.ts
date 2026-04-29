@@ -110,3 +110,16 @@ export async function deletePrintAgent(agentId: string) {
   if (error) throw error;
   return true;
 }
+
+export async function getPendingPrintJobs(restaurantId: string, agentId: string, secretKey: string, afterTimestamp?: string) {
+  const { data, error } = await supabase.rpc('get_pending_print_jobs', {
+    p_restaurant_id: restaurantId,
+    p_agent_id: agentId,
+    p_secret_key: secretKey,
+    p_after_timestamp: afterTimestamp
+  });
+
+  if (error) throw error;
+  return data as PrintJob[];
+}
+
