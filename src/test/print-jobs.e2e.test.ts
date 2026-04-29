@@ -25,7 +25,7 @@ describe('Print Jobs Security & Logic E2E', () => {
     }).select('id').single();
     testRestaurantId = restaurant.id;
 
-    const { data: order } = await adminClient.from('orders').insert({
+    const { data: order, error: orderError } = await adminClient.from('orders').insert({
       tenant_id: testTenantId,
       restaurant_id: testRestaurantId,
       customer_name: 'Print Tester',
@@ -35,6 +35,11 @@ describe('Print Jobs Security & Logic E2E', () => {
       total_cents: 1000,
       status: 'new'
     }).select('id').single();
+    
+    if (orderError) {
+      console.error('Order Insert Error:', orderError);
+      throw orderError;
+    }
     testOrderId = order.id;
   });
 
