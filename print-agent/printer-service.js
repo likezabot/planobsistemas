@@ -63,6 +63,54 @@ async function printDryRun(job) {
   return true;
 }
 
+function formatReceipt(payload) {
+  if (typeof payload !== 'object') return String(payload);
+  
+  const { order, items, restaurant } = payload;
+  let text = '';
+  
+  text += `--- ${restaurant?.name || 'PEDIDO'} ---\n`;
+  text += `Pedido #${order?.id?.split('-')[0] || '---'}\n`;
+  text += `Cliente: ${order?.customer_name || '---'}\n`;
+  text += `Data: ${new Date(order?.created_at).toLocaleString('pt-BR')}\n`;
+  text += `--------------------------------\n`;
+  
+  if (Array.isArray(items)) {
+    items.forEach(item => {
+      text += `${item.quantity}x ${item.product_name}\n`;
+      
+      // Handle customization (pizzas, add-ons, etc.)
+      if (item.customization) {
+        if (item.customization.variants) {
+          item.customization.variants.forEach(v => text += `  > ${v.name}\n`);
+        }
+        if (item.customization.options) {
+          item.customization.options.forEach(opt => {
+            text += `  [${opt.group_name}]\n`;
+            opt.items.forEach(i => text += `    + ${i.name}\n`);
+          });
+        }
+        if (item.customization.half_pizzas) {
+          text += `  Sabores:\n`;
+          item.customization.half_pizzas.forEach(s => text += `    - ${s.name}\n`);
+        }
+      }
+      
+      if (item.note) text += `  Obs: ${item.note}\n`;
+      text += `\n`;
+    });
+  }
+  
+  text += `--------------------------------\n`;
+  text += `Total: R$ ${(order?.total_cents / 100).toFixed(2)}\n`;
+  text += `Pgto: ${order?.payment_method || '---'}\n`;
+  if (order?.notes) text += `Obs Geral: ${order.notes}\n`;
+  text += `--------------------------------\n`;
+  text += `Lovable POS - ${new Date().toLocaleDateString()}\n`;
+  
+  return text;
+}
+
 async function printPowerShell(job, printerName, isBase64) {
   const payload = job.payload;
   
