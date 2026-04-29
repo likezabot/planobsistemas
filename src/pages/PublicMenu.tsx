@@ -120,14 +120,14 @@ export default function PublicMenu() {
       price_cents: product.price_cents,
       quantity: 1
     });
-    toast.success(`${product.name} adicionado ao carrinho`);
+    toast.success(`${product.name} adicionado`);
   };
 
   const scrollToCategory = (id: string) => {
     setActiveCategory(id);
     const element = document.getElementById(`category-${id}`);
     if (element) {
-      const offset = 120; // Category bar height + padding
+      const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -141,36 +141,36 @@ export default function PublicMenu() {
   };
 
   return (
-    <main className="min-h-screen bg-background pb-32 font-sans selection:bg-primary/20">
-      {/* Header Premium */}
+    <main className="min-h-screen bg-[#F8FAFC] pb-32 font-sans">
+      {/* Header Solid */}
       <div className="relative h-48 bg-secondary overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 scale-105" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-50 scale-105" />
         <div className="absolute bottom-6 left-6 right-6 z-20">
-          <h1 className="text-3xl font-display font-bold text-white tracking-tight leading-tight">
+          <h1 className="text-2xl font-bold text-white tracking-tight">
             {restaurant.name}
           </h1>
-          <div className="flex items-center gap-2 mt-2 text-white/90 text-sm">
-            <span className="px-2 py-0.5 bg-success/20 text-success-foreground rounded-full text-xs font-semibold backdrop-blur-sm">Aberto agora</span>
-            <span className="flex items-center gap-1">• <Info className="w-3 h-3" /> Info do restaurante</span>
+          <div className="flex items-center gap-2 mt-2 text-white/90 text-sm font-medium">
+            <span className="flex items-center gap-1.5 px-2 py-0.5 bg-success rounded text-[10px] uppercase font-bold text-white shadow-sm">Aberto</span>
+            <span className="flex items-center gap-1 opacity-60">• <Info className="w-3.5 h-3.5" /> Informações</span>
           </div>
         </div>
       </div>
 
-      {/* Navegação de Categorias Sticky */}
-      <nav className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border py-3">
+      {/* Categorias - Solid, Sticky */}
+      <nav className="sticky top-0 z-30 bg-white border-b border-border shadow-sm">
         <div 
           ref={scrollContainerRef}
-          className="flex gap-2 px-4 overflow-x-auto no-scrollbar scroll-smooth"
+          className="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar scroll-smooth max-w-[1400px] mx-auto"
         >
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => scrollToCategory(cat.id)}
               className={cn(
-                "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all",
+                "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === cat.id
-                  ? "bg-primary text-white shadow-button scale-105"
+                  ? "bg-primary text-white shadow-sm scale-105"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               )}
             >
@@ -181,9 +181,9 @@ export default function PublicMenu() {
             <button
               onClick={() => scrollToCategory('others')}
               className={cn(
-                "whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-all",
+                "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === 'others'
-                  ? "bg-primary text-white shadow-button scale-105"
+                  ? "bg-primary text-white shadow-sm scale-105"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               )}
             >
@@ -193,25 +193,25 @@ export default function PublicMenu() {
         </div>
       </nav>
 
-      <div className="mx-auto max-w-2xl px-4 py-8">
+      <div className="mx-auto max-w-[1400px] px-4 py-8">
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-card rounded-3xl border border-dashed border-border">
-            <p className="text-muted-foreground font-medium">
-              Ainda não há produtos disponíveis neste cardápio.
+          <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
+            <p className="text-muted-foreground font-medium text-sm">
+              Nenhum produto disponível.
             </p>
           </div>
         ) : (
-          <div className="grid gap-12">
+          <div className="space-y-12">
             {categories.map((cat) => {
               const itemsInCat = productsByCategory.get(cat.id) ?? [];
               if (itemsInCat.length === 0) return null;
               return (
                 <section key={cat.id} id={`category-${cat.id}`}>
-                  <h2 className="text-xl font-display font-bold text-secondary mb-6 flex items-center gap-2">
-                    <span className="w-1.5 h-6 bg-primary rounded-full" />
+                  <h2 className="text-lg font-bold text-secondary mb-6 flex items-center gap-2">
+                    <span className="w-1 h-5 bg-primary rounded-full" />
                     {cat.name}
                   </h2>
-                  <div className="grid gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {itemsInCat.map((p) => (
                       <ProductCard 
                         key={p.id} 
@@ -227,11 +227,11 @@ export default function PublicMenu() {
             })}
             {uncategorized.length > 0 && (
               <section id="category-others">
-                <h2 className="text-xl font-display font-bold text-secondary mb-6 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-primary rounded-full" />
+                <h2 className="text-lg font-bold text-secondary mb-6 flex items-center gap-2">
+                  <span className="w-1 h-5 bg-primary rounded-full" />
                   Outros
                 </h2>
-                <div className="grid gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {uncategorized.map((p) => (
                     <ProductCard 
                       key={p.id} 
@@ -248,28 +248,28 @@ export default function PublicMenu() {
         )}
       </div>
 
-      {/* Carrinho Flutuante Elegante */}
+      {/* Floating Cart Solid */}
       {items.length > 0 && (
-        <div className="fixed bottom-6 left-0 right-0 px-4 z-40 animate-in fade-in slide-in-from-bottom-8 duration-500">
+        <div className="fixed bottom-6 left-0 right-0 px-4 z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="mx-auto max-w-lg">
             <Button 
-              className="w-full h-16 rounded-2xl text-lg font-bold flex justify-between px-8 bg-primary hover:bg-primary-hover shadow-premium border-2 border-white/10 group"
+              className="w-full h-14 rounded-xl text-base font-bold flex justify-between px-6 bg-primary hover:bg-primary shadow-xl border-t border-white/10 group"
               onClick={() => navigate(`/menu/${restaurantSlug}/checkout`)}
             >
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <ShoppingCart className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                  <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground w-5 h-5 rounded-full text-[10px] flex items-center justify-center font-bold border border-white">
+                  <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="absolute -top-1.5 -right-1.5 bg-secondary text-white w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-bold border border-white">
                     {items.reduce((acc, i) => acc + i.quantity, 0)}
                   </span>
                 </div>
                 <span>Ver Carrinho</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="bg-white/20 px-3 py-1 rounded-lg text-sm font-bold">
+                <span className="bg-white/20 px-3 py-1 rounded text-xs font-bold">
                   {centsToBRL(getTotal())}
                 </span>
-                <ChevronRight className="w-5 h-5 opacity-50" />
+                <ChevronRight className="w-4 h-4 opacity-50" />
               </div>
             </Button>
           </div>
@@ -291,84 +291,80 @@ function ProductCard({
   onUpdateQty: (id: string, qty: number) => void;
 }) {
   return (
-    <div className="group bg-card rounded-2xl border border-border p-4 shadow-card hover:shadow-premium hover:border-primary/20 transition-all active:scale-[0.98]">
-      <div className="flex gap-4">
-        {/* Espaço para Imagem */}
-        <div className="relative w-24 h-24 shrink-0 overflow-hidden rounded-xl bg-muted">
-          {product.image_url ? (
-            <img 
-              src={product.image_url} 
-              alt={product.name} 
-              className="w-full h-full object-cover transition-transform group-hover:scale-110"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-muted/50 text-muted-foreground">
-              <Plus className="w-6 h-6 opacity-20" />
-            </div>
-          )}
-          <div className="absolute inset-0 ring-1 ring-inset ring-black/5 rounded-xl" />
-        </div>
-
-        <div className="flex-1 min-w-0 py-0.5 flex flex-col justify-between">
-          <div>
-            <h3 className="font-bold text-secondary group-hover:text-primary transition-colors truncate">
-              {product.name}
-            </h3>
-            {product.description && (
-              <p className="mt-1 text-sm text-muted-foreground line-clamp-2 leading-snug">
-                {product.description}
-              </p>
-            )}
+    <div className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3">
+      <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-muted">
+        {product.image_url ? (
+          <img 
+            src={product.image_url} 
+            alt={product.name} 
+            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-muted/30 text-muted-foreground">
+            <Plus className="w-5 h-5 opacity-20" />
           </div>
+        )}
+      </div>
+
+      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+        <div>
+          <h3 className="font-bold text-secondary text-sm group-hover:text-primary transition-colors truncate">
+            {product.name}
+          </h3>
+          {product.description && (
+            <p className="mt-0.5 text-[11px] text-muted-foreground line-clamp-2 leading-tight">
+              {product.description}
+            </p>
+          )}
+        </div>
+        
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <span className="font-bold text-sm text-secondary tabular-nums">
+            {centsToBRL(product.price_cents)}
+          </span>
           
-          <div className="mt-3 flex items-center justify-between gap-4">
-            <span className="font-bold text-lg text-secondary tabular-nums">
-              {centsToBRL(product.price_cents)}
-            </span>
-            
-            <div className="flex items-center gap-1">
-              {!cartItem ? (
+          <div className="flex items-center gap-1">
+            {!cartItem ? (
+              <Button 
+                size="sm"
+                className="h-8 rounded-lg px-3 font-bold bg-muted text-primary hover:bg-primary hover:text-white transition-all text-[11px]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAdd(product);
+                }}
+              >
+                <Plus className="w-3.5 h-3.5 mr-1" />
+                Adicionar
+              </Button>
+            ) : (
+              <div className="flex items-center gap-1 bg-muted p-0.5 rounded-lg">
                 <Button 
-                  size="sm"
-                  className="rounded-xl px-4 font-bold bg-muted text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-md w-7 h-7 text-primary"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onAdd(product);
+                    onUpdateQty(product.id, cartItem.quantity - 1);
                   }}
                 >
-                  <Plus className="w-4 h-4 mr-1.5" />
-                  Adicionar
+                  <Minus className="w-3.5 h-3.5" />
                 </Button>
-              ) : (
-                <div className="flex items-center gap-1 bg-muted p-1 rounded-xl">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="rounded-lg w-8 h-8 text-primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onUpdateQty(product.id, cartItem.quantity - 1);
-                    }}
-                  >
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                  <span className="font-bold text-sm w-6 text-center text-secondary">
-                    {cartItem.quantity}
-                  </span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="rounded-lg w-8 h-8 text-primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onUpdateQty(product.id, cartItem.quantity + 1);
-                    }}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              )}
-            </div>
+                <span className="font-bold text-xs w-5 text-center text-secondary">
+                  {cartItem.quantity}
+                </span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="rounded-md w-7 h-7 text-primary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onUpdateQty(product.id, cartItem.quantity + 1);
+                  }}
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -378,13 +374,13 @@ function ProductCard({
 
 function CenteredMessage({ title, description }: { title: string; description?: string }) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="bg-card shadow-premium border border-border max-w-md p-10 text-center rounded-[2rem]">
-        <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <Info className="w-8 h-8 text-primary" />
+    <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4">
+      <div className="bg-white shadow-xl border border-border max-w-sm p-8 text-center rounded-2xl">
+        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <Info className="w-6 h-6 text-primary" />
         </div>
-        <h1 className="text-2xl font-display font-bold text-secondary">{title}</h1>
-        {description && <p className="mt-3 text-muted-foreground leading-relaxed">{description}</p>}
+        <h1 className="text-xl font-bold text-secondary">{title}</h1>
+        {description && <p className="mt-2 text-muted-foreground text-sm leading-relaxed">{description}</p>}
       </div>
     </main>
   );
