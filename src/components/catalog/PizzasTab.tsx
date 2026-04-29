@@ -389,6 +389,19 @@ function FlavorDialog({
               rows={3}
             />
           </div>
+          <div>
+            <Label>Ingredientes (opcional)</Label>
+            <Textarea
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+              rows={2}
+              placeholder="Ex: Molho de tomate, mussarela, manjericão"
+              data-testid="flavor-ingredients"
+            />
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Aparece para o cliente no cardápio público.
+            </p>
+          </div>
 
           {showInventoryFields && (
             <>
