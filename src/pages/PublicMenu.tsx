@@ -284,6 +284,12 @@ export default function PublicMenu() {
           </div>
         </div>
       )}
+
+      <ProductOptionsModal 
+        product={selectedProduct}
+        restaurantSlug={restaurantSlug || null}
+        onClose={() => setSelectedProduct(null)}
+      />
     </main>
   );
 }
