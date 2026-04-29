@@ -8,6 +8,7 @@ export type ImportResult = {
   option_groups: number;
   option_items: number;
   variants: number;
+  pizza_flavors?: number;
 };
 
 export type ValidationResult =

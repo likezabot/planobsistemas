@@ -15,6 +15,7 @@ import { ShoppingCart, Plus, Minus, Info, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ProductOptionsModal } from "@/components/menu/ProductOptionsModal";
+import { PizzaModal } from "@/components/menu/PizzaModal";
 
 type State =
   | { status: "loading" }
@@ -35,6 +36,7 @@ export default function PublicMenu() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null);
+  const [selectedPizza, setSelectedPizza] = useState<PublicProduct | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -116,8 +118,11 @@ export default function PublicMenu() {
 
   const handleAddToCart = (product: PublicProduct) => {
     if (!restaurantSlug) return;
-    
-    // If complex product, open modal
+
+    if (product.type === "pizza") {
+      setSelectedPizza(product);
+      return;
+    }
     if (product.has_options) {
       setSelectedProduct(product);
       return;
@@ -127,7 +132,7 @@ export default function PublicMenu() {
       product_id: product.id,
       name: product.name,
       price_cents: product.price_cents,
-      quantity: 1
+      quantity: 1,
     });
     toast.success(`${product.name} adicionado`);
   };
@@ -285,10 +290,15 @@ export default function PublicMenu() {
         </div>
       )}
 
-      <ProductOptionsModal 
+      <ProductOptionsModal
         product={selectedProduct}
         restaurantSlug={restaurantSlug || null}
         onClose={() => setSelectedProduct(null)}
+      />
+      <PizzaModal
+        product={selectedPizza}
+        restaurantSlug={restaurantSlug || null}
+        onClose={() => setSelectedPizza(null)}
       />
     </main>
   );

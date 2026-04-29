@@ -130,11 +130,15 @@ export function ProductOptionsModal({
       }
     });
 
+    const allSelectedOptionIds = Object.values(selectedOptions).flat();
+
     addItem(restaurantSlug, {
       product_id: product.id,
       name: finalName,
       price_cents: currentPrice() / quantity,
       quantity,
+      variation_id: selectedVariantId ?? null,
+      selected_options: allSelectedOptionIds,
       customization: descriptionParts.length > 0 ? {
         description: descriptionParts.join(", "),
         details: { selectedVariantId, selectedOptions }

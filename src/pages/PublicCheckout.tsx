@@ -88,7 +88,9 @@ export default function PublicCheckout() {
           product_id: i.product_id,
           quantity: i.quantity,
           note: i.note,
-          customization: i.customization
+          variation_id: i.variation_id ?? null,
+          selected_options: i.selected_options ?? [],
+          pizza_flavors: i.pizza_flavors ?? [],
         })),
         address: data.address,
         notes: data.notes
@@ -314,7 +316,7 @@ export default function PublicCheckout() {
                 </div>
                 <div className="p-4 space-y-3">
                   {items.map((item) => (
-                    <div key={item.product_id} className="flex flex-col gap-0.5">
+                    <div key={item.line_id} className="flex flex-col gap-0.5">
                       <div className="flex justify-between items-start text-sm">
                         <div className="flex gap-2 min-w-0">
                           <span className="font-bold text-primary">{item.quantity}x</span>
