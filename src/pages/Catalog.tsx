@@ -11,9 +11,17 @@ import OptionsTab from "@/components/catalog/OptionsTab";
 import InventoryTab from "@/components/catalog/InventoryTab";
 import ImportExportTab from "@/components/catalog/ImportExportTab";
 
+import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+import { isAdminRole } from "@/lib/catalog/money";
+
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "produtos";
+  const { currentMembership } = useRestaurant();
+  const pizzaEnabled = currentMembership?.restaurants.pizza_module_enabled ?? false;
+  const isAdmin = isAdminRole(currentMembership?.role);
+  // Aba Pizzas visível quando o módulo está ligado, ou para owner/manager (para poder ligar)
+  const showPizzaTab = pizzaEnabled || isAdmin;
 
   useEffect(() => {
     document.title = "Catálogo — Plano B";
@@ -43,10 +51,15 @@ export default function Catalog() {
               <Tag className="w-3.5 h-3.5 mr-2" />
               Categorias
             </TabsTrigger>
-            <TabsTrigger value="pizzas" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-4 py-2 text-xs font-bold uppercase tracking-wider">
-              <Pizza className="w-3.5 h-3.5 mr-2" />
-              Pizzas
-            </TabsTrigger>
+            {showPizzaTab && (
+              <TabsTrigger value="pizzas" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-4 py-2 text-xs font-bold uppercase tracking-wider">
+                <Pizza className="w-3.5 h-3.5 mr-2" />
+                Pizzas
+                {!pizzaEnabled && (
+                  <span className="ml-2 text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground normal-case font-medium">off</span>
+                )}
+              </TabsTrigger>
+            )}
             <TabsTrigger value="variacoes" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-4 py-2 text-xs font-bold uppercase tracking-wider">
               <Layers className="w-3.5 h-3.5 mr-2" />
               Tamanhos
@@ -72,9 +85,11 @@ export default function Catalog() {
             <TabsContent value="categorias">
               <CategoriesTab />
             </TabsContent>
-            <TabsContent value="pizzas">
-              <PizzasTab />
-            </TabsContent>
+            {showPizzaTab && (
+              <TabsContent value="pizzas">
+                <PizzasTab />
+              </TabsContent>
+            )}
             <TabsContent value="variacoes">
               <VariantsTab />
             </TabsContent>

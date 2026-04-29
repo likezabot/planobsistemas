@@ -491,6 +491,7 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          ingredients: string | null
           low_stock_alert: number | null
           name: string
           restaurant_id: string
@@ -509,6 +510,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          ingredients?: string | null
           low_stock_alert?: number | null
           name: string
           restaurant_id: string
@@ -527,6 +529,7 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          ingredients?: string | null
           low_stock_alert?: number | null
           name?: string
           restaurant_id?: string
@@ -776,11 +779,13 @@ export type Database = {
           code: string | null
           cost_cents: number | null
           created_at: string
+          diameter_cm: number | null
           id: string
           low_stock_alert: number | null
           name: string
           price_cents: number
           product_id: string
+          slices: number | null
           sort_order: number | null
           stock_quantity: number | null
           track_stock: boolean | null
@@ -792,11 +797,13 @@ export type Database = {
           code?: string | null
           cost_cents?: number | null
           created_at?: string
+          diameter_cm?: number | null
           id?: string
           low_stock_alert?: number | null
           name: string
           price_cents?: number
           product_id: string
+          slices?: number | null
           sort_order?: number | null
           stock_quantity?: number | null
           track_stock?: boolean | null
@@ -808,11 +815,13 @@ export type Database = {
           code?: string | null
           cost_cents?: number | null
           created_at?: string
+          diameter_cm?: number | null
           id?: string
           low_stock_alert?: number | null
           name?: string
           price_cents?: number
           product_id?: string
+          slices?: number | null
           sort_order?: number | null
           stock_quantity?: number | null
           track_stock?: boolean | null
@@ -1041,6 +1050,7 @@ export type Database = {
           inventory_enabled: boolean | null
           inventory_mode: string | null
           name: string
+          pizza_module_enabled: boolean
           public_menu_enabled: boolean
           slug: string
           tenant_id: string
@@ -1054,6 +1064,7 @@ export type Database = {
           inventory_enabled?: boolean | null
           inventory_mode?: string | null
           name: string
+          pizza_module_enabled?: boolean
           public_menu_enabled?: boolean
           slug: string
           tenant_id: string
@@ -1067,6 +1078,7 @@ export type Database = {
           inventory_enabled?: boolean | null
           inventory_mode?: string | null
           name?: string
+          pizza_module_enabled?: boolean
           public_menu_enabled?: boolean
           slug?: string
           tenant_id?: string
@@ -1223,6 +1235,7 @@ export type Database = {
           inventory_enabled: boolean
           inventory_mode: string
           name: string
+          pizza_module_enabled: boolean
           public_menu_enabled: boolean
           slug: string
           timezone: string

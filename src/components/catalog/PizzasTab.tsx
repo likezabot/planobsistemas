@@ -59,29 +59,69 @@ type Pizza = {
 };
 
 export default function PizzasTab() {
-  const { currentRestaurantId, currentMembership } = useRestaurant();
+  const { currentRestaurantId, currentMembership, refresh: refreshMembership } = useRestaurant();
   const canEdit = isAdminRole(currentMembership?.role);
+  const pizzaEnabled = currentMembership?.restaurants.pizza_module_enabled ?? false;
+  const [toggling, setToggling] = useState(false);
+  const { toast } = useToast();
 
   if (!currentRestaurantId) return <div className="text-sm text-muted-foreground p-8">Selecione um restaurante.</div>;
 
+  async function handleTogglePizzaModule(next: boolean) {
+    if (!currentRestaurantId) return;
+    setToggling(true);
+    const { error } = await supabase
+      .from("restaurants")
+      .update({ pizza_module_enabled: next })
+      .eq("id", currentRestaurantId);
+    setToggling(false);
+    if (error) {
+      toast({ title: "Falhou", description: error.message, variant: "destructive" });
+      return;
+    }
+    await refreshMembership();
+    toast({ title: next ? "Módulo Pizza ativado" : "Módulo Pizza desativado" });
+  }
+
   return (
     <div className="flex flex-col gap-6">
-      <Tabs defaultValue="pizzas" className="w-full">
-        <TabsList className="bg-muted/50 p-1">
-          <TabsTrigger value="pizzas" className="text-xs uppercase font-bold tracking-wider px-6">Configurar Pizzas</TabsTrigger>
-          <TabsTrigger value="flavors" className="text-xs uppercase font-bold tracking-wider px-6">Sabores Globais</TabsTrigger>
-        </TabsList>
-        <TabsContent value="pizzas" className="pt-4">
-          <PizzasTabContent restaurantId={currentRestaurantId} canEdit={canEdit} />
-        </TabsContent>
-        <TabsContent value="flavors" className="pt-4">
-          <FlavorsTabContent
-            restaurantId={currentRestaurantId}
-            tenantId={currentMembership?.tenant_id ?? ""}
-            canEdit={canEdit}
-          />
-        </TabsContent>
-      </Tabs>
+      {canEdit && (
+        <div className="rounded-lg border border-border bg-card p-4 flex items-center justify-between gap-4">
+          <div>
+            <div className="text-sm font-bold text-secondary flex items-center gap-2">
+              <Pizza className="w-4 h-4" /> Módulo Pizza
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Quando ligado, a aba Pizza aparece no PDV/cardápio público com tamanhos, sabores e bordas.
+              Quando desligado, produtos do tipo pizza ficam ocultos do público.
+            </p>
+          </div>
+          <Switch checked={pizzaEnabled} onCheckedChange={handleTogglePizzaModule} disabled={toggling} />
+        </div>
+      )}
+
+      {!pizzaEnabled ? (
+        <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+          O módulo Pizza está desativado neste restaurante. {canEdit ? "Ative acima para liberar o fluxo profissional de pizza." : "Peça ao responsável para ativar."}
+        </div>
+      ) : (
+        <Tabs defaultValue="pizzas" className="w-full">
+          <TabsList className="bg-muted/50 p-1">
+            <TabsTrigger value="pizzas" className="text-xs uppercase font-bold tracking-wider px-6">Configurar Pizzas</TabsTrigger>
+            <TabsTrigger value="flavors" className="text-xs uppercase font-bold tracking-wider px-6">Sabores Globais</TabsTrigger>
+          </TabsList>
+          <TabsContent value="pizzas" className="pt-4">
+            <PizzasTabContent restaurantId={currentRestaurantId} canEdit={canEdit} />
+          </TabsContent>
+          <TabsContent value="flavors" className="pt-4">
+            <FlavorsTabContent
+              restaurantId={currentRestaurantId}
+              tenantId={currentMembership?.tenant_id ?? ""}
+              canEdit={canEdit}
+            />
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 }
