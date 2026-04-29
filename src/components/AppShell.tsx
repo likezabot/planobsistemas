@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Sidebar - Fixed Width, Solid */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-[260px] bg-sidebar-background border-r border-sidebar-border transform transition-transform duration-200 lg:relative lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-[260px] bg-sidebar-background opacity-100 border-r border-sidebar-border transform transition-transform duration-200 lg:relative lg:translate-x-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
@@ -124,7 +124,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </nav>
           </div>
 
-          <div className="p-4 border-t border-sidebar-border bg-sidebar-background">
+          <div className="p-4 border-t border-sidebar-border bg-sidebar-background opacity-100">
             <div className="flex items-center gap-3 px-2 mb-3">
               <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center text-primary border border-sidebar-border shrink-0">
                 <User className="w-4 h-4" />
