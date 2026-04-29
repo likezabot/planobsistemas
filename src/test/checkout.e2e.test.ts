@@ -94,6 +94,10 @@ describe('Checkout Security E2E', () => {
   });
 
   it('should fail if delivery address is missing', async () => {
+    const { data: products } = await anonClient.rpc('get_public_products', { _slug: restaurantSlug });
+    expect(products?.length).toBeGreaterThan(0);
+    const product = products![0];
+
     const { error } = await anonClient.rpc('create_public_order', {
       _restaurant_slug: restaurantSlug,
       _customer_name: 'Delivery Fail',
@@ -101,7 +105,7 @@ describe('Checkout Security E2E', () => {
       _order_type: 'delivery',
       _payment_method: 'money',
       _idempotency_key: `e2e-fail-addr-${Date.now()}`,
-      _items: [{ product_id: '00000000-0000-0000-0000-000000000000', quantity: 1 }],
+      _items: [{ product_id: product.id, quantity: 1 }],
       _address: null
     });
 
