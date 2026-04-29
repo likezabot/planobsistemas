@@ -297,11 +297,15 @@ export default function PublicMenu() {
         product={selectedProduct}
         restaurantSlug={restaurantSlug || null}
         onClose={() => setSelectedProduct(null)}
+        inventoryEnabled={restaurant.inventory_enabled}
+        inventoryMode={restaurant.inventory_mode as "simple" | "advanced"}
       />
       <PizzaModal
         product={selectedPizza}
         restaurantSlug={restaurantSlug || null}
         onClose={() => setSelectedPizza(null)}
+        inventoryEnabled={restaurant.inventory_enabled}
+        inventoryMode={restaurant.inventory_mode as "simple" | "advanced"}
       />
     </main>
   );
