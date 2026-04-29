@@ -161,10 +161,10 @@ describe('KDS Logic & UI', () => {
       </BrowserRouter>
     );
 
-    const actionButton = screen.getAllByText('Preparar')[0];
+    const actionButton = screen.getAllByText('Aceitar')[0];
     fireEvent.click(actionButton);
 
-    expect(mutate).toHaveBeenCalledWith({ orderId: 'order-1', status: 'preparing' });
+    expect(mutate).toHaveBeenCalledWith({ orderId: 'order-1', status: 'accepted' });
   });
 
   it('subscribes to realtime on mount', () => {
