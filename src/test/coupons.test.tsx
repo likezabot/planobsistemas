@@ -20,7 +20,10 @@ vi.mock('@/lib/auth/RestaurantProvider', () => ({
 
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn(),
-  useMutation: vi.fn(),
+  useMutation: vi.fn(() => ({
+    mutate: vi.fn(),
+    isPending: false,
+  })),
   useQueryClient: vi.fn(() => ({
     invalidateQueries: vi.fn(),
   })),
