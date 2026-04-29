@@ -29,6 +29,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { PrintAgentSimulator } from "@/components/printing/PrintAgentSimulator";
+import { PrintAgentManager } from "@/components/printing/PrintAgentManager";
 
 export default function PrintControlPage() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
