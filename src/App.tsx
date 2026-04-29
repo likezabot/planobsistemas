@@ -13,6 +13,7 @@ import PublicMenu from "./pages/PublicMenu.tsx";
 import PublicCheckout from "./pages/PublicCheckout.tsx";
 import Orders from "./pages/Orders.tsx";
 import PrintControl from "./pages/PrintControl.tsx";
+import Accounting from "./pages/Accounting.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
@@ -69,6 +70,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <PrintControl />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/contador"
+                element={
+                  <ProtectedRoute>
+                    <Accounting />
                   </ProtectedRoute>
                 }
               />

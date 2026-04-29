@@ -17,6 +17,7 @@ import {
   BookOpen, 
   Printer, 
   Pizza,
+  Calculator,
   Menu,
   User,
   ChevronRight
