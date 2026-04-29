@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import { AppShell } from "@/components/AppShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -11,10 +10,7 @@ import {
   PlusCircle, 
   Download, 
   ClipboardList,
-  Info,
-  HelpCircle,
-  ArrowRight,
-  CheckCircle2
+  Info
 } from "lucide-react";
 import ProductsTab from "@/components/catalog/ProductsTab";
 import CategoriesTab from "@/components/catalog/CategoriesTab";
