@@ -323,6 +323,8 @@ export default function VariantsTab() {
                             setStockQuantity(v.stock_quantity?.toString() || "0");
                             setLowStockAlert(v.low_stock_alert?.toString() || "");
                             setAllowOutOfStockSale(v.allow_out_of_stock_sale ?? false);
+                            setDiameterCm(v.diameter_cm != null ? String(v.diameter_cm).replace('.', ',') : "");
+                            setSlices(v.slices != null ? String(v.slices) : "");
                             setOpen(true);
                           }}>
                             <Edit2 className="w-3.5 h-3.5" />
