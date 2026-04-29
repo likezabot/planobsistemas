@@ -511,6 +511,14 @@ export type Database = {
         Args: { _tenant_id: string; _user_id: string }
         Returns: boolean
       }
+      update_order_status: {
+        Args: {
+          _new_status: Database["public"]["Enums"]["order_status"]
+          _order_id: string
+          _reason?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role:
