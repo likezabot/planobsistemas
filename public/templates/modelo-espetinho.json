@@ -1,0 +1,35 @@
+{
+  "$schema_version": "1.0",
+  "_readme": "Modelo Espetinho/Churrasquinho. Usa produtos simples + adicionais. NÃO usa módulo Pizza. Mantenha pizza_module_enabled=false.",
+  "categories": [
+    { "code": "ESP", "name": "Espetinhos", "sort_order": 10, "active": true },
+    { "code": "ACO", "name": "Acompanhamentos", "sort_order": 20, "active": true },
+    { "code": "BEB", "name": "Bebidas", "sort_order": 30, "active": true }
+  ],
+  "products": [
+    { "code": "ESP-CAR", "name": "Espeto de Carne", "category_code": "ESP", "type": "simple", "price_cents": 800, "active": true },
+    { "code": "ESP-FRA", "name": "Espeto de Frango", "category_code": "ESP", "type": "simple", "price_cents": 700, "active": true },
+    { "code": "ESP-COR", "name": "Espeto de Coração", "category_code": "ESP", "type": "simple", "price_cents": 900, "active": true },
+    { "code": "ESP-QUE", "name": "Espeto de Queijo Coalho", "category_code": "ESP", "type": "simple", "price_cents": 1000, "active": true },
+    { "code": "ACO-FAR", "name": "Farofa", "category_code": "ACO", "type": "simple", "price_cents": 500, "active": true },
+    { "code": "ACO-VIN", "name": "Vinagrete", "category_code": "ACO", "type": "simple", "price_cents": 500, "active": true },
+    { "code": "BEB-REF", "name": "Refrigerante Lata", "category_code": "BEB", "type": "simple", "price_cents": 600, "active": true },
+    { "code": "BEB-CER", "name": "Cerveja Long Neck", "category_code": "BEB", "type": "simple", "price_cents": 1000, "active": true }
+  ],
+  "variants": [],
+  "option_groups": [
+    { "code": "PONTO", "name": "Ponto da carne", "min_options": 0, "max_options": 1, "is_required": false, "active": true },
+    { "code": "MOLHO", "name": "Molhos", "min_options": 0, "max_options": 3, "is_required": false, "active": true }
+  ],
+  "option_items": [
+    { "group_code": "PONTO", "code": "MAL", "name": "Mal passado", "price_cents": 0, "active": true },
+    { "group_code": "PONTO", "code": "PON", "name": "Ao ponto", "price_cents": 0, "active": true },
+    { "group_code": "PONTO", "code": "BEM", "name": "Bem passado", "price_cents": 0, "active": true },
+    { "group_code": "MOLHO", "code": "ALH", "name": "Alho", "price_cents": 200, "active": true },
+    { "group_code": "MOLHO", "code": "PIM", "name": "Pimenta", "price_cents": 200, "active": true },
+    { "group_code": "MOLHO", "code": "BAR", "name": "Barbecue", "price_cents": 300, "active": true }
+  ],
+  "pizza_flavors": [],
+  "product_pizza_flavors": [],
+  "pizza_configs": []
+}

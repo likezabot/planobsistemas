@@ -1,0 +1,33 @@
+{
+  "$schema_version": "1.0",
+  "_readme": "Modelo genérico de catálogo. Edite, salve e importe em Catálogo > Importar/Exportar. Não importa automaticamente.",
+  "categories": [
+    { "code": "BEB", "name": "Bebidas", "sort_order": 10, "active": true },
+    { "code": "PRA", "name": "Pratos", "sort_order": 20, "active": true }
+  ],
+  "products": [
+    {
+      "code": "PRA-001",
+      "name": "Prato do dia",
+      "description": "Descrição opcional do prato",
+      "category_code": "PRA",
+      "type": "simple",
+      "price_cents": 2500,
+      "active": true
+    },
+    {
+      "code": "BEB-001",
+      "name": "Refrigerante 350ml",
+      "category_code": "BEB",
+      "type": "simple",
+      "price_cents": 700,
+      "active": true
+    }
+  ],
+  "variants": [],
+  "option_groups": [],
+  "option_items": [],
+  "pizza_flavors": [],
+  "product_pizza_flavors": [],
+  "pizza_configs": []
+}
