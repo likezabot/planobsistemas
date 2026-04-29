@@ -953,20 +953,35 @@ export type Database = {
         Args: { p_order_id: string; p_reason?: string; p_source: string }
         Returns: string
       }
-      create_public_order: {
-        Args: {
-          _address?: string
-          _customer_name: string
-          _customer_phone: string
-          _idempotency_key: string
-          _items: Json
-          _notes?: string
-          _order_type: string
-          _payment_method: string
-          _restaurant_slug: string
-        }
-        Returns: Json
-      }
+      create_public_order:
+        | {
+            Args: {
+              _address?: string
+              _customer_name: string
+              _customer_phone: string
+              _idempotency_key: string
+              _items: Json
+              _notes?: string
+              _order_type: Database["public"]["Enums"]["order_type"]
+              _payment_method: Database["public"]["Enums"]["payment_method"]
+              _restaurant_slug: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _address?: string
+              _customer_name: string
+              _customer_phone: string
+              _idempotency_key: string
+              _items: Json
+              _notes?: string
+              _order_type: string
+              _payment_method: string
+              _restaurant_slug: string
+            }
+            Returns: Json
+          }
       export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
       fail_print_job:
         | {
