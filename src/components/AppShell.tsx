@@ -60,7 +60,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const accountingEnabled = currentMembership?.restaurants.accounting_reports_enabled ?? false;
   const role = currentMembership?.role;
-  const canSeeAccounting = accountingEnabled && (role === "owner" || role === "manager" || role === "cashier");
+  const isAdmin = role === "owner" || role === "manager";
+  // Owner/manager sempre veem (para poder ativar). Cashier só vê quando ativo. Waiter/kitchen/anon nunca.
+  const canSeeAccounting = isAdmin || (accountingEnabled && role === "cashier");
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
