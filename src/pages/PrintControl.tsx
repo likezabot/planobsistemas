@@ -28,7 +28,6 @@ import {
   Clock,
   RefreshCw
 } from "lucide-react";
-import { useAuth } from "@/lib/auth/AuthProvider";
 
 export default function PrintControlPage() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
