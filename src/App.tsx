@@ -12,6 +12,7 @@ import CatalogProducts from "./pages/CatalogProducts.tsx";
 import CatalogCategories from "./pages/CatalogCategories.tsx";
 import PublicMenu from "./pages/PublicMenu.tsx";
 import PublicCheckout from "./pages/PublicCheckout.tsx";
+import Orders from "./pages/Orders.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
