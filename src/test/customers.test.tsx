@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import Customers from '../pages/Customers';
 import { useRestaurant } from '@/lib/auth/RestaurantProvider';
 import { useQuery } from '@tanstack/react-query';
@@ -60,6 +60,7 @@ describe('Customers CRM Logic & UI', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    cleanup(); // Force cleanup
     (useRestaurant as any).mockReturnValue({
       currentRestaurantId: mockRestaurantId,
       currentMembership: { 
@@ -113,8 +114,8 @@ describe('Customers CRM Logic & UI', () => {
     const detailButtons = screen.getAllByText('Ver Detalhes');
     fireEvent.click(detailButtons[0]);
 
-    const whatsappLink = screen.getByRole('link', { name: /WhatsApp/i });
-    expect(whatsappLink).toHaveAttribute('href', 'https://wa.me/5511999999999');
+    const whatsappLinks = screen.getAllByRole('link', { name: /WhatsApp/i });
+    expect(whatsappLinks[0]).toHaveAttribute('href', 'https://wa.me/5511999999999');
   });
 
   it('filters customers by search term', () => {
@@ -124,8 +125,8 @@ describe('Customers CRM Logic & UI', () => {
       </BrowserRouter>
     );
 
-    const searchInputs = screen.getAllByPlaceholderText(/Buscar por nome ou telefone/i);
-    fireEvent.change(searchInputs[0], { target: { value: 'Maria' } });
+    const searchInput = screen.getByPlaceholderText(/Buscar por nome ou telefone/i);
+    fireEvent.change(searchInput, { target: { value: 'Maria' } });
 
     expect(screen.queryByText('João CRM')).not.toBeInTheDocument();
     expect(screen.getByText('Maria CRM')).toBeInTheDocument();
