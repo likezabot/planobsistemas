@@ -210,6 +210,37 @@ export default function VariantsTab() {
 
   return (
     <div className="space-y-6">
+      {duplicatePizzaGroups.length > 0 && (
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 shadow-sm space-y-2">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-amber-900">
+                Existem pizzas duplicadas com o mesmo nome
+              </h3>
+              <ul className="text-xs text-amber-800/80 mt-1 list-disc pl-4 space-y-0.5">
+                {duplicatePizzaGroups.map((g) => (
+                  <li key={g.nameKey}>
+                    <strong>{g.nameKey}</strong> — {g.ids.length} ocorrências
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {canEdit && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs"
+                onClick={handleDedupePizzas}
+                disabled={dedupingDup}
+              >
+                {dedupingDup && <Loader2 className="w-3.5 h-3.5 animate-spin mr-1.5" />}
+                Inativar duplicatas (manter a mais antiga)
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
       <div className="bg-white p-4 rounded-xl border border-border shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center gap-4">
           <div className="flex-1">
