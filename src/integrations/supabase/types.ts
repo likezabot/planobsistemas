@@ -185,6 +185,79 @@ export type Database = {
           },
         ]
       }
+      print_jobs: {
+        Row: {
+          agent_id: string | null
+          attempts: number
+          claimed_at: string | null
+          created_at: string | null
+          id: string
+          last_error: string | null
+          order_id: string
+          payload: Json
+          payload_hash: string
+          printed_at: string | null
+          restaurant_id: string
+          source: string
+          status: string
+          tenant_id: string
+        }
+        Insert: {
+          agent_id?: string | null
+          attempts?: number
+          claimed_at?: string | null
+          created_at?: string | null
+          id?: string
+          last_error?: string | null
+          order_id: string
+          payload: Json
+          payload_hash: string
+          printed_at?: string | null
+          restaurant_id: string
+          source: string
+          status?: string
+          tenant_id: string
+        }
+        Update: {
+          agent_id?: string | null
+          attempts?: number
+          claimed_at?: string | null
+          created_at?: string | null
+          id?: string
+          last_error?: string | null
+          order_id?: string
+          payload?: Json
+          payload_hash?: string
+          printed_at?: string | null
+          restaurant_id?: string
+          source?: string
+          status?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_jobs_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_jobs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "print_jobs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_categories: {
         Row: {
           active: boolean
@@ -436,6 +509,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_print_job: {
+        Args: { p_agent_id: string; p_job_id: string }
+        Returns: boolean
+      }
+      complete_print_job: {
+        Args: { p_agent_id: string; p_job_id: string }
+        Returns: boolean
+      }
+      create_print_job_for_order: {
+        Args: { p_order_id: string; p_source: string }
+        Returns: string
+      }
       create_public_order: {
         Args: {
           _address?: string
@@ -449,6 +534,10 @@ export type Database = {
           _restaurant_slug: string
         }
         Returns: Json
+      }
+      fail_print_job: {
+        Args: { p_agent_id: string; p_error: string; p_job_id: string }
+        Returns: boolean
       }
       get_public_categories: {
         Args: { _slug: string }
@@ -510,6 +599,10 @@ export type Database = {
       is_member_of_tenant: {
         Args: { _tenant_id: string; _user_id: string }
         Returns: boolean
+      }
+      reprint_order: {
+        Args: { p_order_id: string; p_reason: string }
+        Returns: string
       }
       update_order_status: {
         Args: {
