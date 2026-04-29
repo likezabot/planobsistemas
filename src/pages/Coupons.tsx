@@ -185,7 +185,10 @@ export default function Coupons() {
       <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary tracking-tight">Cupons de Desconto</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-secondary tracking-tight">Cupons de Desconto</h1>
+              <InfoBalloon text="Os cupons permitem criar descontos em reais ou porcentagem para fidelizar clientes. Você pode definir regras de uso como valor mínimo do pedido ou data de expiração." />
+            </div>
             <p className="text-muted-foreground text-sm mt-1">Gerencie campanhas promocionais e fidelize clientes.</p>
           </div>
           <Button onClick={handleCreate} className="rounded-lg font-bold gap-2">
