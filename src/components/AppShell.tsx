@@ -21,7 +21,8 @@ import {
   Menu,
   User,
   ChevronRight,
-  ChefHat
+  ChefHat,
+  BarChart2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
