@@ -141,7 +141,7 @@ export default function PublicMenu() {
   };
 
   return (
-    <main className="min-h-screen bg-white pb-32 font-sans">
+    <main className="min-h-screen bg-gray-800 pb-32 font-sans">
       {/* Header Solid */}
       <div className="relative h-48 bg-secondary overflow-hidden">
         <div className="absolute inset-0 bg-black z-10 opacity-60" />
@@ -158,7 +158,7 @@ export default function PublicMenu() {
       </div>
 
       {/* Categorias - Solid, Sticky */}
-      <nav className="sticky top-0 z-30 bg-white border-b border-border py-3 shadow-sm">
+      <nav className="sticky top-0 z-30 bg-gray-800 border-b border-gray-700 py-3 shadow-sm">
         <div 
           ref={scrollContainerRef}
           className="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar scroll-smooth max-w-[1400px] mx-auto"
@@ -171,7 +171,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === cat.id
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-muted-foreground hover:bg-secondary hover:text-white"
+                  : "bg-muted text-gray-400 hover:bg-secondary hover:text-white"
               )}
             >
               {cat.name}
@@ -184,7 +184,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === 'others'
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-muted-foreground hover:bg-secondary hover:text-white"
+                  : "bg-muted text-gray-400 hover:bg-secondary hover:text-white"
               )}
             >
               Outros
@@ -195,8 +195,8 @@ export default function PublicMenu() {
 
       <div className="mx-auto max-w-[1400px] px-4 py-8">
         {products.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
-            <p className="text-muted-foreground font-medium text-sm">
+          <div className="text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
+            <p className="text-gray-400 font-medium text-sm">
               Nenhum produto disponível.
             </p>
           </div>
@@ -207,7 +207,7 @@ export default function PublicMenu() {
               if (itemsInCat.length === 0) return null;
               return (
                 <section key={cat.id} id={`category-${cat.id}`}>
-                  <h2 className="text-lg font-bold text-secondary mb-6 flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                     <span className="w-1 h-5 bg-primary rounded-full" />
                     {cat.name}
                   </h2>
@@ -227,7 +227,7 @@ export default function PublicMenu() {
             })}
             {uncategorized.length > 0 && (
               <section id="category-others">
-                <h2 className="text-lg font-bold text-secondary mb-6 flex items-center gap-2">
+                <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                   <span className="w-1 h-5 bg-primary rounded-full" />
                   Outros
                 </h2>
@@ -291,7 +291,7 @@ function ProductCard({
   onUpdateQty: (id: string, qty: number) => void;
 }) {
   return (
-    <div className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3">
+    <div className="group bg-gray-800 rounded-xl border border-gray-700 p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3">
       <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-muted">
         {product.image_url ? (
           <img 
@@ -300,7 +300,7 @@ function ProductCard({
             className="w-full h-full object-cover transition-transform group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
+          <div className="w-full h-full flex items-center justify-center bg-muted text-gray-400">
             <Plus className="w-5 h-5 opacity-20" />
           </div>
         )}
@@ -308,18 +308,18 @@ function ProductCard({
 
       <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
         <div>
-          <h3 className="font-bold text-secondary text-sm group-hover:text-primary transition-colors truncate">
+          <h3 className="font-bold text-white text-sm group-hover:text-primary transition-colors truncate">
             {product.name}
           </h3>
           {product.description && (
-            <p className="mt-0.5 text-[11px] text-muted-foreground line-clamp-2 leading-tight">
+            <p className="mt-0.5 text-[11px] text-gray-400 line-clamp-2 leading-tight">
               {product.description}
             </p>
           )}
         </div>
         
         <div className="mt-2 flex items-center justify-between gap-2">
-          <span className="font-bold text-sm text-secondary tabular-nums">
+          <span className="font-bold text-sm text-white tabular-nums">
             {centsToBRL(product.price_cents)}
           </span>
           
@@ -349,7 +349,7 @@ function ProductCard({
                 >
                   <Minus className="w-3.5 h-3.5" />
                 </Button>
-                <span className="font-bold text-xs w-5 text-center text-secondary">
+                <span className="font-bold text-xs w-5 text-center text-white">
                   {cartItem.quantity}
                 </span>
                 <Button 
@@ -375,12 +375,12 @@ function ProductCard({
 function CenteredMessage({ title, description }: { title: string; description?: string }) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4">
-      <div className="bg-white shadow-xl border border-border max-w-sm p-8 text-center rounded-2xl">
+      <div className="bg-gray-800 shadow-xl border border-gray-700 max-w-sm p-8 text-center rounded-2xl">
         <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mx-auto mb-4">
           <Info className="w-6 h-6 text-primary" />
         </div>
-        <h1 className="text-xl font-bold text-secondary">{title}</h1>
-        {description && <p className="mt-2 text-muted-foreground text-sm leading-relaxed">{description}</p>}
+        <h1 className="text-xl font-bold text-white">{title}</h1>
+        {description && <p className="mt-2 text-gray-400 text-sm leading-relaxed">{description}</p>}
       </div>
     </main>
   );

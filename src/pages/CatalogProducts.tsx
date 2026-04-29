@@ -104,11 +104,11 @@ export default function CatalogProducts() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary">Catálogo de Produtos</h1>
-            <p className="text-muted-foreground text-sm mt-1">Gerencie seu cardápio, preços e disponibilidade.</p>
+            <h1 className="text-2xl font-bold text-white">Catálogo de Produtos</h1>
+            <p className="text-gray-400 text-sm mt-1">Gerencie seu cardápio, preços e disponibilidade.</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" className="rounded-lg border-border h-10">
+            <Button asChild variant="outline" className="rounded-lg border-gray-700 h-10">
               <Link to="/catalogo/categorias">
                 <Tag className="w-4 h-4 mr-2" />
                 Categorias
@@ -124,20 +124,20 @@ export default function CatalogProducts() {
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-xl border border-border shadow-sm">
+        <div className="flex flex-col md:flex-row gap-4 items-center bg-gray-800 p-4 rounded-xl border border-gray-700 shadow-sm">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input 
               placeholder="Buscar produtos..." 
-              className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+              className="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-700 bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-3 w-full md:w-auto">
-            <Filter className="w-4 h-4 text-muted-foreground hidden md:block" />
+            <Filter className="w-4 h-4 text-gray-400 hidden md:block" />
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="h-10 w-full md:w-48 rounded-lg border-border bg-[#F8FAFC] text-sm">
+              <SelectTrigger className="h-10 w-full md:w-48 rounded-lg border-gray-700 bg-[#F8FAFC] text-sm">
                 <SelectValue placeholder="Todas categorias" />
               </SelectTrigger>
               <SelectContent>
@@ -157,28 +157,28 @@ export default function CatalogProducts() {
               {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
-              <Package className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
-              <p className="text-muted-foreground text-sm">Nenhum produto encontrado.</p>
+            <div className="text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
+              <Package className="w-12 h-12 mx-auto mb-4 opacity-10 text-white" />
+              <p className="text-gray-400 text-sm">Nenhum produto encontrado.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((p) => {
                 const cat = categories.find((c) => c.id === p.category_id);
                 return (
-                  <div key={p.id} className="bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden">
+                  <div key={p.id} className="bg-gray-800 rounded-xl border border-gray-700 shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden">
                     <div className="aspect-video w-full bg-muted relative overflow-hidden shrink-0">
                       {p.image_url ? (
                         <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <ImageIcon className="w-8 h-8 text-muted-foreground opacity-20" />
+                          <ImageIcon className="w-8 h-8 text-gray-400 opacity-20" />
                         </div>
                       )}
                       <div className="absolute top-2 right-2">
                         <Badge variant={p.active ? "secondary" : "outline"} className={cn(
                           "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest border-none shadow-sm",
-                          p.active ? "bg-success text-white" : "bg-muted text-muted-foreground"
+                          p.active ? "bg-success text-white" : "bg-muted text-gray-400"
                         )}>
                           {p.active ? "Ativo" : "Inativo"}
                         </Badge>
@@ -188,22 +188,22 @@ export default function CatalogProducts() {
                     <div className="p-4 flex-1 flex flex-col">
                       <div className="flex justify-between items-start gap-2 mb-2">
                         <div className="min-w-0">
-                          <h3 className="font-bold text-secondary text-sm leading-tight group-hover:text-primary transition-colors truncate">{p.name}</h3>
+                          <h3 className="font-bold text-white text-sm leading-tight group-hover:text-primary transition-colors truncate">{p.name}</h3>
                           {cat && (
-                            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{cat.name}</span>
+                            <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{cat.name}</span>
                           )}
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="font-bold text-secondary text-sm tabular-nums">{centsToBRL(p.price_cents)}</p>
-                          <p className="text-[9px] text-muted-foreground tabular-nums">Custo: {centsToBRL(p.cost_cents)}</p>
+                          <p className="font-bold text-white text-sm tabular-nums">{centsToBRL(p.price_cents)}</p>
+                          <p className="text-[9px] text-gray-400 tabular-nums">Custo: {centsToBRL(p.cost_cents)}</p>
                         </div>
                       </div>
 
                       {p.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed">{p.description}</p>
+                        <p className="text-xs text-gray-400 line-clamp-2 mb-4 leading-relaxed">{p.description}</p>
                       )}
 
-                      <div className="mt-auto pt-3 border-t border-border flex justify-between items-center">
+                      <div className="mt-auto pt-3 border-t border-gray-700 flex justify-between items-center">
                         <div className="flex gap-1">
                           {p.type && p.type !== 'simple' && (
                             <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted border-none">
@@ -221,14 +221,14 @@ export default function CatalogProducts() {
                                 className="h-8 w-8 rounded-lg hover:bg-muted"
                                 onClick={() => { setEditing(p); setOpen(true); }}
                               >
-                                <Edit2 className="h-3.5 w-3.5 text-secondary" />
+                                <Edit2 className="h-3.5 w-3.5 text-white" />
                               </Button>
                               <Button 
                                 size="icon" 
                                 variant="ghost" 
                                 className={cn(
                                   "h-8 w-8 rounded-lg hover:bg-muted transition-colors",
-                                  p.active ? "text-success hover:text-destructive" : "text-muted-foreground hover:text-success"
+                                  p.active ? "text-success hover:text-destructive" : "text-gray-400 hover:text-success"
                                 )}
                                 onClick={() => handleToggleActive(p)}
                               >
@@ -350,23 +350,23 @@ function ProductDialog({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="p-name" className="text-xs font-bold text-secondary uppercase tracking-wider">Nome do Produto</Label>
+                <Label htmlFor="p-name" className="text-xs font-bold text-white uppercase tracking-wider">Nome do Produto</Label>
                 <Input 
                   id="p-name" 
                   value={name} 
                   onChange={(e) => setName(e.target.value)} 
-                  className="h-10 rounded-lg border-border focus:ring-primary"
+                  className="h-10 rounded-lg border-gray-700 focus:ring-primary"
                   placeholder="Ex: Hambúrguer de Costela"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="p-desc" className="text-xs font-bold text-secondary uppercase tracking-wider">Descrição / Ingredientes</Label>
+                <Label htmlFor="p-desc" className="text-xs font-bold text-white uppercase tracking-wider">Descrição / Ingredientes</Label>
                 <Textarea 
                   id="p-desc" 
                   value={description} 
                   onChange={(e) => setDescription(e.target.value)} 
                   rows={3} 
-                  className="rounded-lg border-border focus:ring-primary text-sm"
+                  className="rounded-lg border-gray-700 focus:ring-primary text-sm"
                   placeholder="Detalhes que ajudam o cliente..."
                 />
               </div>
@@ -375,39 +375,39 @@ function ProductDialog({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="p-price" className="text-xs font-bold text-secondary uppercase tracking-wider">Preço (R$)</Label>
+                  <Label htmlFor="p-price" className="text-xs font-bold text-white uppercase tracking-wider">Preço (R$)</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                     <Input 
                       id="p-price" 
                       inputMode="decimal" 
                       value={price} 
                       onChange={(e) => setPrice(e.target.value)} 
                       placeholder="0,00" 
-                      className="h-10 pl-9 rounded-lg border-border focus:ring-primary font-bold text-sm"
+                      className="h-10 pl-9 rounded-lg border-gray-700 focus:ring-primary font-bold text-sm"
                     />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="p-cost" className="text-xs font-bold text-secondary uppercase tracking-wider">Custo (R$)</Label>
+                  <Label htmlFor="p-cost" className="text-xs font-bold text-white uppercase tracking-wider">Custo (R$)</Label>
                   <div className="relative">
-                    <TrendingDown className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <TrendingDown className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                     <Input 
                       id="p-cost" 
                       inputMode="decimal" 
                       value={cost} 
                       onChange={(e) => setCost(e.target.value)} 
                       placeholder="0,00" 
-                      className="h-10 pl-9 rounded-lg border-border focus:ring-primary text-xs"
+                      className="h-10 pl-9 rounded-lg border-gray-700 focus:ring-primary text-xs"
                     />
                   </div>
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-secondary uppercase tracking-wider">Categoria</Label>
+                <Label className="text-xs font-bold text-white uppercase tracking-wider">Categoria</Label>
                 <Select value={categoryId ?? "__none"} onValueChange={(v) => setCategoryId(v === "__none" ? null : v)}>
-                  <SelectTrigger className="h-10 rounded-lg border-border text-sm bg-[#F8FAFC]">
+                  <SelectTrigger className="h-10 rounded-lg border-gray-700 text-sm bg-[#F8FAFC]">
                     <SelectValue placeholder="Selecione categoria" />
                   </SelectTrigger>
                   <SelectContent>
@@ -420,9 +420,9 @@ function ProductDialog({
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold text-secondary uppercase tracking-wider">Tipo de Produto</Label>
+                <Label className="text-xs font-bold text-white uppercase tracking-wider">Tipo de Produto</Label>
                 <Select value={type} onValueChange={setType}>
-                  <SelectTrigger className="h-10 rounded-lg border-border text-sm bg-[#F8FAFC]">
+                  <SelectTrigger className="h-10 rounded-lg border-gray-700 text-sm bg-[#F8FAFC]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -437,7 +437,7 @@ function ProductDialog({
           </div>
         </div>
 
-        <DialogFooter className="p-6 bg-[#F8FAFC] border-t border-border gap-2">
+        <DialogFooter className="p-6 bg-[#F8FAFC] border-t border-gray-700 gap-2">
           <Button variant="ghost" className="rounded-lg font-bold" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button 
             className="rounded-lg h-10 font-bold px-8 shadow-sm min-w-[120px]"
