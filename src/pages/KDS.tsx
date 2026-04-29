@@ -124,8 +124,6 @@ export default function KDS() {
             title="Novos" 
             orders={columns.new} 
             onAction={(id, status) => statusMutation.mutate({ orderId: id, status })}
-            actionLabel="Preparar"
-            nextStatus="preparing"
             color="bg-primary/5"
             borderColor="border-primary/20"
           />
