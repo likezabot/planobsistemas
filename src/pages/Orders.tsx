@@ -13,6 +13,7 @@ import { ptBR } from "date-fns/locale";
 import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useSearchParams } from "react-router-dom";
+import { NewOrderDrawer } from "@/components/orders/NewOrderDrawer";
 import {
   Dialog,
   DialogContent,
