@@ -60,6 +60,20 @@ export default function OrdersPage() {
     },
   });
 
+  const reprintMutation = useMutation({
+    mutationFn: ({ orderId, reason }: { orderId: string; reason: string }) =>
+      reprintOrder(orderId, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast.success("Solicitação de reimpressão enviada!");
+      setIsReprintDialogOpen(false);
+      setReprintReason("");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao solicitar reimpressão");
+    },
+  });
+
   const handleStatusChange = (orderId: string, status: any) => {
     if (status === 'cancelled') {
       setIsCancelDialogOpen(true);
