@@ -239,10 +239,10 @@ export default function InventoryTab() {
 
 function getItemIcon(type: string) {
   switch (type) {
-    case 'product': return <Package className="w-3.5 h-3.5 mx-auto text-blue-500" title="Produto" />;
-    case 'variant': return <Layers className="w-3.5 h-3.5 mx-auto text-orange-500" title="Variação" />;
-    case 'option_item': return <PlusCircle className="w-3.5 h-3.5 mx-auto text-green-500" title="Adicional" />;
-    case 'pizza_flavor': return <Pizza className="w-3.5 h-3.5 mx-auto text-red-500" title="Sabor" />;
+    case 'product': return <Package className="w-3.5 h-3.5 mx-auto text-blue-500" />;
+    case 'variant': return <Layers className="w-3.5 h-3.5 mx-auto text-orange-500" />;
+    case 'option_item': return <PlusCircle className="w-3.5 h-3.5 mx-auto text-green-500" />;
+    case 'pizza_flavor': return <Pizza className="w-3.5 h-3.5 mx-auto text-red-500" />;
     default: return null;
   }
 }
