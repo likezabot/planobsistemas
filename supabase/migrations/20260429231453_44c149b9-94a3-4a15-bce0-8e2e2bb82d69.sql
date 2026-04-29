@@ -1,0 +1,1 @@
+DROP FUNCTION IF EXISTS public.create_print_job_for_order(uuid, text);
