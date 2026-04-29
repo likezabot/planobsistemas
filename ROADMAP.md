@@ -3,6 +3,46 @@
 > Este arquivo registra escopo **adiado conscientemente**. Nada aqui deve ser
 > implementado sem aprovação explícita do dono do produto.
 
+---
+
+## Status atual (29/04/2026)
+
+✅ **Sistema tecnicamente pronto para piloto comercial.**
+
+Validado em Bloco D (Hardening de piloto):
+- Multi-tenant real isolado (RLS + testes E2E negativos)
+- RBAC validado no backend (owner / manager / cashier / waiter / kitchen)
+- Catálogo completo (simples, variável, pizza multi-sabor, opções, overrides)
+- Checkout público com idempotência e rate-limit (8/5min)
+- Impressão com 1 agente local + recuperação de jobs travados
+- Módulo Contador opcional (CSV/JSON, sem valor fiscal)
+- Suíte: 126/126 testes passando, typecheck limpo, 0 erros críticos no scan
+
+**Limitações conhecidas (comunicar ao cliente antes de vender):**
+- Sem emissão fiscal real (NFC-e/SAT/NF-e) — ver item 1
+- 1 impressora por restaurante — ver item 2
+- Sem onboarding assistido — ver Bloco E abaixo
+- Backup automático diário pela Lovable Cloud (7 dias de retenção padrão)
+- 5 warnings pré-existentes do linter aceitos como falsos positivos — ver item 4
+
+---
+
+## Bloco E — Onboarding e operação assistida do 1º cliente (próximo provável, **NÃO aprovado**)
+
+Escopo provável a discutir antes de implementar:
+- Checklist de onboarding (passo a passo do dono ao primeiro pedido)
+- Wizard de criação de cliente / restaurante / primeiro usuário
+- Catálogo modelo por tipo de negócio (pizzaria, hamburgueria, açaí, etc.)
+- Tela de saúde do restaurante (impressora online, pedidos hoje, erros recentes)
+- Teste ponta-a-ponta guiado (criar pedido fake, imprimir, cancelar)
+- Relatório comercial 1-pager (o que entrega / o que não entrega / preço sugerido)
+
+Status: **aguardando aprovação explícita do dono do produto.**
+Justificativa de prioridade: onboarding atrapalha **toda venda**, mesmo a primeira —
+mais alto ROI que fiscal ou multi-impressora neste momento.
+
+---
+
 ## 1. Fiscal real opcional (futuro)
 - Emissão de NFC-e / SAT / NF-e
 - Geração e assinatura de XML
