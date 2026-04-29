@@ -133,7 +133,8 @@ export default function PublicCheckout() {
           pizza_flavors: i.pizza_flavors ?? [],
         })),
         address: data.address,
-        notes: data.notes
+        notes: data.notes,
+        delivery_zone_id: data.delivery_zone_id
       });
 
       setOrderSuccess(result.order_id);
