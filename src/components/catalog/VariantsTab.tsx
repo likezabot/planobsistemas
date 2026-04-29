@@ -402,6 +402,7 @@ export default function VariantsTab() {
               </div>
             )}
 
+            {showInventoryFields && (
               <>
                 <Separator className="my-2" />
                 <div className="space-y-4 pt-2">
