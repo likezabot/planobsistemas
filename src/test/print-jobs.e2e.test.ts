@@ -67,13 +67,14 @@ describe('Print Jobs Security & Logic E2E', () => {
     expect(jobId1).toBeDefined();
 
     // 2. Try to create second automatic job with same payload (default payload)
-    const { error: error2 } = await adminClient.rpc('create_print_job_for_order', {
+    const { data: jobId2, error: error2 } = await adminClient.rpc('create_print_job_for_order', {
       p_order_id: testOrderId,
       p_source: 'auto'
     });
     
-    // In PostgreSQL, unique index violation on rpc might return a 23505 error
-    expect(error2).not.toBeNull();
+    // Now it should NOT fail, but return the same ID
+    expect(error2).toBeNull();
+    expect(jobId2).toBe(jobId1);
   });
 
   it('reprint creates a NEW job even if one exists', async () => {
