@@ -371,7 +371,37 @@ export default function VariantsTab() {
               </div>
             </div>
 
-            {showInventoryFields && (
+            {isPizzaProduct && (
+              <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Diâmetro (cm)</Label>
+                  <Input
+                    type="number"
+                    inputMode="decimal"
+                    value={diameterCm}
+                    onChange={e => setDiameterCm(e.target.value)}
+                    placeholder="Ex: 35"
+                    className="h-10 tabular-nums"
+                    data-testid="variant-diameter"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Fatias</Label>
+                  <Input
+                    type="number"
+                    value={slices}
+                    onChange={e => setSlices(e.target.value)}
+                    placeholder="Ex: 8"
+                    className="h-10 tabular-nums"
+                    data-testid="variant-slices"
+                  />
+                </div>
+                <p className="col-span-2 text-[10px] text-muted-foreground">
+                  Opcional. Aparece no cardápio público para o cliente saber o tamanho real da pizza.
+                </p>
+              </div>
+            )}
+
               <>
                 <Separator className="my-2" />
                 <div className="space-y-4 pt-2">
