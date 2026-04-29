@@ -85,7 +85,7 @@ describe('Checkout Security E2E', () => {
     const params = {
       _restaurant_slug: restaurantSlug,
       _customer_name: 'Idempotent User',
-      _customer_phone: '11999998888',
+      _customer_phone: `119${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: 'pickup',
       _payment_method: 'money',
       _idempotency_key: idempotencyKey,
@@ -110,7 +110,7 @@ describe('Checkout Security E2E', () => {
     const result = await rpcWithRetry(anonClient, 'create_public_order', {
       _restaurant_slug: restaurantSlug,
       _customer_name: 'Delivery Fail',
-      _customer_phone: '11999998888',
+      _customer_phone: `119${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: 'delivery',
       _payment_method: 'money',
       _idempotency_key: `e2e-fail-addr-${Date.now()}-${Math.random()}`,
@@ -133,7 +133,7 @@ describe('Checkout Security E2E', () => {
     const { error } = await rpcWithRetry(anonClient, 'create_public_order', {
       _restaurant_slug: 'e2e-public-off',
       _customer_name: 'Off Restaurant',
-      _customer_phone: '11999998888',
+      _customer_phone: `119${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: 'pickup',
       _payment_method: 'money',
       _idempotency_key: `e2e-fail-off-${Date.now()}`,
