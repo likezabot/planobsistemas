@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
-import { getRestaurantOrders, updateOrderStatus, OrderWithItems } from "@/lib/orders/queries";
+import { getRestaurantOrders, updateOrderStatus, reprintOrder, OrderWithItems } from "@/lib/orders/queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
