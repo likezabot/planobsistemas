@@ -75,11 +75,17 @@ export default function VariantsTab() {
   const [stockQuantity, setStockQuantity] = useState("0");
   const [lowStockAlert, setLowStockAlert] = useState("");
   const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+  const [diameterCm, setDiameterCm] = useState("");
+  const [slices, setSlices] = useState("");
   const [saving, setSaving] = useState(false);
 
   const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
   const inventoryMode = currentMembership?.restaurants.inventory_mode;
   const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
+
+  // Mostra campos de pizza só quando o produto selecionado é do tipo pizza
+  const selectedProduct = products.find((p) => p.id === selectedProductId);
+  const isPizzaProduct = selectedProduct?.type === "pizza";
 
   const canEdit = isAdminRole(currentMembership?.role);
 
@@ -173,7 +179,7 @@ export default function VariantsTab() {
       const costCents = parseBRLToCents(cost);
       setSaving(true);
       
-      const payload = {
+      const payload: Record<string, unknown> = {
         name: name.trim(),
         code: code.trim(),
         price_cents: priceCents,
@@ -184,10 +190,14 @@ export default function VariantsTab() {
         low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
         allow_out_of_stock_sale: allowOutOfStockSale,
       };
+      if (isPizzaProduct) {
+        payload.diameter_cm = diameterCm ? Number(diameterCm.replace(',', '.')) : null;
+        payload.slices = slices ? parseInt(slices, 10) : null;
+      }
 
       const res = editing
-        ? await updateVariant(editing.id, payload)
-        : await createVariant(payload);
+        ? await updateVariant(editing.id, payload as any)
+        : await createVariant(payload as any);
 
       if (res.error) throw res.error;
 
@@ -257,7 +267,7 @@ export default function VariantsTab() {
             </Select>
           </div>
           {selectedProductId && canEdit && (
-            <Button className="font-bold h-10 px-6 mt-5 md:mt-0" onClick={() => { setEditing(null); setName(""); setCode(""); setPrice(""); setCost(""); setOpen(true); }}>
+            <Button className="font-bold h-10 px-6 mt-5 md:mt-0" onClick={() => { setEditing(null); setName(""); setCode(""); setPrice(""); setCost(""); setDiameterCm(""); setSlices(""); setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false); setOpen(true); }}>
               <Plus className="w-4 h-4 mr-2" />
               Novo Tamanho
             </Button>
@@ -313,6 +323,8 @@ export default function VariantsTab() {
                             setStockQuantity(v.stock_quantity?.toString() || "0");
                             setLowStockAlert(v.low_stock_alert?.toString() || "");
                             setAllowOutOfStockSale(v.allow_out_of_stock_sale ?? false);
+                            setDiameterCm(v.diameter_cm != null ? String(v.diameter_cm).replace('.', ',') : "");
+                            setSlices(v.slices != null ? String(v.slices) : "");
                             setOpen(true);
                           }}>
                             <Edit2 className="w-3.5 h-3.5" />
@@ -358,6 +370,37 @@ export default function VariantsTab() {
                 <Input value={cost} onChange={e => setCost(e.target.value)} placeholder="0,00" className="h-10" />
               </div>
             </div>
+
+            {isPizzaProduct && (
+              <div className="grid grid-cols-2 gap-4 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Diâmetro (cm)</Label>
+                  <Input
+                    type="number"
+                    inputMode="decimal"
+                    value={diameterCm}
+                    onChange={e => setDiameterCm(e.target.value)}
+                    placeholder="Ex: 35"
+                    className="h-10 tabular-nums"
+                    data-testid="variant-diameter"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Fatias</Label>
+                  <Input
+                    type="number"
+                    value={slices}
+                    onChange={e => setSlices(e.target.value)}
+                    placeholder="Ex: 8"
+                    className="h-10 tabular-nums"
+                    data-testid="variant-slices"
+                  />
+                </div>
+                <p className="col-span-2 text-[10px] text-muted-foreground">
+                  Opcional. Aparece no cardápio público para o cliente saber o tamanho real da pizza.
+                </p>
+              </div>
+            )}
 
             {showInventoryFields && (
               <>

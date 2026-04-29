@@ -1,0 +1,52 @@
+{
+  "$schema_version": "1.0",
+  "_readme": "Modelo Lanchonete. Lanches simples + variações de tamanho + adicionais. NÃO usa módulo Pizza.",
+  "categories": [
+    { "code": "LAN", "name": "Lanches", "sort_order": 10, "active": true },
+    { "code": "POR", "name": "Porções", "sort_order": 20, "active": true },
+    { "code": "BEB", "name": "Bebidas", "sort_order": 30, "active": true },
+    { "code": "COM", "name": "Combos", "sort_order": 40, "active": true }
+  ],
+  "products": [
+    { "code": "LAN-XBU", "name": "X-Burger", "category_code": "LAN", "type": "variable", "price_cents": 1500, "active": true },
+    { "code": "LAN-XSA", "name": "X-Salada", "category_code": "LAN", "type": "variable", "price_cents": 1700, "active": true },
+    { "code": "LAN-XBA", "name": "X-Bacon", "category_code": "LAN", "type": "variable", "price_cents": 1900, "active": true },
+    { "code": "POR-FRI", "name": "Batata Frita", "category_code": "POR", "type": "variable", "price_cents": 1200, "active": true },
+    { "code": "BEB-REF", "name": "Refrigerante Lata", "category_code": "BEB", "type": "simple", "price_cents": 600, "active": true },
+    { "code": "BEB-SUC", "name": "Suco Natural", "category_code": "BEB", "type": "simple", "price_cents": 900, "active": true },
+    { "code": "COM-XBU", "name": "Combo X-Burger", "category_code": "COM", "type": "simple", "price_cents": 2500, "active": true, "description": "X-Burger + Batata P + Refri" }
+  ],
+  "variants": [
+    { "product_code": "LAN-XBU", "code": "S", "name": "Simples", "price_cents": 1500, "active": true },
+    { "product_code": "LAN-XBU", "code": "D", "name": "Duplo", "price_cents": 2200, "active": true },
+    { "product_code": "LAN-XSA", "code": "S", "name": "Simples", "price_cents": 1700, "active": true },
+    { "product_code": "LAN-XSA", "code": "D", "name": "Duplo", "price_cents": 2400, "active": true },
+    { "product_code": "LAN-XBA", "code": "S", "name": "Simples", "price_cents": 1900, "active": true },
+    { "product_code": "LAN-XBA", "code": "D", "name": "Duplo", "price_cents": 2700, "active": true },
+    { "product_code": "POR-FRI", "code": "P", "name": "Pequena", "price_cents": 1200, "active": true },
+    { "product_code": "POR-FRI", "code": "G", "name": "Grande", "price_cents": 1900, "active": true }
+  ],
+  "option_groups": [
+    { "code": "EXTRA", "name": "Adicionais", "min_options": 0, "max_options": 5, "is_required": false, "active": true },
+    { "code": "MOLHO", "name": "Molhos", "min_options": 0, "max_options": 3, "is_required": false, "active": true }
+  ],
+  "option_items": [
+    { "group_code": "EXTRA", "code": "BAC", "name": "Bacon extra", "price_cents": 400, "active": true },
+    { "group_code": "EXTRA", "code": "QUE", "name": "Queijo extra", "price_cents": 300, "active": true },
+    { "group_code": "EXTRA", "code": "OVO", "name": "Ovo", "price_cents": 200, "active": true },
+    { "group_code": "MOLHO", "code": "MAI", "name": "Maionese da casa", "price_cents": 0, "active": true },
+    { "group_code": "MOLHO", "code": "BAR", "name": "Barbecue", "price_cents": 100, "active": true },
+    { "group_code": "MOLHO", "code": "MOS", "name": "Mostarda", "price_cents": 0, "active": true }
+  ],
+  "product_option_groups": [
+    { "product_code": "LAN-XBU", "group_code": "EXTRA" },
+    { "product_code": "LAN-XBU", "group_code": "MOLHO" },
+    { "product_code": "LAN-XSA", "group_code": "EXTRA" },
+    { "product_code": "LAN-XSA", "group_code": "MOLHO" },
+    { "product_code": "LAN-XBA", "group_code": "EXTRA" },
+    { "product_code": "LAN-XBA", "group_code": "MOLHO" }
+  ],
+  "pizza_flavors": [],
+  "product_pizza_flavors": [],
+  "pizza_configs": []
+}

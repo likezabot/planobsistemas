@@ -299,6 +299,7 @@ function FlavorDialog({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [ingredients, setIngredients] = useState("");
   const [saving, setSaving] = useState(false);
   const { currentMembership } = useRestaurant();
   const [trackStock, setTrackStock] = useState(false);
@@ -315,6 +316,7 @@ function FlavorDialog({
       setName(flavor.name);
       setDescription(flavor.description ?? "");
       setCategory(flavor.category ?? "");
+      setIngredients((flavor as any).ingredients ?? "");
       setTrackStock(flavor.track_stock ?? false);
       setStockQuantity(flavor.stock_quantity?.toString() || "0");
       setLowStockAlert(flavor.low_stock_alert?.toString() || "");
@@ -323,6 +325,7 @@ function FlavorDialog({
       setName("");
       setDescription("");
       setCategory("");
+      setIngredients("");
       setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [flavor, open]);
@@ -333,10 +336,11 @@ function FlavorDialog({
       return;
     }
     setSaving(true);
-    const payload = {
+    const payload: any = {
       name: name.trim(),
       description: description.trim() || null,
       category: category.trim() || null,
+      ingredients: ingredients.trim() || null,
       track_stock: trackStock,
       stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
       low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
@@ -384,6 +388,19 @@ function FlavorDialog({
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
             />
+          </div>
+          <div>
+            <Label>Ingredientes (opcional)</Label>
+            <Textarea
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+              rows={2}
+              placeholder="Ex: Molho de tomate, mussarela, manjericão"
+              data-testid="flavor-ingredients"
+            />
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Aparece para o cliente no cardápio público.
+            </p>
           </div>
 
           {showInventoryFields && (

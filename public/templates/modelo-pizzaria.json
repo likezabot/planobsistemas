@@ -1,0 +1,67 @@
+{
+  "$schema_version": "1.0",
+  "_readme": "Modelo Pizzaria. Requer pizza_module_enabled=true. Sabores são pizza_flavors (NÃO products simples). Tamanhos = product_variants vinculados ao produto pizza. Bordas = option_items com override por tamanho.",
+  "categories": [
+    { "code": "PIZ", "name": "Pizzas", "sort_order": 10, "active": true },
+    { "code": "BEB", "name": "Bebidas", "sort_order": 20, "active": true }
+  ],
+  "products": [
+    {
+      "code": "PIZ-MNT",
+      "name": "Monte sua pizza",
+      "category_code": "PIZ",
+      "type": "pizza",
+      "price_cents": 0,
+      "active": true,
+      "description": "Escolha tamanho, sabores e borda."
+    },
+    { "code": "BEB-REF2L", "name": "Refrigerante 2L", "category_code": "BEB", "type": "simple", "price_cents": 1500, "active": true }
+  ],
+  "variants": [
+    { "product_code": "PIZ-MNT", "code": "M", "name": "Média (30cm — 8 fatias)", "price_cents": 4500, "diameter_cm": 30, "slices": 8, "active": true },
+    { "product_code": "PIZ-MNT", "code": "G", "name": "Grande (35cm — 10 fatias)", "price_cents": 5500, "diameter_cm": 35, "slices": 10, "active": true },
+    { "product_code": "PIZ-MNT", "code": "F", "name": "Família (40cm — 12 fatias)", "price_cents": 6800, "diameter_cm": 40, "slices": 12, "active": true }
+  ],
+  "option_groups": [
+    { "code": "BORDA", "name": "Borda", "min_options": 0, "max_options": 1, "is_required": false, "active": true }
+  ],
+  "option_items": [
+    { "group_code": "BORDA", "code": "BOR-CAT", "name": "Catupiry", "price_cents": 800, "active": true,
+      "price_overrides": [
+        { "variant_code": "G", "price_cents": 1000 },
+        { "variant_code": "F", "price_cents": 1200 }
+      ] },
+    { "group_code": "BORDA", "code": "BOR-CHE", "name": "Cheddar", "price_cents": 800, "active": true }
+  ],
+  "product_option_groups": [
+    { "product_code": "PIZ-MNT", "group_code": "BORDA" }
+  ],
+  "pizza_flavors": [
+    { "code": "SAB-MUSS", "name": "Mussarela", "category": "Tradicional", "ingredients": "Molho de tomate, mussarela, orégano", "active": true,
+      "prices": [
+        { "variant_code": "M", "price_cents": 0 },
+        { "variant_code": "G", "price_cents": 0 },
+        { "variant_code": "F", "price_cents": 0 }
+      ] },
+    { "code": "SAB-CALA", "name": "Calabresa", "category": "Tradicional", "ingredients": "Molho, mussarela, calabresa, cebola", "active": true,
+      "prices": [
+        { "variant_code": "M", "price_cents": 0 },
+        { "variant_code": "G", "price_cents": 0 },
+        { "variant_code": "F", "price_cents": 500 }
+      ] },
+    { "code": "SAB-PORT", "name": "Portuguesa", "category": "Especial", "ingredients": "Presunto, ovo, cebola, ervilha, mussarela", "active": true,
+      "prices": [
+        { "variant_code": "M", "price_cents": 500 },
+        { "variant_code": "G", "price_cents": 700 },
+        { "variant_code": "F", "price_cents": 900 }
+      ] }
+  ],
+  "product_pizza_flavors": [
+    { "product_code": "PIZ-MNT", "flavor_code": "SAB-MUSS" },
+    { "product_code": "PIZ-MNT", "flavor_code": "SAB-CALA" },
+    { "product_code": "PIZ-MNT", "flavor_code": "SAB-PORT" }
+  ],
+  "pizza_configs": [
+    { "product_code": "PIZ-MNT", "max_flavors": 2, "price_rule": "max", "allow_edge_customization": true }
+  ]
+}
