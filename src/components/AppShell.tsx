@@ -68,7 +68,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile Overlay - Solid Tint */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-black z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
