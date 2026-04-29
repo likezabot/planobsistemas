@@ -12,10 +12,6 @@ async function printJob(job, config) {
     throw new Error('Invalid payload: missing order id');
   }
 
-  if (payload.force_fail) {
-    throw new Error('Simulated print failure');
-  }
-
   if (mode === 'dry_run') {
     return printDryRun(job);
   } else if (mode === 'spooler_powershell') {
