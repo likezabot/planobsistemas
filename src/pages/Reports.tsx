@@ -118,7 +118,10 @@ export default function Reports() {
       <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary tracking-tight">Relatórios de Gestão</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-secondary tracking-tight">Relatórios de Gestão</h1>
+              <InfoBalloon text="Analise o desempenho do seu restaurante através de dados visuais. Estes relatórios são baseados no histórico de pedidos concluídos." />
+            </div>
             <p className="text-muted-foreground text-sm mt-1">Análise visual de performance e tendências.</p>
           </div>
           <Select value={days} onValueChange={setDays}>
