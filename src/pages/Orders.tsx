@@ -77,9 +77,11 @@ export default function OrdersPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
+      <AppShell>
+        <div className="flex items-center justify-center h-[50vh]">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </AppShell>
     );
   }
 
@@ -149,7 +151,7 @@ export default function OrdersPage() {
   );
 
   return (
-    <div className="p-4 pb-20 max-w-5xl mx-auto">
+    <AppShell>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Pedidos</h1>
         <Button variant="outline" size="sm" onClick={() => queryClient.invalidateQueries({ queryKey: ["orders"] })}>
@@ -293,6 +295,6 @@ export default function OrdersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </AppShell>
   );
 }
