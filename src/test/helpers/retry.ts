@@ -8,8 +8,8 @@
 
 const RETRYABLE_CODES = new Set(['PGRST002']);
 
-const DEFAULT_MAX_ATTEMPTS = 4;
-const DEFAULT_DELAY_MS = 500;
+const DEFAULT_MAX_ATTEMPTS = 6;
+const DEFAULT_DELAY_MS = 800;
 
 function isRetryableError(error: any): boolean {
   if (!error) return false;
@@ -42,11 +42,13 @@ export async function withRetry<T extends { error: any; data: any }>(
       return result;
     }
     if (attempt < max) {
+      // Progressive backoff: 800ms, 1200ms, 1600ms, 2000ms, 2400ms (cap ~2.5s)
+      const wait = Math.min(delay + (attempt - 1) * 400, 2500);
       // eslint-disable-next-line no-console
       console.warn(
-        `[withRetry] PGRST002 schema cache (attempt ${attempt}/${max}); retrying in ${delay}ms`
+        `[withRetry] PGRST002 schema cache (attempt ${attempt}/${max}); retrying in ${wait}ms`
       );
-      await sleep(delay);
+      await sleep(wait);
     }
   }
   return lastResult as T;
