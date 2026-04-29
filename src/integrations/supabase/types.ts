@@ -601,6 +601,36 @@ export type Database = {
             }
             Returns: boolean
           }
+      get_pending_print_jobs: {
+        Args: {
+          p_after_timestamp?: string
+          p_agent_id: string
+          p_restaurant_id: string
+          p_secret_key: string
+        }
+        Returns: {
+          agent_id: string | null
+          attempts: number
+          claimed_at: string | null
+          created_at: string | null
+          id: string
+          last_error: string | null
+          order_id: string
+          payload: Json
+          payload_hash: string
+          printed_at: string | null
+          restaurant_id: string
+          source: string
+          status: string
+          tenant_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "print_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_public_categories: {
         Args: { _slug: string }
         Returns: {
