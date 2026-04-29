@@ -73,8 +73,20 @@ por desenho, o ponto de entrada público controlado.
 | Checkout só cria pedido se `public_menu_enabled=true` | ✅ | `checkout.e2e.test.ts` |
 | Telefone é normalizado (remove formatação) | ✅ | RPC logic |
 | Anônimo NÃO consegue INSERT direto em `orders` ou `order_items` | ✅ | `checkout.e2e.test.ts` |
+| Carrinho vazio não gera pedido | ✅ | `checkout.e2e.test.ts` |
 
-## 5. Genéricos
+## 5. Pedidos / PDV (autenticado)
+
+| Item | Status | Onde |
+|---|---|---|
+| Membro do restaurante A não vê pedido do restaurante B | ✅ | RLS `Members can view orders` |
+| Anônimo NÃO lê `orders` ou `order_items` | ✅ | `orders-pdv.e2e.test.ts` |
+| Mudança de status via RPC segura `update_order_status` | ✅ | RPC logic + Audit log |
+| Cancelamento exige motivo obrigatório | ✅ | RPC check |
+| Bloqueio de reativação de pedido cancelado/concluído | ✅ | RPC logic |
+| Audit log gerado para mudanças de status | ✅ | `audit_log` verification |
+
+## 6. Genéricos
 
 | Item | Status |
 |---|---|
