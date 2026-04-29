@@ -168,7 +168,8 @@ export default function PublicCheckout() {
         })),
         address: data.address,
         notes: data.notes,
-        delivery_zone_id: data.delivery_zone_id
+        delivery_zone_id: data.delivery_zone_id,
+        coupon_code: appliedCoupon?.code
       });
 
       setOrderSuccess(result.order_id);
