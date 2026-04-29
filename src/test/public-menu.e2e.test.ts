@@ -97,7 +97,7 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   // -------- 3. RPCs públicas filtram corretamente --------
 
   it("get_public_restaurant retorna o restaurante quando ENABLED", async () => {
-    const { data, error } = await anon!.rpc("get_public_restaurant", { _slug: "e2e-public-on" });
+    const { data, error } = await rpcWithRetry(anon!, "get_public_restaurant", { _slug: "e2e-public-on" });
     expect(error).toBeNull();
     expect(Array.isArray(data)).toBe(true);
     expect(data!.length).toBe(1);
@@ -105,14 +105,14 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   });
 
   it("get_public_restaurant retorna VAZIO quando public_menu_enabled=false", async () => {
-    const { data, error } = await anon!.rpc("get_public_restaurant", { _slug: "e2e-public-off" });
+    const { data, error } = await rpcWithRetry(anon!, "get_public_restaurant", { _slug: "e2e-public-off" });
     expect(error).toBeNull();
     expect(Array.isArray(data)).toBe(true);
     expect(data!.length).toBe(0);
   });
 
   it("get_public_products NÃO retorna produto active=false", async () => {
-    const { data, error } = await anon!.rpc("get_public_products", { _slug: "e2e-public-on" });
+    const { data, error } = await rpcWithRetry(anon!, "get_public_products", { _slug: "e2e-public-on" });
     expect(error).toBeNull();
     const names = (data ?? []).map((p: { name: string }) => p.name);
     expect(names).toContain("E2E Produto Ativo");
@@ -120,13 +120,13 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   });
 
   it("get_public_products NÃO retorna produto cuja categoria está inativa", async () => {
-    const { data } = await anon!.rpc("get_public_products", { _slug: "e2e-public-on" });
+    const { data } = await rpcWithRetry(anon!, "get_public_products", { _slug: "e2e-public-on" });
     const names = (data ?? []).map((p: { name: string }) => p.name);
     expect(names).not.toContain("E2E Produto em Cat Inativa");
   });
 
   it("get_public_categories NÃO inclui categoria com active=false", async () => {
-    const { data, error } = await anon!.rpc("get_public_categories", { _slug: "e2e-public-on" });
+    const { data, error } = await rpcWithRetry(anon!, "get_public_categories", { _slug: "e2e-public-on" });
     expect(error).toBeNull();
     const names = (data ?? []).map((c: { name: string }) => c.name);
     expect(names).toContain("E2E Categoria Ativa");
@@ -134,7 +134,7 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   });
 
   it("get_public_products NÃO devolve cost_cents nem tenant_id", async () => {
-    const { data } = await anon!.rpc("get_public_products", { _slug: "e2e-public-on" });
+    const { data } = await rpcWithRetry(anon!, "get_public_products", { _slug: "e2e-public-on" });
     expect(Array.isArray(data)).toBe(true);
     for (const row of data!) {
       const r = row as Record<string, unknown>;
@@ -145,13 +145,12 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   });
 
   it("get_public_products NÃO vaza produtos do restaurante OFF", async () => {
-    const { data } = await anon!.rpc("get_public_products", { _slug: "e2e-public-off" });
-    // restaurante desabilitado → RPC já filtra public_menu_enabled=true
+    const { data } = await rpcWithRetry(anon!, "get_public_products", { _slug: "e2e-public-off" });
     expect((data ?? []).length).toBe(0);
   });
 
   it("isolamento por slug: pedir slug A não devolve produto de B", async () => {
-    const { data } = await anon!.rpc("get_public_products", { _slug: "e2e-public-on" });
+    const { data } = await rpcWithRetry(anon!, "get_public_products", { _slug: "e2e-public-on" });
     const names = (data ?? []).map((p: { name: string }) => p.name);
     expect(names).not.toContain("E2E Produto OFF");
   });
