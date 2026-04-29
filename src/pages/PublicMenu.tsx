@@ -300,7 +300,7 @@ function ProductCard({
             className="w-full h-full object-cover transition-transform group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted/30 text-muted-foreground">
+          <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
             <Plus className="w-5 h-5 opacity-20" />
           </div>
         )}
