@@ -440,12 +440,29 @@ export default function PublicCheckout() {
                       )}
                     </div>
                   ))}
-                  {orderType === 'delivery' && selectedZone && (
-                    <div className="flex justify-between items-center text-sm mb-3">
-                      <span className="text-muted-foreground font-bold uppercase text-[10px]">Taxa de Entrega ({selectedZone.name})</span>
-                      <span className="tabular-nums font-bold text-secondary">{centsToBRL(selectedZone.fee_cents)}</span>
+                  <div className="space-y-3 mb-6">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground font-bold uppercase text-[10px]">Subtotal</span>
+                      <span className="tabular-nums font-bold text-secondary">{centsToBRL(subtotal)}</span>
                     </div>
-                  )}
+
+                    {appliedCoupon && (
+                      <div className="flex justify-between items-center text-sm">
+                        <div className="flex items-center gap-1.5">
+                          <Ticket className="w-3 h-3 text-success" />
+                          <span className="text-success font-bold uppercase text-[10px]">Desconto ({appliedCoupon.code})</span>
+                        </div>
+                        <span className="tabular-nums font-bold text-success">-{centsToBRL(appliedCoupon.discount_cents)}</span>
+                      </div>
+                    )}
+
+                    {orderType === 'delivery' && selectedZone && (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-muted-foreground font-bold uppercase text-[10px]">Taxa de Entrega ({selectedZone.name})</span>
+                        <span className="tabular-nums font-bold text-secondary">{centsToBRL(selectedZone.fee_cents)}</span>
+                      </div>
+                    )}
+                  </div>
 
                   <div className="border-t border-dashed border-border pt-4 flex justify-between items-center">
                     <span className="text-base font-bold text-secondary uppercase tracking-widest">Total</span>
