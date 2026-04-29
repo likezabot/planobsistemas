@@ -857,6 +857,7 @@ export type Database = {
         Returns: {
           category_id: string
           description: string
+          has_options: boolean
           id: string
           image_url: string
           name: string
