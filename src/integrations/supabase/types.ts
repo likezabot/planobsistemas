@@ -961,8 +961,8 @@ export type Database = {
           _idempotency_key: string
           _items: Json
           _notes?: string
-          _order_type: string
-          _payment_method: string
+          _order_type: Database["public"]["Enums"]["order_type"]
+          _payment_method: Database["public"]["Enums"]["payment_method"]
           _restaurant_slug: string
         }
         Returns: Json
