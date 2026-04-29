@@ -473,6 +473,34 @@ export default function PublicCheckout() {
                 </div>
               </div>
 
+              <div className="bg-white rounded-xl border border-border shadow-sm p-4 space-y-4">
+                <div className="flex items-center gap-3">
+                   <Ticket className="w-5 h-5 text-primary" />
+                   <h3 className="font-bold text-secondary text-sm">Cupom de Desconto</h3>
+                </div>
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="CÓDIGO" 
+                    className="h-11 rounded-xl uppercase font-black tracking-widest border-border bg-white"
+                    {...form.register("coupon_code")}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="secondary"
+                    className="h-11 rounded-xl font-bold px-6"
+                    onClick={handleApplyCoupon}
+                    disabled={isValidatingCoupon || !couponCode}
+                  >
+                    {isValidatingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Aplicar"}
+                  </Button>
+                </div>
+                {appliedCoupon && (
+                  <p className="text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Cupom {appliedCoupon.code} aplicado!
+                  </p>
+                )}
+              </div>
+
               <div className="space-y-1.5">
                 <Label htmlFor="notes" className="text-xs font-bold text-secondary uppercase tracking-wider">Observações?</Label>
                 <Textarea 
