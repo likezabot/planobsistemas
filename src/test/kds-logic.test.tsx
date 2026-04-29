@@ -7,6 +7,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { BrowserRouter } from 'react-router-dom';
 
 // Mocks
+vi.mock('@/lib/auth/AuthProvider', () => ({
+  useAuth: vi.fn(() => ({
+    user: { email: 'kitchen@example.com' },
+    signOut: vi.fn(),
+  })),
+}));
+
 vi.mock('@/lib/auth/RestaurantProvider', () => ({
   useRestaurant: vi.fn(),
 }));
