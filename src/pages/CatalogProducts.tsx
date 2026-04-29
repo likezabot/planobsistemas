@@ -185,12 +185,12 @@ export default function CatalogProducts() {
                       </div>
                     </div>
                     
-                    <div className="p-4 flex-1 flex flex-col">
+                    <div className="p-3 sm:p-4 flex-1 flex flex-col min-w-0">
                       <div className="flex justify-between items-start gap-2 mb-2">
-                        <div className="min-w-0">
-                          <h3 className="font-bold text-secondary text-sm leading-tight group-hover:text-primary transition-colors truncate">{p.name}</h3>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-secondary text-sm leading-tight group-hover:text-primary transition-colors truncate" title={p.name}>{p.name}</h3>
                           {cat && (
-                            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{cat.name}</span>
+                            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block truncate">{cat.name}</span>
                           )}
                         </div>
                         <div className="text-right shrink-0">
@@ -200,19 +200,19 @@ export default function CatalogProducts() {
                       </div>
 
                       {p.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed">{p.description}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-tight h-8">{p.description}</p>
                       )}
 
-                      <div className="mt-auto pt-3 border-t border-border flex justify-between items-center">
-                        <div className="flex gap-1">
+                      <div className="mt-auto pt-2 border-t border-border flex justify-between items-center">
+                        <div className="flex gap-1 overflow-hidden">
                           {p.type && p.type !== 'simple' && (
-                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted/50 border-none">
+                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted/50 border-none truncate">
                               {p.type}
                             </Badge>
                           )}
                         </div>
                         
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 shrink-0">
                           {canEdit && (
                             <>
                               <Button 
