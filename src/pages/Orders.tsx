@@ -26,7 +26,8 @@ import {
   Package, 
   MapPin,
   ClipboardList,
-  Phone
+  Phone,
+  Printer
 } from "lucide-react";
 
 export default function OrdersPage() {
