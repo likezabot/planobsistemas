@@ -171,7 +171,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === cat.id
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  : "bg-muted text-muted-foreground hover:bg-secondary hover:text-white"
               )}
             >
               {cat.name}
