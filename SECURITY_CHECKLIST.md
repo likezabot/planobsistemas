@@ -18,8 +18,12 @@ Convenção:
 | Item | Status | Onde |
 |---|---|---|
 | Toda query operacional exige `restaurant_id` em escopo | ✅ | `useRequiredRestaurantId`, `multi-tenant-isolation.test.tsx` |
-| Usuário do restaurante A não vê produto do restaurante B | 🟡 | RLS no banco; falta E2E com 2 contas reais → **BLOQUEADOR** |
-| Usuário do restaurante A não vê pedidos / membros / auditoria de B | ❌ | depende dos próximos módulos |
+| Usuário do restaurante A não vê produto do restaurante B | ✅ | `multi-tenant-isolation.e2e.test.ts` (Bloco D) |
+| Usuário do restaurante A não vê pedidos / print_jobs / inventory / audit_log de B | ✅ | `multi-tenant-isolation.e2e.test.ts` (Bloco D) |
+| Usuário do restaurante A não edita catálogo / pedidos / flags de B | ✅ | `multi-tenant-isolation.e2e.test.ts` (Bloco D) |
+| RBAC negativo: waiter/cashier/kitchen NÃO escrevem catálogo | ✅ | `rbac-catalog-negative.e2e.test.ts` (Bloco D) |
+| Rate-limit em `create_public_order` (8/5min por loja+telefone) | ✅ | `rate-limit.e2e.test.ts` (Bloco D) |
+| Recuperação de print_jobs presos (>5min em printing) | ✅ | `print-recovery.e2e.test.ts` (Bloco D) |
 
 ## 2. Cardápio Público (anônimo)
 
