@@ -65,6 +65,73 @@ export type Database = {
           },
         ]
       }
+      inventory_logs: {
+        Row: {
+          change_amount: number
+          created_at: string
+          created_by: string | null
+          id: string
+          item_id: string
+          item_type: string
+          new_quantity: number
+          old_quantity: number
+          order_id: string | null
+          reason: string
+          restaurant_id: string
+          tenant_id: string
+        }
+        Insert: {
+          change_amount: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          item_id: string
+          item_type: string
+          new_quantity: number
+          old_quantity: number
+          order_id?: string | null
+          reason: string
+          restaurant_id: string
+          tenant_id: string
+        }
+        Update: {
+          change_amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          item_id?: string
+          item_type?: string
+          new_quantity?: number
+          old_quantity?: number
+          order_id?: string | null
+          reason?: string
+          restaurant_id?: string
+          tenant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_logs_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_logs_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       option_groups: {
         Row: {
           active: boolean
@@ -157,38 +224,50 @@ export type Database = {
       option_items: {
         Row: {
           active: boolean
+          allow_out_of_stock_sale: boolean | null
           code: string | null
           cost_cents: number | null
           created_at: string
           group_id: string
           id: string
+          low_stock_alert: number | null
           name: string
           price_cents: number
           sort_order: number | null
+          stock_quantity: number | null
+          track_stock: boolean | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           code?: string | null
           cost_cents?: number | null
           created_at?: string
           group_id: string
           id?: string
+          low_stock_alert?: number | null
           name: string
           price_cents?: number
           sort_order?: number | null
+          stock_quantity?: number | null
+          track_stock?: boolean | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           code?: string | null
           cost_cents?: number | null
           created_at?: string
           group_id?: string
           id?: string
+          low_stock_alert?: number | null
           name?: string
           price_cents?: number
           sort_order?: number | null
+          stock_quantity?: number | null
+          track_stock?: boolean | null
           updated_at?: string
         }
         Relationships: [
@@ -405,44 +484,56 @@ export type Database = {
       pizza_flavors: {
         Row: {
           active: boolean
+          allow_out_of_stock_sale: boolean | null
           category: string | null
           code: string | null
           created_at: string
           description: string | null
           id: string
           image_url: string | null
+          low_stock_alert: number | null
           name: string
           restaurant_id: string
           sort_order: number
+          stock_quantity: number | null
           tenant_id: string
+          track_stock: boolean | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           category?: string | null
           code?: string | null
           created_at?: string
           description?: string | null
           id?: string
           image_url?: string | null
+          low_stock_alert?: number | null
           name: string
           restaurant_id: string
           sort_order?: number
+          stock_quantity?: number | null
           tenant_id: string
+          track_stock?: boolean | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           category?: string | null
           code?: string | null
           created_at?: string
           description?: string | null
           id?: string
           image_url?: string | null
+          low_stock_alert?: number | null
           name?: string
           restaurant_id?: string
           sort_order?: number
+          stock_quantity?: number | null
           tenant_id?: string
+          track_stock?: boolean | null
           updated_at?: string
         }
         Relationships: []
@@ -681,38 +772,50 @@ export type Database = {
       product_variants: {
         Row: {
           active: boolean
+          allow_out_of_stock_sale: boolean | null
           code: string | null
           cost_cents: number | null
           created_at: string
           id: string
+          low_stock_alert: number | null
           name: string
           price_cents: number
           product_id: string
           sort_order: number | null
+          stock_quantity: number | null
+          track_stock: boolean | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           code?: string | null
           cost_cents?: number | null
           created_at?: string
           id?: string
+          low_stock_alert?: number | null
           name: string
           price_cents?: number
           product_id: string
           sort_order?: number | null
+          stock_quantity?: number | null
+          track_stock?: boolean | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           code?: string | null
           cost_cents?: number | null
           created_at?: string
           id?: string
+          low_stock_alert?: number | null
           name?: string
           price_cents?: number
           product_id?: string
           sort_order?: number | null
+          stock_quantity?: number | null
+          track_stock?: boolean | null
           updated_at?: string
         }
         Relationships: [
@@ -728,6 +831,7 @@ export type Database = {
       products: {
         Row: {
           active: boolean
+          allow_out_of_stock_sale: boolean | null
           category_id: string | null
           code: string | null
           cost_cents: number
@@ -735,16 +839,20 @@ export type Database = {
           description: string | null
           id: string
           image_url: string | null
+          low_stock_alert: number | null
           name: string
           price_cents: number
           restaurant_id: string
           sort_order: number
+          stock_quantity: number | null
           tenant_id: string
+          track_stock: boolean | null
           type: Database["public"]["Enums"]["product_type"] | null
           updated_at: string
         }
         Insert: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           category_id?: string | null
           code?: string | null
           cost_cents?: number
@@ -752,16 +860,20 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          low_stock_alert?: number | null
           name: string
           price_cents?: number
           restaurant_id: string
           sort_order?: number
+          stock_quantity?: number | null
           tenant_id: string
+          track_stock?: boolean | null
           type?: Database["public"]["Enums"]["product_type"] | null
           updated_at?: string
         }
         Update: {
           active?: boolean
+          allow_out_of_stock_sale?: boolean | null
           category_id?: string | null
           code?: string | null
           cost_cents?: number
@@ -769,11 +881,14 @@ export type Database = {
           description?: string | null
           id?: string
           image_url?: string | null
+          low_stock_alert?: number | null
           name?: string
           price_cents?: number
           restaurant_id?: string
           sort_order?: number
+          stock_quantity?: number | null
           tenant_id?: string
+          track_stock?: boolean | null
           type?: Database["public"]["Enums"]["product_type"] | null
           updated_at?: string
         }
@@ -871,6 +986,8 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          inventory_enabled: boolean | null
+          inventory_mode: string | null
           name: string
           public_menu_enabled: boolean
           slug: string
@@ -881,6 +998,8 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          inventory_enabled?: boolean | null
+          inventory_mode?: string | null
           name: string
           public_menu_enabled?: boolean
           slug: string
@@ -891,6 +1010,8 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          inventory_enabled?: boolean | null
+          inventory_mode?: string | null
           name?: string
           public_menu_enabled?: boolean
           slug?: string
@@ -1097,6 +1218,18 @@ export type Database = {
           _new_status: Database["public"]["Enums"]["order_status"]
           _order_id: string
           _reason?: string
+        }
+        Returns: undefined
+      }
+      update_stock: {
+        Args: {
+          p_created_by?: string
+          p_item_id: string
+          p_item_type: string
+          p_new_quantity: number
+          p_order_id?: string
+          p_reason: string
+          p_restaurant_id: string
         }
         Returns: undefined
       }
