@@ -15,6 +15,7 @@ import Orders from "./pages/Orders.tsx";
 import PrintControl from "./pages/PrintControl.tsx";
 import Accounting from "./pages/Accounting.tsx";
 import KDS from "./pages/KDS.tsx";
+import Reports from "./pages/Reports.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
