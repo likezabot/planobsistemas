@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { getRestaurantOrders, updateOrderStatus, OrderWithItems } from "@/lib/orders/queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { centsToBRL } from "@/lib/catalog/money";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { AppShell } from "@/components/AppShell";
 import {
   Dialog,
   DialogContent,
@@ -23,13 +24,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { 
   Loader2, 
   Package, 
-  Clock, 
-  CheckCircle2, 
-  XCircle, 
-  ChevronRight,
-  Phone,
   MapPin,
-  ClipboardList
+  ClipboardList,
+  Phone
 } from "lucide-react";
 
 export default function OrdersPage() {
