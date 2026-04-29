@@ -41,6 +41,30 @@ import {
   Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
+
+function InfoBalloon({ text }: { text: string }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="inline-flex items-center justify-center ml-1 cursor-help text-primary hover:text-primary/80 transition-colors">
+            <Info className="w-3.5 h-3.5" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-secondary text-white border-none p-3 max-w-xs shadow-xl">
+          <p className="text-xs leading-relaxed font-medium">{text}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 
 export default function OrdersPage() {
   const { currentRestaurantId } = useRestaurant();
