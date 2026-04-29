@@ -85,9 +85,11 @@ export default function Catalog() {
             <TabsContent value="categorias">
               <CategoriesTab />
             </TabsContent>
-            <TabsContent value="pizzas">
-              <PizzasTab />
-            </TabsContent>
+            {showPizzaTab && (
+              <TabsContent value="pizzas">
+                <PizzasTab />
+              </TabsContent>
+            )}
             <TabsContent value="variacoes">
               <VariantsTab />
             </TabsContent>
