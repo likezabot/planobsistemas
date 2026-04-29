@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { getRestaurantOrders, updateOrderStatus, reprintOrder, OrderWithItems } from "@/lib/orders/queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +11,9 @@ import { centsToBRL } from "@/lib/catalog/money";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AppShell } from "@/components/AppShell";
+import { supabase } from "@/integrations/supabase/client";
+import { useSearchParams } from "react-router-dom";
+import { NewOrderDrawer } from "@/components/orders/NewOrderDrawer";
 import {
   Dialog,
   DialogContent,
@@ -34,13 +37,17 @@ import {
   AlertCircle,
   Hash,
   ShoppingBag,
-  Truck
+  Truck,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function OrdersPage() {
   const { currentRestaurantId } = useRestaurant();
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isNewOrderRequested = searchParams.get("novo") === "1";
+  
   const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
@@ -51,8 +58,31 @@ export default function OrdersPage() {
     queryKey: ["orders", currentRestaurantId],
     queryFn: () => getRestaurantOrders(currentRestaurantId!),
     enabled: !!currentRestaurantId,
-    refetchInterval: 5000, 
   });
+
+  useEffect(() => {
+    if (!currentRestaurantId) return;
+
+    const channel = supabase
+      .channel(`orders-${currentRestaurantId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: `restaurant_id=eq.${currentRestaurantId}`,
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["orders", currentRestaurantId] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentRestaurantId, queryClient]);
 
   const statusMutation = useMutation({
     mutationFn: ({ orderId, status, reason }: { orderId: string; status: any; reason?: string }) =>
@@ -145,16 +175,37 @@ export default function OrdersPage() {
 
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-secondary">Monitor de Pedidos</h1>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="rounded-lg h-9 border-border"
-            onClick={() => queryClient.invalidateQueries({ queryKey: ["orders"] })}
-          >
-            <Loader2 className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
-            Atualizar
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              className="rounded-lg h-9 font-bold bg-primary text-white"
+              size="sm"
+              onClick={() => setSearchParams({ novo: "1" })}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Pedido
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="rounded-lg h-9 border-border"
+              onClick={() => queryClient.invalidateQueries({ queryKey: ["orders"] })}
+            >
+              <Loader2 className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
+              Atualizar
+            </Button>
+          </div>
         </div>
+
+        <NewOrderDrawer 
+          open={isNewOrderRequested} 
+          onOpenChange={(open) => {
+            if (!open) {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete("novo");
+              setSearchParams(newParams);
+            }
+          }} 
+        />
 
         <Tabs defaultValue="new" className="w-full">
           <TabsList className="grid grid-cols-4 w-full bg-white border border-border p-1 rounded-xl h-12 mb-6">
