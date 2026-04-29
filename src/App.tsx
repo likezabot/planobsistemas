@@ -67,6 +67,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/kds"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager', 'kitchen']}>
+                    <KDS />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/impressao"
                 element={
                   <ProtectedRoute>
