@@ -24,6 +24,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { Plus, Pizza, Power, Trash2, Edit2, Save } from "lucide-react";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
 import { supabase } from "@/integrations/supabase/client";
@@ -259,16 +260,30 @@ function FlavorDialog({
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [saving, setSaving] = useState(false);
+  const { currentMembership } = useRestaurant();
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const inventoryMode = currentMembership?.restaurants.inventory_mode;
+  const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
 
   useEffect(() => {
     if (flavor) {
       setName(flavor.name);
       setDescription(flavor.description ?? "");
       setCategory(flavor.category ?? "");
+      setTrackStock(flavor.track_stock ?? false);
+      setStockQuantity(flavor.stock_quantity?.toString() || "0");
+      setLowStockAlert(flavor.low_stock_alert?.toString() || "");
+      setAllowOutOfStockSale(flavor.allow_out_of_stock_sale ?? false);
     } else {
       setName("");
       setDescription("");
       setCategory("");
+      setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [flavor, open]);
 
@@ -282,6 +297,10 @@ function FlavorDialog({
       name: name.trim(),
       description: description.trim() || null,
       category: category.trim() || null,
+      track_stock: trackStock,
+      stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+      low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+      allow_out_of_stock_sale: allowOutOfStockSale,
     };
     const res = flavor
       ? await updatePizzaFlavor(flavor.id, payload)
