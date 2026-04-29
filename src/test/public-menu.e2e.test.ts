@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { createClient } from "@supabase/supabase-js";
+import { rpcWithRetry, queryWithRetry } from "./helpers/retry";
 
 /**
  * Testes E2E REAIS de segurança do Cardápio Público.
