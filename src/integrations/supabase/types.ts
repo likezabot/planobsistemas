@@ -65,6 +65,68 @@ export type Database = {
           },
         ]
       }
+      coupons: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          max_uses: number | null
+          min_order_cents: number
+          name: string
+          percent_value: number | null
+          restaurant_id: string
+          type: string
+          updated_at: string
+          used_count: number
+          valid_from: string | null
+          valid_until: string | null
+          value_cents: number | null
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          max_uses?: number | null
+          min_order_cents?: number
+          name: string
+          percent_value?: number | null
+          restaurant_id: string
+          type: string
+          updated_at?: string
+          used_count?: number
+          valid_from?: string | null
+          valid_until?: string | null
+          value_cents?: number | null
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          max_uses?: number | null
+          min_order_cents?: number
+          name?: string
+          percent_value?: number | null
+          restaurant_id?: string
+          type?: string
+          updated_at?: string
+          used_count?: number
+          valid_from?: string | null
+          valid_until?: string | null
+          value_cents?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupons_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delivery_zones: {
         Row: {
           active: boolean
@@ -381,11 +443,13 @@ export type Database = {
       orders: {
         Row: {
           address: string | null
+          coupon_code: string | null
           created_at: string
           customer_name: string
           customer_phone: string
           delivery_fee_cents: number
           delivery_zone_id: string | null
+          discount_cents: number
           id: string
           idempotency_key: string
           notes: string | null
@@ -401,11 +465,13 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          coupon_code?: string | null
           created_at?: string
           customer_name: string
           customer_phone: string
           delivery_fee_cents?: number
           delivery_zone_id?: string | null
+          discount_cents?: number
           id?: string
           idempotency_key: string
           notes?: string | null
@@ -423,11 +489,13 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          coupon_code?: string | null
           created_at?: string
           customer_name?: string
           customer_phone?: string
           delivery_fee_cents?: number
           delivery_zone_id?: string | null
+          discount_cents?: number
           id?: string
           idempotency_key?: string
           notes?: string | null
@@ -1208,36 +1276,22 @@ export type Database = {
         Args: { p_order_id: string; p_reason?: string; p_source: string }
         Returns: string
       }
-      create_public_order:
-        | {
-            Args: {
-              _address?: string
-              _customer_name: string
-              _customer_phone: string
-              _idempotency_key: string
-              _items: Json
-              _notes?: string
-              _order_type: Database["public"]["Enums"]["order_type"]
-              _payment_method: Database["public"]["Enums"]["payment_method"]
-              _restaurant_slug: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              _address?: string
-              _customer_name: string
-              _customer_phone: string
-              _delivery_zone_id?: string
-              _idempotency_key: string
-              _items: Json
-              _notes?: string
-              _order_type: Database["public"]["Enums"]["order_type"]
-              _payment_method: Database["public"]["Enums"]["payment_method"]
-              _restaurant_slug: string
-            }
-            Returns: Json
-          }
+      create_public_order: {
+        Args: {
+          _address?: string
+          _coupon_code?: string
+          _customer_name: string
+          _customer_phone: string
+          _delivery_zone_id?: string
+          _idempotency_key: string
+          _items: Json
+          _notes?: string
+          _order_type: Database["public"]["Enums"]["order_type"]
+          _payment_method: Database["public"]["Enums"]["payment_method"]
+          _restaurant_slug: string
+        }
+        Returns: Json
+      }
       export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
       fail_print_job:
         | {
@@ -1398,6 +1452,10 @@ export type Database = {
           p_restaurant_id: string
         }
         Returns: undefined
+      }
+      validate_coupon: {
+        Args: { _code: string; _slug: string; _subtotal_cents: number }
+        Returns: Json
       }
     }
     Enums: {

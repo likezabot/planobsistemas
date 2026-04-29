@@ -24,7 +24,8 @@ import {
   ChefHat,
   BarChart2,
   Users,
-  MapPin
+  MapPin,
+  Ticket
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -79,6 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     ...(canSeeReports ? [
       { to: "/relatorios", icon: BarChart2, label: "Relatórios" }, 
       { to: "/clientes", icon: Users, label: "Clientes" },
+      { to: "/cupons", icon: Ticket, label: "Cupons" },
       { to: "/configuracoes/entrega", icon: MapPin, label: "Entrega" }
     ] : []),
     ...(canSeeAccounting ? [{ to: "/contador", icon: Calculator, label: "Contador" }] : []),

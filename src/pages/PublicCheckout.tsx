@@ -30,7 +30,8 @@ import {
   User,
   Phone,
   ClipboardList,
-  Truck
+  Truck,
+  Ticket
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,7 @@ const checkoutSchema = z.object({
   delivery_zone_id: z.string().optional(),
   payment_method: z.enum(["money", "card", "pix", "online"]),
   notes: z.string().optional(),
+  coupon_code: z.string().optional(),
 }).refine((data) => {
   if (data.order_type === "delivery" && (!data.address || data.address.length < 5)) {
     return false;
@@ -71,6 +73,8 @@ export default function PublicCheckout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
   const [step, setStep] = useState(1);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount_cents: number } | null>(null);
 
   const { data: zones } = useQuery({
     queryKey: ["checkout-delivery-zones", restaurantSlug],
@@ -94,15 +98,46 @@ export default function PublicCheckout() {
 
   const orderType = form.watch("order_type");
   const deliveryZoneId = form.watch("delivery_zone_id");
+  const couponCode = form.watch("coupon_code");
   const selectedZone = zones?.find(z => z.id === deliveryZoneId);
 
-  const finalTotal = getTotal() + (orderType === 'delivery' ? (selectedZone?.fee_cents || 0) : 0);
+  const subtotal = getTotal();
+  const deliveryFee = orderType === 'delivery' ? (selectedZone?.fee_cents || 0) : 0;
+  const discount = appliedCoupon ? appliedCoupon.discount_cents : 0;
+  const finalTotal = Math.max(subtotal - discount, 0) + deliveryFee;
 
   useEffect(() => {
     if (items.length === 0 && !orderSuccess) {
       navigate(`/menu/${restaurantSlug}`);
     }
   }, [items, orderSuccess, navigate, restaurantSlug]);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode || !restaurantSlug) return;
+    setIsValidatingCoupon(true);
+    try {
+      const { data, error } = await supabase.rpc("validate_coupon", {
+        _slug: restaurantSlug,
+        _code: couponCode,
+        _subtotal_cents: subtotal
+      });
+
+      if (error) throw error;
+
+      const result = data as any;
+      if (result.valid) {
+        setAppliedCoupon({ code: couponCode.toUpperCase(), discount_cents: result.discount_cents });
+        toast.success(result.message);
+      } else {
+        setAppliedCoupon(null);
+        toast.error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao validar cupom");
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
 
   const onSubmit = async (data: CheckoutForm) => {
     if (!restaurantSlug) return;
@@ -134,7 +169,8 @@ export default function PublicCheckout() {
         })),
         address: data.address,
         notes: data.notes,
-        delivery_zone_id: data.delivery_zone_id
+        delivery_zone_id: data.delivery_zone_id,
+        coupon_code: appliedCoupon?.code
       });
 
       setOrderSuccess(result.order_id);
@@ -405,12 +441,29 @@ export default function PublicCheckout() {
                       )}
                     </div>
                   ))}
-                  {orderType === 'delivery' && selectedZone && (
-                    <div className="flex justify-between items-center text-sm mb-3">
-                      <span className="text-muted-foreground font-bold uppercase text-[10px]">Taxa de Entrega ({selectedZone.name})</span>
-                      <span className="tabular-nums font-bold text-secondary">{centsToBRL(selectedZone.fee_cents)}</span>
+                  <div className="space-y-3 mb-6">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-muted-foreground font-bold uppercase text-[10px]">Subtotal</span>
+                      <span className="tabular-nums font-bold text-secondary">{centsToBRL(subtotal)}</span>
                     </div>
-                  )}
+
+                    {appliedCoupon && (
+                      <div className="flex justify-between items-center text-sm">
+                        <div className="flex items-center gap-1.5">
+                          <Ticket className="w-3 h-3 text-success" />
+                          <span className="text-success font-bold uppercase text-[10px]">Desconto ({appliedCoupon.code})</span>
+                        </div>
+                        <span className="tabular-nums font-bold text-success">-{centsToBRL(appliedCoupon.discount_cents)}</span>
+                      </div>
+                    )}
+
+                    {orderType === 'delivery' && selectedZone && (
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-muted-foreground font-bold uppercase text-[10px]">Taxa de Entrega ({selectedZone.name})</span>
+                        <span className="tabular-nums font-bold text-secondary">{centsToBRL(selectedZone.fee_cents)}</span>
+                      </div>
+                    )}
+                  </div>
 
                   <div className="border-t border-dashed border-border pt-4 flex justify-between items-center">
                     <span className="text-base font-bold text-secondary uppercase tracking-widest">Total</span>
@@ -419,6 +472,34 @@ export default function PublicCheckout() {
                     </span>
                   </div>
                 </div>
+              </div>
+
+              <div className="bg-white rounded-xl border border-border shadow-sm p-4 space-y-4">
+                <div className="flex items-center gap-3">
+                   <Ticket className="w-5 h-5 text-primary" />
+                   <h3 className="font-bold text-secondary text-sm">Cupom de Desconto</h3>
+                </div>
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="CÓDIGO" 
+                    className="h-11 rounded-xl uppercase font-black tracking-widest border-border bg-white"
+                    {...form.register("coupon_code")}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="secondary"
+                    className="h-11 rounded-xl font-bold px-6"
+                    onClick={handleApplyCoupon}
+                    disabled={isValidatingCoupon || !couponCode}
+                  >
+                    {isValidatingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Aplicar"}
+                  </Button>
+                </div>
+                {appliedCoupon && (
+                  <p className="text-[10px] font-black text-success uppercase tracking-widest flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> Cupom {appliedCoupon.code} aplicado!
+                  </p>
+                )}
               </div>
 
               <div className="space-y-1.5">
