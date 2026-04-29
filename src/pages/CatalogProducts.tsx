@@ -151,10 +151,10 @@ export default function CatalogProducts() {
         </div>
 
         {/* Product Grid */}
-        <div className="min-h-[400px]">
+        <div className="min-h-[200px]">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
@@ -162,12 +162,12 @@ export default function CatalogProducts() {
               <p className="text-muted-foreground text-sm">Nenhum produto encontrado.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredProducts.map((p) => {
                 const cat = categories.find((c) => c.id === p.category_id);
                 return (
-                  <div key={p.id} className="bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden">
-                    <div className="aspect-video w-full bg-muted relative overflow-hidden shrink-0">
+                  <div key={p.id} className="bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden h-full">
+                    <div className="h-32 sm:h-36 w-full bg-muted relative overflow-hidden shrink-0">
                       {p.image_url ? (
                         <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                       ) : (
