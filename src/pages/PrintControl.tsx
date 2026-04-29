@@ -31,14 +31,13 @@ import {
 import { useAuth } from "@/lib/auth/AuthProvider";
 
 export default function PrintControlPage() {
-  const { currentRestaurantId } = useRestaurant();
-  const { profile } = useAuth();
+  const { currentRestaurantId, currentMembership } = useRestaurant();
   const queryClient = useQueryClient();
   const [selectedJob, setSelectedJob] = useState<PrintJob | null>(null);
   const [reprintReason, setReprintReason] = useState("");
   const [isReprintDialogOpen, setIsReprintDialogOpen] = useState(false);
 
-  const canReprint = profile?.role && ['owner', 'manager', 'cashier'].includes(profile.role);
+  const canReprint = currentMembership?.role && ['owner', 'manager', 'cashier'].includes(currentMembership.role);
 
   const { data: jobs, isLoading } = useQuery({
     queryKey: ["print_jobs", currentRestaurantId],
