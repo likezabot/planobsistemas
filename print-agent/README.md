@@ -31,3 +31,6 @@ npm start
 - **Prevenção de Backlog**: Ao iniciar, o agente captura apenas jobs criados **após** o seu horário de início (`started_at`).
 - **Logs**: Registra tudo em `agent.log` e no console.
 - **Fail-safe**: Se houver erro na impressão, marca o job como `failed` no banco com a mensagem de erro.
+
+## Validação de Impressão Física
+Antes de gerar o EXE, siga o [Guia de Validação Manual](./manual-test-guide.md).
