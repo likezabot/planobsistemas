@@ -1,0 +1,3 @@
+REVOKE EXECUTE ON FUNCTION public.create_internal_order(UUID, TEXT, TEXT, order_type, payment_method, TEXT, JSONB, TEXT, TEXT) FROM public;
+REVOKE EXECUTE ON FUNCTION public.create_internal_order(UUID, TEXT, TEXT, order_type, payment_method, TEXT, JSONB, TEXT, TEXT) FROM anon;
+GRANT EXECUTE ON FUNCTION public.create_internal_order(UUID, TEXT, TEXT, order_type, payment_method, TEXT, JSONB, TEXT, TEXT) TO authenticated;
