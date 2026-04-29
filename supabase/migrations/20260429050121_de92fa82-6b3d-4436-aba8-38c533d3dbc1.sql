@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.create_public_order TO anon, authenticated;
