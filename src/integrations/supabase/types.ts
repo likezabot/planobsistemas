@@ -1148,6 +1148,7 @@ export type Database = {
       get_public_products: {
         Args: { _slug: string }
         Returns: {
+          allow_out_of_stock_sale: boolean
           category_id: string
           description: string
           has_options: boolean
@@ -1156,6 +1157,8 @@ export type Database = {
           name: string
           price_cents: number
           sort_order: number
+          stock_quantity: number
+          track_stock: boolean
           type: Database["public"]["Enums"]["product_type"]
         }[]
       }
@@ -1163,6 +1166,8 @@ export type Database = {
         Args: { _slug: string }
         Returns: {
           id: string
+          inventory_enabled: boolean
+          inventory_mode: string
           name: string
           public_menu_enabled: boolean
           slug: string
