@@ -113,15 +113,6 @@ describe("Cardápio Público — camada de aplicação", () => {
   });
 });
 
-describe("Cardápio Público — garantias de banco (E2E pendentes)", () => {
-  // Estes precisam rodar contra o Supabase real com cliente anônimo.
-  it.todo("anônimo NÃO consegue SELECT direto em public.products");
-  it.todo("anônimo NÃO consegue SELECT em public.audit_log");
-  it.todo("anônimo NÃO consegue SELECT em public.restaurant_members");
-  it.todo("anônimo NÃO consegue INSERT/UPDATE/DELETE em public.products");
-  it.todo("get_public_products NÃO inclui produto com active=false");
-  it.todo("get_public_categories NÃO inclui categoria com active=false");
-  it.todo("get_public_restaurant retorna vazio se public_menu_enabled=false");
-  it.todo("get_public_products NÃO retorna produto cuja categoria está inativa");
-  it.todo("usuário do restaurante A não vê produtos do restaurante B via RPC pública (slug é o filtro)");
-});
+// Os it.todo críticos foram promovidos a testes E2E REAIS em
+// `src/test/public-menu.e2e.test.ts`, que roda contra o Supabase real
+// com o cliente anônimo. Veja também SECURITY_CHECKLIST.md.
