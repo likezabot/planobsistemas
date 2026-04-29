@@ -367,11 +367,14 @@ export function PizzaModal({
                                 <div className="flex gap-3 min-w-0">
                                   <Checkbox
                                     checked={checked}
-                                    disabled={reachedMax}
+                                    disabled={reachedMax || isFlavorOutOfStock}
                                     className="mt-0.5 rounded-md"
                                   />
                                   <div className="min-w-0">
-                                    <p className="font-medium text-sm text-secondary">{f.name}</p>
+                                    <p className="font-medium text-sm text-secondary">
+                                      {f.name}
+                                      {isFlavorOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
+                                    </p>
                                     {f.description && (
                                       <p className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">
                                         {f.description}
