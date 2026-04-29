@@ -49,6 +49,7 @@ const checkoutSchema = z.object({
   customer_name: z.string().min(2, "Nome muito curto"),
   order_type: z.enum(["pickup", "delivery"]),
   address: z.string().optional(),
+  delivery_zone_id: z.string().optional(),
   payment_method: z.enum(["money", "card", "pix", "online"]),
   notes: z.string().optional(),
 }).refine((data) => {
