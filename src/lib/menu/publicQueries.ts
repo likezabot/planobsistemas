@@ -19,6 +19,7 @@ export interface PublicRestaurant {
   public_menu_enabled: boolean;
   inventory_enabled: boolean;
   inventory_mode: "simple" | "advanced";
+  pizza_module_enabled: boolean;
 }
 
 export interface PublicCategory {
@@ -50,6 +51,8 @@ export interface PublicProductDetails {
     track_stock: boolean;
     stock_quantity: number;
     allow_out_of_stock_sale: boolean;
+    diameter_cm?: number | null;
+    slices?: number | null;
   }[];
   option_groups: {
     id: string;
@@ -79,6 +82,7 @@ export interface PublicProductDetails {
     description: string | null;
     category: string | null;
     image_url: string | null;
+    ingredients?: string | null;
     // preço por variant_id (default 0 quando não listado)
     prices: Record<string, number>;
     track_stock: boolean;
