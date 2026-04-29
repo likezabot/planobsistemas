@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL!;
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY!;
+const supabaseKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY!;
 
 // We need a way to test authenticated roles. 
 // For E2E tests in this environment, we usually use the service role or 
