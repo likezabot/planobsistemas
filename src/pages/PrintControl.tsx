@@ -28,6 +28,7 @@ import {
   Clock,
   RefreshCw
 } from "lucide-react";
+import { PrintAgentSimulator } from "@/components/printing/PrintAgentSimulator";
 
 export default function PrintControlPage() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
