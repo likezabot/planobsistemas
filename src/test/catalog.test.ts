@@ -16,12 +16,16 @@ import {
  */
 
 describe("Catálogo — money", () => {
-  it("converte BRL para centavos", () => {
+  it("converte BRL para centavos (formato pt-BR)", () => {
     expect(parseBRLToCents("12,50")).toBe(1250);
-    expect(parseBRLToCents("12.50")).toBe(1250);
     expect(parseBRLToCents("1.234,56")).toBe(123456);
     expect(parseBRLToCents("0")).toBe(0);
     expect(parseBRLToCents("")).toBe(0);
+  });
+
+  it("aceita ponto como decimal quando não há vírgula", () => {
+    // entrada "12.5" sem vírgula → 12.5 reais → 1250 cents
+    expect(parseBRLToCents("12.5")).toBe(1250);
   });
 
   it("formata centavos como BRL", () => {
