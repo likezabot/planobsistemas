@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Info, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ProductOptionsModal } from "@/components/menu/ProductOptionsModal";
 
 type State =
   | { status: "loading" }
@@ -33,6 +34,7 @@ export default function PublicMenu() {
   const { items, addItem, updateQuantity, getTotal } = useCart();
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -114,6 +116,13 @@ export default function PublicMenu() {
 
   const handleAddToCart = (product: PublicProduct) => {
     if (!restaurantSlug) return;
+    
+    // If complex product, open modal
+    if (product.has_options) {
+      setSelectedProduct(product);
+      return;
+    }
+
     addItem(restaurantSlug, {
       product_id: product.id,
       name: product.name,
@@ -275,6 +284,12 @@ export default function PublicMenu() {
           </div>
         </div>
       )}
+
+      <ProductOptionsModal 
+        product={selectedProduct}
+        restaurantSlug={restaurantSlug || null}
+        onClose={() => setSelectedProduct(null)}
+      />
     </main>
   );
 }
@@ -291,7 +306,10 @@ function ProductCard({
   onUpdateQty: (id: string, qty: number) => void;
 }) {
   return (
-    <div className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3">
+    <div 
+      className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3 cursor-pointer"
+      onClick={() => onAdd(product)}
+    >
       <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-muted">
         {product.image_url ? (
           <img 

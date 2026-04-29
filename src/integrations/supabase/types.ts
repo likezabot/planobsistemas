@@ -848,16 +848,22 @@ export type Database = {
           sort_order: number
         }[]
       }
+      get_public_product_details: {
+        Args: { _product_id: string }
+        Returns: Json
+      }
       get_public_products: {
         Args: { _slug: string }
         Returns: {
           category_id: string
           description: string
+          has_options: boolean
           id: string
           image_url: string
           name: string
           price_cents: number
           sort_order: number
+          type: Database["public"]["Enums"]["product_type"]
         }[]
       }
       get_public_restaurant: {

@@ -33,6 +33,33 @@ export interface PublicProduct {
   price_cents: number;
   sort_order: number;
   image_url: string | null;
+  type: "simple" | "variable" | "pizza" | "combo";
+  has_options: boolean;
+}
+
+export interface PublicProductDetails {
+  variants: {
+    id: string;
+    name: string;
+    price_cents: number;
+  }[];
+  option_groups: {
+    id: string;
+    name: string;
+    min_options: number;
+    max_options: number;
+    is_required: boolean;
+    items: {
+      id: string;
+      name: string;
+      price_cents: number;
+    }[];
+  }[];
+  pizza_config?: {
+    max_flavors: number;
+    price_rule: "max" | "average" | "sum";
+    allow_edge_customization: boolean;
+  };
 }
 
 function requireSlug(slug: string | null | undefined): string {
@@ -60,9 +87,7 @@ export async function getPublicProducts(slug: string): Promise<PublicProduct[]> 
   const s = requireSlug(slug);
   const { data, error } = await supabase.rpc("get_public_products", { _slug: s });
   if (error) throw error;
-  const rows = (data as PublicProduct[] | null) ?? [];
-  // Defesa em profundidade: se algum dia a RPC mudar e devolver cost_cents,
-  // garantimos que ele NÃO atravessa a camada de aplicação.
+  const rows = (data as any[] | null) ?? [];
   return rows.map((p) => ({
     id: p.id,
     category_id: p.category_id,
@@ -71,5 +96,15 @@ export async function getPublicProducts(slug: string): Promise<PublicProduct[]> 
     price_cents: p.price_cents,
     sort_order: p.sort_order,
     image_url: p.image_url,
+    type: p.type,
+    has_options: p.has_options,
   }));
+}
+
+export async function getPublicProductDetails(productId: string): Promise<PublicProductDetails> {
+  const { data, error } = await supabase.rpc("get_public_product_details", { 
+    _product_id: productId 
+  });
+  if (error) throw error;
+  return data as unknown as PublicProductDetails;
 }
