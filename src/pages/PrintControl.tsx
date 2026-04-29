@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { getPrintJobs, reprintOrder, PrintJob } from "@/lib/printing/queries";
+import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +43,24 @@ export default function PrintControlPage() {
   const [isReprintDialogOpen, setIsReprintDialogOpen] = useState(false);
 
   const canReprint = currentMembership?.role && ['owner', 'manager', 'cashier'].includes(currentMembership.role);
+  const canResetStuck = currentMembership?.role === 'owner' || currentMembership?.role === 'manager';
+
+  const resetStuckMutation = useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.rpc('reset_stuck_print_jobs', {
+        p_restaurant_id: currentRestaurantId!,
+        p_stuck_minutes: 5,
+      });
+      if (error) throw error;
+      return data as number;
+    },
+    onSuccess: (count) => {
+      queryClient.invalidateQueries({ queryKey: ["print_jobs"] });
+      if (count > 0) toast.success(`${count} job(s) travado(s) liberados.`);
+      else toast.info("Nenhum job travado encontrado.");
+    },
+    onError: (err: any) => toast.error(err.message || "Falha ao liberar jobs travados."),
+  });
 
   const { data: jobs, isLoading } = useQuery({
     queryKey: ["print_jobs", currentRestaurantId],
@@ -104,15 +123,34 @@ export default function PrintControlPage() {
             <h1 className="text-2xl font-bold text-secondary">Controle de Impressão</h1>
             <p className="text-muted-foreground text-sm mt-1">Gerencie a fila de impressão e os agentes locais.</p>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="rounded-lg h-9 border-border"
-            onClick={() => queryClient.invalidateQueries({ queryKey: ["print_jobs"] })}
-          >
-            <RefreshCw className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
-            Sincronizar
-          </Button>
+          <div className="flex gap-2">
+            {canResetStuck && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-lg h-9 border-border"
+                onClick={() => resetStuckMutation.mutate()}
+                disabled={resetStuckMutation.isPending}
+                title="Devolve para 'pendente' jobs presos em 'imprimindo' há mais de 5 minutos (agente caiu)"
+              >
+                {resetStuckMutation.isPending ? (
+                  <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                ) : (
+                  <AlertCircle className="w-3.5 h-3.5 mr-2" />
+                )}
+                Liberar travados
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-lg h-9 border-border"
+              onClick={() => queryClient.invalidateQueries({ queryKey: ["print_jobs"] })}
+            >
+              <RefreshCw className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
+              Sincronizar
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
