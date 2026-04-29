@@ -65,6 +65,126 @@ export type Database = {
           },
         ]
       }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          order_id: string
+          product_id: string
+          quantity: number
+          total_price_cents: number
+          unit_price_cents: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          order_id: string
+          product_id: string
+          quantity: number
+          total_price_cents: number
+          unit_price_cents: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          total_price_cents?: number
+          unit_price_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string | null
+          created_at: string
+          customer_name: string
+          customer_phone: string
+          delivery_fee_cents: number
+          id: string
+          idempotency_key: string
+          notes: string | null
+          order_type: Database["public"]["Enums"]["order_type"]
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          restaurant_id: string
+          status: Database["public"]["Enums"]["order_status"]
+          subtotal_cents: number
+          tenant_id: string
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          customer_name: string
+          customer_phone: string
+          delivery_fee_cents?: number
+          id?: string
+          idempotency_key: string
+          notes?: string | null
+          order_type: Database["public"]["Enums"]["order_type"]
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          restaurant_id: string
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal_cents?: number
+          tenant_id: string
+          total_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string
+          delivery_fee_cents?: number
+          id?: string
+          idempotency_key?: string
+          notes?: string | null
+          order_type?: Database["public"]["Enums"]["order_type"]
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          restaurant_id?: string
+          status?: Database["public"]["Enums"]["order_status"]
+          subtotal_cents?: number
+          tenant_id?: string
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_categories: {
         Row: {
           active: boolean
@@ -316,6 +436,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_public_order: {
+        Args: {
+          _address?: string
+          _customer_name: string
+          _customer_phone: string
+          _idempotency_key: string
+          _items: Json
+          _notes?: string
+          _order_type: string
+          _payment_method: string
+          _restaurant_slug: string
+        }
+        Returns: Json
+      }
       get_public_categories: {
         Args: { _slug: string }
         Returns: {
@@ -386,6 +520,17 @@ export type Database = {
         | "waiter"
         | "kitchen"
         | "support"
+      order_status:
+        | "new"
+        | "accepted"
+        | "preparing"
+        | "ready"
+        | "out_for_delivery"
+        | "delivered"
+        | "completed"
+        | "cancelled"
+      order_type: "pickup" | "delivery"
+      payment_method: "money" | "card" | "pix" | "online"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -514,6 +659,18 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["owner", "manager", "cashier", "waiter", "kitchen", "support"],
+      order_status: [
+        "new",
+        "accepted",
+        "preparing",
+        "ready",
+        "out_for_delivery",
+        "delivered",
+        "completed",
+        "cancelled",
+      ],
+      order_type: ["pickup", "delivery"],
+      payment_method: ["money", "card", "pix", "online"],
     },
   },
 } as const
