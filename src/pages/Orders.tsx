@@ -175,16 +175,37 @@ export default function OrdersPage() {
 
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-secondary">Monitor de Pedidos</h1>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="rounded-lg h-9 border-border"
-            onClick={() => queryClient.invalidateQueries({ queryKey: ["orders"] })}
-          >
-            <Loader2 className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
-            Atualizar
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              className="rounded-lg h-9 font-bold bg-primary text-white"
+              size="sm"
+              onClick={() => setSearchParams({ novo: "1" })}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Novo Pedido
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="rounded-lg h-9 border-border"
+              onClick={() => queryClient.invalidateQueries({ queryKey: ["orders"] })}
+            >
+              <Loader2 className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
+              Atualizar
+            </Button>
+          </div>
         </div>
+
+        <NewOrderDrawer 
+          open={isNewOrderRequested} 
+          onOpenChange={(open) => {
+            if (!open) {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.delete("novo");
+              setSearchParams(newParams);
+            }
+          }} 
+        />
 
         <Tabs defaultValue="new" className="w-full">
           <TabsList className="grid grid-cols-4 w-full bg-white border border-border p-1 rounded-xl h-12 mb-6">
