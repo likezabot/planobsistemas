@@ -99,7 +99,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 onValueChange={setCurrentRestaurantId}
                 disabled={memberships.length === 0}
               >
-                <SelectTrigger className="h-10 w-full bg-sidebar-accent/50 border-sidebar-border text-white rounded-lg focus:ring-primary text-xs">
+                <SelectTrigger className="h-10 w-full bg-sidebar-accent border-sidebar-border text-white rounded-lg focus:ring-primary text-xs">
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent className="bg-sidebar-background border-sidebar-border text-white">
