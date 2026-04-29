@@ -133,6 +133,22 @@ export default function OrdersPage() {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  const PrintStatusBadge = ({ status }: { status: string }) => {
+    const configs: Record<string, { label: string; variant: any }> = {
+      none: { label: "Não impresso", variant: "outline" },
+      pending: { label: "Aguardando Impressora", variant: "secondary" },
+      printed: { label: "Impresso", variant: "default" },
+      failed: { label: "Falha na Impressão", variant: "destructive" },
+    };
+    const config = configs[status] || { label: status, variant: "outline" };
+    return (
+      <div className="flex items-center gap-1">
+        <Printer className="w-3 h-3" />
+        <Badge variant={config.variant} className="text-[10px] px-1 h-4">{config.label}</Badge>
+      </div>
+    );
+  };
+
   const OrderCard = ({ order }: { order: OrderWithItems }) => (
     <Card 
       className="mb-4 cursor-pointer hover:border-primary transition-colors"
