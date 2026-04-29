@@ -86,8 +86,12 @@ describe('KDS Logic & UI', () => {
     vi.clearAllMocks();
     (useRestaurant as any).mockReturnValue({
       currentRestaurantId: mockRestaurantId,
-      currentMembership: { role: 'kitchen' },
+      currentMembership: { 
+        role: 'kitchen',
+        restaurants: { name: 'Mock Rest', accounting_reports_enabled: false }
+      },
       loading: false,
+      memberships: [{ restaurant_id: mockRestaurantId, restaurants: { name: 'Mock Rest' } }]
     });
 
     (useQuery as any).mockReturnValue({
