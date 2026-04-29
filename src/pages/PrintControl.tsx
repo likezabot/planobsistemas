@@ -234,7 +234,7 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
         </div>
         
         {job.last_error && (
-          <div className="p-2 bg-destructive/5 text-destructive rounded-lg text-[10px] flex gap-1.5 border border-destructive/10 font-medium leading-tight">
+          <div className="p-2 bg-accent text-destructive rounded-lg text-[10px] flex gap-1.5 border border-destructive font-medium leading-tight">
             <AlertCircle className="w-3 h-3 shrink-0 mt-0.5" />
             <p className="line-clamp-2"><strong>Erro:</strong> {job.last_error}</p>
           </div>
