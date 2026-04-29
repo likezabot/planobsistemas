@@ -151,10 +151,10 @@ export default function CatalogProducts() {
         </div>
 
         {/* Product Grid */}
-        <div className="min-h-[400px]">
+        <div className="min-h-[200px]">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
@@ -162,12 +162,12 @@ export default function CatalogProducts() {
               <p className="text-muted-foreground text-sm">Nenhum produto encontrado.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredProducts.map((p) => {
                 const cat = categories.find((c) => c.id === p.category_id);
                 return (
-                  <div key={p.id} className="bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden">
-                    <div className="aspect-video w-full bg-muted relative overflow-hidden shrink-0">
+                  <div key={p.id} className="bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden h-full">
+                    <div className="h-32 sm:h-36 w-full bg-muted relative overflow-hidden shrink-0">
                       {p.image_url ? (
                         <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                       ) : (
@@ -185,12 +185,12 @@ export default function CatalogProducts() {
                       </div>
                     </div>
                     
-                    <div className="p-4 flex-1 flex flex-col">
+                    <div className="p-3 sm:p-4 flex-1 flex flex-col min-w-0">
                       <div className="flex justify-between items-start gap-2 mb-2">
-                        <div className="min-w-0">
-                          <h3 className="font-bold text-secondary text-sm leading-tight group-hover:text-primary transition-colors truncate">{p.name}</h3>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-bold text-secondary text-sm leading-tight group-hover:text-primary transition-colors truncate" title={p.name}>{p.name}</h3>
                           {cat && (
-                            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{cat.name}</span>
+                            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block truncate">{cat.name}</span>
                           )}
                         </div>
                         <div className="text-right shrink-0">
@@ -200,19 +200,19 @@ export default function CatalogProducts() {
                       </div>
 
                       {p.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed">{p.description}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-tight h-8">{p.description}</p>
                       )}
 
-                      <div className="mt-auto pt-3 border-t border-border flex justify-between items-center">
-                        <div className="flex gap-1">
+                      <div className="mt-auto pt-2 border-t border-border flex justify-between items-center">
+                        <div className="flex gap-1 overflow-hidden">
                           {p.type && p.type !== 'simple' && (
-                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted/50 border-none">
+                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted/50 border-none truncate">
                               {p.type}
                             </Badge>
                           )}
                         </div>
                         
-                        <div className="flex gap-1">
+                        <div className="flex gap-1 shrink-0">
                           {canEdit && (
                             <>
                               <Button 
