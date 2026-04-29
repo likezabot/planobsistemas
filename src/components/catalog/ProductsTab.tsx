@@ -120,6 +120,44 @@ export default function ProductsTab() {
     });
   }, [products, searchTerm, selectedCategory, selectedType, statusFilter]);
 
+  // Separa suspeitos (sabor cadastrado como produto) dos normais.
+  // Itens dispensados via "Ignorar aviso" voltam para a lista normal.
+  const { normalProducts, suspectProducts } = useMemo(() => {
+    const normal: Product[] = [];
+    const suspect: Product[] = [];
+    for (const p of filteredProducts) {
+      const isSuspect = isSuspectFlavorProduct(
+        { id: p.id, type: p.type, category_id: p.category_id },
+        categories.map((c) => ({ id: c.id, name: c.name })),
+      );
+      if (isSuspect && !isDismissed(scope, p.id)) suspect.push(p);
+      else normal.push(p);
+    }
+    return { normalProducts: normal, suspectProducts: suspect };
+    // dismissedTick força reavaliação após dismiss
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredProducts, categories, scope, dismissedTick]);
+
+  function handleProductClick(p: Product, forceEdit = false) {
+    const isSuspect = isSuspectFlavorProduct(
+      { id: p.id, type: p.type, category_id: p.category_id },
+      categories.map((c) => ({ id: c.id, name: c.name })),
+    );
+    if (isSuspect && !isDismissed(scope, p.id) && !forceEdit) {
+      setSuspectProduct(p);
+      setSuspectOpen(true);
+    } else {
+      setSelectedProduct(p);
+      setSheetOpen(true);
+    }
+  }
+
+  function handleDismissSuspect(p: Product) {
+    dismiss(scope, p.id);
+    setDismissedTick((t) => t + 1);
+    toast({ title: "Aviso dispensado para este item" });
+  }
+
   async function handleToggleActive(p: Product) {
     if (!canEdit) return;
     const { error } = await setProductActive(p.id, !p.active);
