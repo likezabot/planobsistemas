@@ -29,6 +29,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { PrintAgentSimulator } from "@/components/printing/PrintAgentSimulator";
+import { PrintAgentManager } from "@/components/printing/PrintAgentManager";
 
 export default function PrintControlPage() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
@@ -196,7 +197,10 @@ export default function PrintControlPage() {
 
         <div className="lg:col-span-1">
           {currentRestaurantId && (
-            <PrintAgentSimulator restaurantId={currentRestaurantId} />
+            <div className="space-y-6">
+              <PrintAgentManager restaurantId={currentRestaurantId} />
+              <PrintAgentSimulator restaurantId={currentRestaurantId} />
+            </div>
           )}
         </div>
       </div>
