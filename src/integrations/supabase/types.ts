@@ -854,6 +854,7 @@ export type Database = {
           category_id: string
           description: string
           id: string
+          image_url: string
           name: string
           price_cents: number
           sort_order: number

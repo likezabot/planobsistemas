@@ -20,51 +20,51 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#E63946", // Tomato Red
+          foreground: "#FFFFFF",
+          hover: "#D62828",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
-        },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#1D3557", // Navy Blue
+          foreground: "#F1FAEE",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#A8DADC", // Soft Cyan
+          foreground: "#1D3557",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        success: {
+          DEFAULT: "#2A9D8F", // Emerald/Teal
+          foreground: "#FFFFFF",
+        },
+        warning: {
+          DEFAULT: "#F4A261", // Sandy Orange
+          foreground: "#FFFFFF",
+        },
+        highlight: {
+          DEFAULT: "#E9C46A", // Golden/Yellow
+          foreground: "#1D3557",
+        },
+        destructive: {
+          DEFAULT: "#BC4749",
+          foreground: "#FFFFFF",
+        },
+        muted: {
+          DEFAULT: "#F8F9FA",
+          foreground: "#6C757D",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "#FFFFFF",
+          foreground: "#1D3557",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+      },
+      boxShadow: {
+        'premium': '0 10px 30px -10px rgba(29, 53, 87, 0.1)',
+        'card': '0 4px 20px -2px rgba(29, 53, 87, 0.05)',
+        'button': '0 4px 14px 0 rgba(230, 57, 70, 0.39)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Lexend', 'Inter', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -7,6 +7,10 @@ export interface CartItem {
   price_cents: number;
   quantity: number;
   note?: string;
+  customization?: {
+    description: string;
+    details: any;
+  };
 }
 
 interface CartState {
