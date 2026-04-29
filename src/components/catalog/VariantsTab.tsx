@@ -21,9 +21,12 @@ import {
   Layers, 
   Search, 
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { 
   Select, 
@@ -65,7 +68,15 @@ export default function VariantsTab() {
   const [code, setCode] = useState("");
   const [price, setPrice] = useState("");
   const [cost, setCost] = useState("");
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const inventoryMode = currentMembership?.restaurants.inventory_mode;
+  const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
 
   const canEdit = isAdminRole(currentMembership?.role);
 
@@ -122,6 +133,10 @@ export default function VariantsTab() {
         price_cents: priceCents,
         cost_cents: costCents,
         product_id: selectedProductId,
+        track_stock: trackStock,
+        stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+        low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+        allow_out_of_stock_sale: allowOutOfStockSale,
       };
 
       const res = editing
