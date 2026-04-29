@@ -137,10 +137,10 @@ async function printPowerShell(job, printerName, isBase64) {
         // Important: Printer must be shared locally for this to work
         psCommand = `powershell.exe -Command "$data = [System.IO.File]::ReadAllBytes('${winTempFile}'); [System.IO.File]::WriteAllBytes('\\\\\\\\localhost\\\\${printerName}', $data)"`;
       } else {
-        // Text/JSON fallback
-        const text = typeof payload === 'object' ? JSON.stringify(payload, null, 2) : String(payload);
-        fs.writeFileSync(tempFile, text);
-        psCommand = `powershell.exe -Command "Get-Content '${winTempFile}' | Out-Printer -Name '${printerName}'"`;
+        // Text/JSON formatting
+        const text = formatReceipt(payload);
+        fs.writeFileSync(tempFile, text, 'utf8');
+        psCommand = `powershell.exe -Command "Get-Content '${winTempFile}' -Raw | Out-Printer -Name '${printerName}'"`;
       }
 
       const startTime = Date.now();
