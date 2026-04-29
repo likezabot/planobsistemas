@@ -253,7 +253,7 @@ export default function DeliverySettings() {
                   step="0.01"
                   placeholder="0,00"
                   value={editingZone ? (editingZone.fee_cents || 0) / 100 : ""}
-                  onChange={(e) => setEditingZone(prev => ({ ...prev!, fee_cents: brlToCents(e.target.value) }))}
+                  onChange={(e) => setEditingZone(prev => ({ ...prev!, fee_cents: parseBRLToCents(e.target.value) }))}
                   className="rounded-lg h-11"
                 />
               </div>
