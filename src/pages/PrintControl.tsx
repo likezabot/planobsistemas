@@ -85,7 +85,7 @@ export default function PrintControlPage() {
   }
 
   const StatusBadge = ({ status }: { status: string }) => {
-    const configs: Record<string, { label: string; variant: any; icon: any }> = {
+    const configs: Record<string, { label: string; variant: "default" | "destructive" | "outline" | "secondary"; icon: any }> = {
       pending: { label: "Pendente", variant: "outline", icon: Clock },
       printing: { label: "Imprimindo", variant: "default", icon: Printer },
       printed: { label: "Impresso", variant: "secondary", icon: CheckCircle2 },
@@ -109,9 +109,10 @@ export default function PrintControlPage() {
             Pedido #{job.order_id.slice(0, 5)}
           </CardTitle>
           <div className="flex gap-2 mt-1">
-            <Badge variant="ghost" className="text-[10px] uppercase h-5">
+            <Badge variant="outline" className="text-[10px] uppercase h-5 bg-muted">
               {job.source}
             </Badge>
+... keep existing code
             <span className="text-xs text-muted-foreground">
               {format(new Date(job.created_at), "HH:mm:ss '•' dd/MM", { locale: ptBR })}
             </span>
