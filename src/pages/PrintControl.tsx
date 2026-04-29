@@ -260,10 +260,6 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
             <RefreshCw className="w-3 h-3" />
             Tentativas: {job.attempts}
           </div>
-          <div className="flex items-center gap-1.5">
-            <Cpu className="w-3 h-3" />
-            V: {job.fingerprint ? 'Sim' : 'Não'}
-          </div>
         </div>
       </CardContent>
     </Card>
