@@ -306,7 +306,10 @@ function ProductCard({
   onUpdateQty: (id: string, qty: number) => void;
 }) {
   return (
-    <div className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3">
+    <div 
+      className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3 cursor-pointer"
+      onClick={() => onAdd(product)}
+    >
       <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-muted">
         {product.image_url ? (
           <img 
