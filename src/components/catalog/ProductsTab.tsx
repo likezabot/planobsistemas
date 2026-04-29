@@ -337,9 +337,18 @@ function ProductSheet({
   const [stockQuantity, setStockQuantity] = useState("0");
   const [lowStockAlert, setLowStockAlert] = useState("");
   const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+  const [ncm, setNcm] = useState("");
+  const [cest, setCest] = useState("");
+  const [cfop, setCfop] = useState("");
+  const [cst, setCst] = useState("");
+  const [csosn, setCsosn] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [fiscalUnit, setFiscalUnit] = useState("");
+  const [fiscalNotes, setFiscalNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
   const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const accountingEnabled = currentMembership?.restaurants.accounting_reports_enabled;
 
   useEffect(() => {
     if (product) {
@@ -354,9 +363,18 @@ function ProductSheet({
       setStockQuantity(product.stock_quantity?.toString() || "0");
       setLowStockAlert(product.low_stock_alert?.toString() || "");
       setAllowOutOfStockSale(product.allow_out_of_stock_sale ?? false);
+      setNcm((product as any).ncm ?? "");
+      setCest((product as any).cest ?? "");
+      setCfop((product as any).cfop ?? "");
+      setCst((product as any).cst ?? "");
+      setCsosn((product as any).csosn ?? "");
+      setOrigin((product as any).origin ?? "");
+      setFiscalUnit((product as any).fiscal_unit ?? "");
+      setFiscalNotes((product as any).fiscal_notes ?? "");
     } else {
       setName(""); setCode(""); setDescription(""); setPrice(""); setCost(""); setCategoryId(null); setType("simple");
       setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
+      setNcm(""); setCest(""); setCfop(""); setCst(""); setCsosn(""); setOrigin(""); setFiscalUnit(""); setFiscalNotes("");
     }
   }, [product, open]);
 
@@ -375,7 +393,7 @@ function ProductSheet({
       return;
     }
     setSaving(true);
-    const payload = {
+    const payload: Record<string, unknown> = {
       name: name.trim(),
       code: code.trim() || null,
       description: description.trim() || null,
@@ -388,11 +406,21 @@ function ProductSheet({
       low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
       allow_out_of_stock_sale: allowOutOfStockSale,
     };
+    if (accountingEnabled) {
+      payload.ncm = ncm.trim() || null;
+      payload.cest = cest.trim() || null;
+      payload.cfop = cfop.trim() || null;
+      payload.cst = cst.trim() || null;
+      payload.csosn = csosn.trim() || null;
+      payload.origin = origin.trim() || null;
+      payload.fiscal_unit = fiscalUnit.trim() || null;
+      payload.fiscal_notes = fiscalNotes.trim() || null;
+    }
     
     const res = product
-      ? await updateProduct(product.id, payload)
+      ? await updateProduct(product.id, payload as any)
       : await createProduct({
-          ...payload,
+          ...(payload as any),
           tenant_id: currentMembership.tenant_id,
           restaurant_id: currentRestaurantId,
         });
@@ -532,6 +560,31 @@ function ProductSheet({
                 </div>
               </>
             )}
+
+            {accountingEnabled && (
+              <>
+                <Separator className="my-2" />
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <Label className="text-sm font-bold">Dados fiscais (opcional)</Label>
+                    <p className="text-[10px] text-muted-foreground">Apenas informativo. Não substitui emissão de cupom fiscal.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <FiscalField label="NCM" value={ncm} onChange={setNcm} disabled={!canEdit} />
+                    <FiscalField label="CEST" value={cest} onChange={setCest} disabled={!canEdit} />
+                    <FiscalField label="CFOP" value={cfop} onChange={setCfop} disabled={!canEdit} />
+                    <FiscalField label="CST" value={cst} onChange={setCst} disabled={!canEdit} />
+                    <FiscalField label="CSOSN" value={csosn} onChange={setCsosn} disabled={!canEdit} />
+                    <FiscalField label="Origem" value={origin} onChange={setOrigin} disabled={!canEdit} />
+                    <FiscalField label="Unid. Fiscal" value={fiscalUnit} onChange={setFiscalUnit} disabled={!canEdit} />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Observações fiscais</Label>
+                    <Textarea value={fiscalNotes} onChange={(e) => setFiscalNotes(e.target.value)} className="min-h-[60px] mt-1" disabled={!canEdit} />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -545,5 +598,14 @@ function ProductSheet({
         </SheetFooter>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function FiscalField({ label, value, onChange, disabled }: { label: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</Label>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled} className="h-9" />
+    </div>
   );
 }
