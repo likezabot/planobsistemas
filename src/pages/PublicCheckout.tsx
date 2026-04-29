@@ -72,6 +72,8 @@ export default function PublicCheckout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
   const [step, setStep] = useState(1);
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount_cents: number } | null>(null);
 
   const { data: zones } = useQuery({
     queryKey: ["checkout-delivery-zones", restaurantSlug],
@@ -95,15 +97,46 @@ export default function PublicCheckout() {
 
   const orderType = form.watch("order_type");
   const deliveryZoneId = form.watch("delivery_zone_id");
+  const couponCode = form.watch("coupon_code");
   const selectedZone = zones?.find(z => z.id === deliveryZoneId);
 
-  const finalTotal = getTotal() + (orderType === 'delivery' ? (selectedZone?.fee_cents || 0) : 0);
+  const subtotal = getTotal();
+  const deliveryFee = orderType === 'delivery' ? (selectedZone?.fee_cents || 0) : 0;
+  const discount = appliedCoupon ? appliedCoupon.discount_cents : 0;
+  const finalTotal = Math.max(subtotal - discount, 0) + deliveryFee;
 
   useEffect(() => {
     if (items.length === 0 && !orderSuccess) {
       navigate(`/menu/${restaurantSlug}`);
     }
   }, [items, orderSuccess, navigate, restaurantSlug]);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode || !restaurantSlug) return;
+    setIsValidatingCoupon(true);
+    try {
+      const { data, error } = await supabase.rpc("validate_coupon", {
+        _slug: restaurantSlug,
+        _code: couponCode,
+        _subtotal_cents: subtotal
+      });
+
+      if (error) throw error;
+
+      const result = data as any;
+      if (result.valid) {
+        setAppliedCoupon({ code: couponCode.toUpperCase(), discount_cents: result.discount_cents });
+        toast.success(result.message);
+      } else {
+        setAppliedCoupon(null);
+        toast.error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao validar cupom");
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
 
   const onSubmit = async (data: CheckoutForm) => {
     if (!restaurantSlug) return;
