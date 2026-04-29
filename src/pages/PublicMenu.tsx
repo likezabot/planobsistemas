@@ -311,7 +311,8 @@ function ProductCard({
   product, 
   onAdd,
   cartItem,
-  onUpdateQty
+  onUpdateQty,
+  inventoryEnabled
 }: { 
   product: PublicProduct; 
   onAdd: (p: PublicProduct) => void;
