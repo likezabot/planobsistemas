@@ -61,10 +61,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
-    { to: "/catalogo/categorias", icon: Store, label: "Categorias" },
-    { to: "/catalogo/pizzas", icon: Pizza, label: "Pizzas" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
   ];
+
 
   return (
     <div className="flex min-h-screen bg-white text-foreground font-sans relative">

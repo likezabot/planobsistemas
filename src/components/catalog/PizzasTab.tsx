@@ -57,55 +57,39 @@ type Pizza = {
   type: string | null;
 };
 
-export default function CatalogPizzas() {
+export default function PizzasTab() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
   const canEdit = isAdminRole(currentMembership?.role);
 
-  useEffect(() => {
-    document.title = "Pizzas — Catálogo";
-  }, []);
+  if (!currentRestaurantId) return <div className="text-sm text-muted-foreground p-8">Selecione um restaurante.</div>;
 
   return (
-    <AppShell>
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary flex items-center gap-2">
-            <Pizza className="w-6 h-6" /> Pizzas
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Configure sabores, tamanhos e regras de preço da pizzaria.
-          </p>
-        </div>
-
-        {!currentRestaurantId ? (
-          <div className="text-sm text-muted-foreground">Selecione um restaurante.</div>
-        ) : (
-          <Tabs defaultValue="pizzas" className="w-full">
-            <TabsList>
-              <TabsTrigger value="pizzas">Pizzas</TabsTrigger>
-              <TabsTrigger value="flavors">Sabores</TabsTrigger>
-            </TabsList>
-            <TabsContent value="pizzas" className="pt-4">
-              <PizzasTab restaurantId={currentRestaurantId} canEdit={canEdit} />
-            </TabsContent>
-            <TabsContent value="flavors" className="pt-4">
-              <FlavorsTab
-                restaurantId={currentRestaurantId}
-                tenantId={currentMembership?.tenant_id ?? ""}
-                canEdit={canEdit}
-              />
-            </TabsContent>
-          </Tabs>
-        )}
-      </div>
-    </AppShell>
+    <div className="flex flex-col gap-6">
+      <Tabs defaultValue="pizzas" className="w-full">
+        <TabsList className="bg-muted/50 p-1">
+          <TabsTrigger value="pizzas" className="text-xs uppercase font-bold tracking-wider px-6">Configurar Pizzas</TabsTrigger>
+          <TabsTrigger value="flavors" className="text-xs uppercase font-bold tracking-wider px-6">Sabores Globais</TabsTrigger>
+        </TabsList>
+        <TabsContent value="pizzas" className="pt-4">
+          <PizzasTabContent restaurantId={currentRestaurantId} canEdit={canEdit} />
+        </TabsContent>
+        <TabsContent value="flavors" className="pt-4">
+          <FlavorsTabContent
+            restaurantId={currentRestaurantId}
+            tenantId={currentMembership?.tenant_id ?? ""}
+            canEdit={canEdit}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
+
 
 // =====================================================================
 // ABA: Sabores (CRUD global do restaurante)
 // =====================================================================
-function FlavorsTab({
+function FlavorsTabContent({
   restaurantId,
   tenantId,
   canEdit,
@@ -359,7 +343,7 @@ function FlavorDialog({
 // =====================================================================
 // ABA: Pizzas (lista de produtos type=pizza + editor)
 // =====================================================================
-function PizzasTab({ restaurantId, canEdit }: { restaurantId: string; canEdit: boolean }) {
+function PizzasTabContent({ restaurantId, canEdit }: { restaurantId: string; canEdit: boolean }) {
   const { toast } = useToast();
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [loading, setLoading] = useState(false);
