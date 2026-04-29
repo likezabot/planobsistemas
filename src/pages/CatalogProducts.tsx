@@ -36,15 +36,12 @@ import {
   Power, 
   Search, 
   Filter, 
-  MoreVertical, 
   Edit2, 
   Image as ImageIcon,
   Tag,
   DollarSign,
   TrendingDown,
-  ChevronRight,
   Package,
-  Loader2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -104,22 +101,21 @@ export default function CatalogProducts() {
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-8">
-        {/* Page Header */}
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-display font-bold text-secondary">Catálogo de Produtos</h1>
-            <p className="text-muted-foreground font-medium mt-1">Gerencie seu cardápio, preços e disponibilidade.</p>
+            <h1 className="text-2xl font-bold text-secondary">Catálogo de Produtos</h1>
+            <p className="text-muted-foreground text-sm mt-1">Gerencie seu cardápio, preços e disponibilidade.</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="rounded-xl border-border h-12">
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" className="rounded-lg border-border h-10">
               <Link to="/catalogo/categorias">
                 <Tag className="w-4 h-4 mr-2" />
                 Categorias
               </Link>
             </Button>
             {canEdit && (
-              <Button className="rounded-xl h-12 shadow-button" onClick={() => { setEditing(null); setOpen(true); }}>
+              <Button className="rounded-lg h-10 shadow-sm" onClick={() => { setEditing(null); setOpen(true); }}>
                 <Plus className="w-4 h-4 mr-2" /> 
                 Novo Produto
               </Button>
@@ -127,20 +123,13 @@ export default function CatalogProducts() {
           </div>
         </div>
 
-        {!canEdit && (
-          <div className="bg-muted/50 border border-border p-4 rounded-2xl flex items-center gap-3 text-sm text-muted-foreground">
-            <Package className="w-5 h-5 opacity-40" />
-            <p>Seu perfil tem acesso somente leitura. Para alterações, contate um administrador.</p>
-          </div>
-        )}
-
         {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row gap-4 items-center">
+        <div className="flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-xl border border-border shadow-sm">
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input 
-              placeholder="Buscar por nome do produto..." 
-              className="h-12 pl-11 rounded-2xl border-border bg-card shadow-sm"
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input 
+              placeholder="Buscar produtos..." 
+              className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -148,7 +137,7 @@ export default function CatalogProducts() {
           <div className="flex items-center gap-3 w-full md:w-auto">
             <Filter className="w-4 h-4 text-muted-foreground hidden md:block" />
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="h-12 w-full md:w-48 rounded-2xl border-border bg-card shadow-sm">
+              <SelectTrigger className="h-10 w-full md:w-48 rounded-lg border-border bg-[#F8FAFC] text-sm">
                 <SelectValue placeholder="Todas categorias" />
               </SelectTrigger>
               <SelectContent>
@@ -161,103 +150,98 @@ export default function CatalogProducts() {
           </div>
         </div>
 
-        {/* Product List/Table */}
-        <div className="bg-card rounded-[2.5rem] border border-border shadow-card overflow-hidden">
+        {/* Product Grid */}
+        <div className="min-h-[400px]">
           {loading ? (
-            <div className="p-12 space-y-4">
-              {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />)}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-32">
-              <Package className="w-16 h-16 mx-auto mb-4 opacity-10 text-secondary" />
-              <p className="text-muted-foreground font-medium">Nenhum produto encontrado.</p>
+            <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
+              <Package className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
+              <p className="text-muted-foreground text-sm">Nenhum produto encontrado.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-muted/30 border-b border-border">
-                    <th className="px-8 py-5 text-left text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Produto</th>
-                    <th className="px-6 py-5 text-left text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Categoria</th>
-                    <th className="px-6 py-5 text-right text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Preço</th>
-                    <th className="px-6 py-5 text-right text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Custo</th>
-                    <th className="px-6 py-5 text-center text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Status</th>
-                    <th className="px-8 py-5"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {filteredProducts.map((p) => {
-                    const cat = categories.find((c) => c.id === p.category_id);
-                    return (
-                      <tr key={p.id} className="hover:bg-muted/20 transition-colors group">
-                        <td className="px-8 py-5">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center overflow-hidden border border-border/50">
-                              {p.image_url ? (
-                                <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
-                              ) : (
-                                <ImageIcon className="w-5 h-5 text-muted-foreground opacity-30" />
-                              )}
-                            </div>
-                            <div>
-                              <p className="font-bold text-secondary">{p.name}</p>
-                              {p.type && <Badge variant="outline" className="text-[9px] h-4 mt-1 font-bold uppercase tracking-tighter">{p.type}</Badge>}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-5">
-                          {cat ? (
-                            <Badge className="bg-secondary/10 text-secondary border-none font-bold text-[10px] rounded-lg">
-                              {cat.name}
-                            </Badge>
-                          ) : (
-                            <span className="text-muted-foreground text-xs italic">Sem categoria</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((p) => {
+                const cat = categories.find((c) => c.id === p.category_id);
+                return (
+                  <div key={p.id} className="bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden">
+                    <div className="aspect-video w-full bg-muted relative overflow-hidden shrink-0">
+                      {p.image_url ? (
+                        <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <ImageIcon className="w-8 h-8 text-muted-foreground opacity-20" />
+                        </div>
+                      )}
+                      <div className="absolute top-2 right-2">
+                        <Badge variant={p.active ? "secondary" : "outline"} className={cn(
+                          "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest border-none shadow-sm",
+                          p.active ? "bg-success text-white" : "bg-muted text-muted-foreground"
+                        )}>
+                          {p.active ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 flex-1 flex flex-col">
+                      <div className="flex justify-between items-start gap-2 mb-2">
+                        <div className="min-w-0">
+                          <h3 className="font-bold text-secondary text-sm leading-tight group-hover:text-primary transition-colors truncate">{p.name}</h3>
+                          {cat && (
+                            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{cat.name}</span>
                           )}
-                        </td>
-                        <td className="px-6 py-5 text-right">
-                          <span className="font-bold text-secondary tabular-nums">{centsToBRL(p.price_cents)}</span>
-                        </td>
-                        <td className="px-6 py-5 text-right">
-                          <span className="text-xs font-medium text-muted-foreground tabular-nums">{centsToBRL(p.cost_cents)}</span>
-                        </td>
-                        <td className="px-6 py-5 text-center">
-                          <Badge variant={p.active ? "secondary" : "outline"} className={cn(
-                            "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest",
-                            p.active ? "bg-success/10 text-success border-success/20" : "bg-muted text-muted-foreground opacity-50"
-                          )}>
-                            {p.active ? "Ativo" : "Inativo"}
-                          </Badge>
-                        </td>
-                        <td className="px-8 py-5 text-right">
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="font-bold text-secondary text-sm tabular-nums">{centsToBRL(p.price_cents)}</p>
+                          <p className="text-[9px] text-muted-foreground tabular-nums">Custo: {centsToBRL(p.cost_cents)}</p>
+                        </div>
+                      </div>
+
+                      {p.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed">{p.description}</p>
+                      )}
+
+                      <div className="mt-auto pt-3 border-t border-border flex justify-between items-center">
+                        <div className="flex gap-1">
+                          {p.type && p.type !== 'simple' && (
+                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted/50 border-none">
+                              {p.type}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <div className="flex gap-1">
                           {canEdit && (
-                            <div className="flex justify-end gap-2">
+                            <>
                               <Button 
                                 size="icon" 
                                 variant="ghost" 
-                                className="rounded-xl hover:bg-white hover:shadow-sm"
+                                className="h-8 w-8 rounded-lg hover:bg-muted"
                                 onClick={() => { setEditing(p); setOpen(true); }}
                               >
-                                <Edit2 className="h-4 w-4 text-secondary" />
+                                <Edit2 className="h-3.5 w-3.5 text-secondary" />
                               </Button>
                               <Button 
                                 size="icon" 
                                 variant="ghost" 
                                 className={cn(
-                                  "rounded-xl hover:bg-white hover:shadow-sm",
+                                  "h-8 w-8 rounded-lg hover:bg-muted transition-colors",
                                   p.active ? "text-success hover:text-destructive" : "text-muted-foreground hover:text-success"
                                 )}
                                 onClick={() => handleToggleActive(p)}
                               >
-                                <Power className="h-4 w-4" />
+                                <Power className="h-3.5 w-3.5" />
                               </Button>
-                            </div>
+                            </>
                           )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -352,110 +336,115 @@ function ProductDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl rounded-[2.5rem] p-0 overflow-hidden border-none shadow-premium">
-        <DialogHeader className="p-8 bg-secondary text-white">
-          <DialogTitle className="text-2xl font-display font-bold">
+      <DialogContent className="max-w-xl rounded-2xl p-0 overflow-hidden border-none shadow-xl">
+        <DialogHeader className="p-6 bg-secondary text-white">
+          <DialogTitle className="text-xl font-bold">
             {product ? "Editar Produto" : "Novo Produto"}
           </DialogTitle>
-          <DialogDescription className="text-white/60">
-            {product ? `Editando ${product.name}` : "Preencha as informações para adicionar um novo item ao cardápio."}
+          <DialogDescription className="text-white/60 text-sm">
+            {product ? `Editando ${product.name}` : "Preencha as informações do novo item."}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="p-name" className="font-bold text-secondary">Nome do Produto</Label>
-              <Input 
-                id="p-name" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                className="h-12 rounded-xl border-border focus:ring-primary"
-                placeholder="Ex: Hambúrguer de Costela"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="p-desc" className="font-bold text-secondary">Descrição / Ingredientes</Label>
-              <Textarea 
-                id="p-desc" 
-                value={description} 
-                onChange={(e) => setDescription(e.target.value)} 
-                rows={4} 
-                className="rounded-xl border-border focus:ring-primary"
-                placeholder="Detalhes que ajudam o cliente a escolher..."
-              />
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="p-price" className="font-bold text-secondary">Preço Venda (R$)</Label>
-                <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input 
-                    id="p-price" 
-                    inputMode="decimal" 
-                    value={price} 
-                    onChange={(e) => setPrice(e.target.value)} 
-                    placeholder="0,00" 
-                    className="h-12 pl-10 rounded-xl border-border focus:ring-primary font-bold"
-                  />
-                </div>
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="p-name" className="text-xs font-bold text-secondary uppercase tracking-wider">Nome do Produto</Label>
+                <Input 
+                  id="p-name" 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  className="h-10 rounded-lg border-border focus:ring-primary"
+                  placeholder="Ex: Hambúrguer de Costela"
+                />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="p-cost" className="font-bold text-secondary">Custo Médio (R$)</Label>
-                <div className="relative">
-                  <TrendingDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input 
-                    id="p-cost" 
-                    inputMode="decimal" 
-                    value={cost} 
-                    onChange={(e) => setCost(e.target.value)} 
-                    placeholder="0,00" 
-                    className="h-12 pl-10 rounded-xl border-border focus:ring-primary text-muted-foreground"
-                  />
-                </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="p-desc" className="text-xs font-bold text-secondary uppercase tracking-wider">Descrição / Ingredientes</Label>
+                <Textarea 
+                  id="p-desc" 
+                  value={description} 
+                  onChange={(e) => setDescription(e.target.value)} 
+                  rows={3} 
+                  className="rounded-lg border-border focus:ring-primary text-sm"
+                  placeholder="Detalhes que ajudam o cliente..."
+                />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label className="font-bold text-secondary">Categoria</Label>
-              <Select value={categoryId ?? "__none"} onValueChange={(v) => setCategoryId(v === "__none" ? null : v)}>
-                <SelectTrigger className="h-12 rounded-xl border-border"><SelectValue placeholder="Sem categoria" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__none">Sem categoria</SelectItem>
-                  {categories.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="p-price" className="text-xs font-bold text-secondary uppercase tracking-wider">Preço (R$)</Label>
+                  <div className="relative">
+                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <Input 
+                      id="p-price" 
+                      inputMode="decimal" 
+                      value={price} 
+                      onChange={(e) => setPrice(e.target.value)} 
+                      placeholder="0,00" 
+                      className="h-10 pl-9 rounded-lg border-border focus:ring-primary font-bold text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="p-cost" className="text-xs font-bold text-secondary uppercase tracking-wider">Custo (R$)</Label>
+                  <div className="relative">
+                    <TrendingDown className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                    <Input 
+                      id="p-cost" 
+                      inputMode="decimal" 
+                      value={cost} 
+                      onChange={(e) => setCost(e.target.value)} 
+                      placeholder="0,00" 
+                      className="h-10 pl-9 rounded-lg border-border focus:ring-primary text-xs"
+                    />
+                  </div>
+                </div>
+              </div>
 
-            <div className="space-y-2">
-              <Label className="font-bold text-secondary">Tipo de Produto</Label>
-              <Select value={type} onValueChange={setType}>
-                <SelectTrigger className="h-12 rounded-xl border-border"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="simple">Simples</SelectItem>
-                  <SelectItem value="variation">Com Variações</SelectItem>
-                  <SelectItem value="combo">Combo</SelectItem>
-                  <SelectItem value="pizza">Pizza</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold text-secondary uppercase tracking-wider">Categoria</Label>
+                <Select value={categoryId ?? "__none"} onValueChange={(v) => setCategoryId(v === "__none" ? null : v)}>
+                  <SelectTrigger className="h-10 rounded-lg border-border text-sm bg-[#F8FAFC]">
+                    <SelectValue placeholder="Selecione categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none" className="text-sm italic">Sem categoria</SelectItem>
+                    {categories.map((c) => (
+                      <SelectItem key={c.id} value={c.id} className="text-sm">{c.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold text-secondary uppercase tracking-wider">Tipo de Produto</Label>
+                <Select value={type} onValueChange={setType}>
+                  <SelectTrigger className="h-10 rounded-lg border-border text-sm bg-[#F8FAFC]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="simple" className="text-sm">Simples (Item único)</SelectItem>
+                    <SelectItem value="variant" className="text-sm">Com Variações (Tamanho, Sabor...)</SelectItem>
+                    <SelectItem value="combo" className="text-sm">Combo / Oferta</SelectItem>
+                    <SelectItem value="pizza" className="text-sm">Pizza (Múltiplos Sabores)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </div>
 
-        <DialogFooter className="p-8 bg-muted/50 gap-2 border-t border-border">
-          <Button variant="ghost" className="rounded-xl font-bold" onClick={() => onOpenChange(false)}>Cancelar</Button>
+        <DialogFooter className="p-6 bg-[#F8FAFC] border-t border-border gap-2">
+          <Button variant="ghost" className="rounded-lg font-bold" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button 
-            onClick={handleSave} 
+            className="rounded-lg h-10 font-bold px-8 shadow-sm min-w-[120px]"
             disabled={saving}
-            className="rounded-xl h-12 px-8 font-bold shadow-premium"
+            onClick={handleSave}
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            {product ? "Salvar Alterações" : "Criar Produto"}
+            {saving ? "Salvando..." : "Salvar Alterações"}
           </Button>
         </DialogFooter>
       </DialogContent>
