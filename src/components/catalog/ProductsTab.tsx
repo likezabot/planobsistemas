@@ -331,7 +331,13 @@ function ProductSheet({
   const [cost, setCost] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [type, setType] = useState<string>("simple");
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
 
   useEffect(() => {
     if (product) {
@@ -342,8 +348,13 @@ function ProductSheet({
       setCost((product.cost_cents / 100).toFixed(2).replace(".", ","));
       setCategoryId(product.category_id);
       setType(product.type || "simple");
+      setTrackStock(product.track_stock ?? false);
+      setStockQuantity(product.stock_quantity?.toString() || "0");
+      setLowStockAlert(product.low_stock_alert?.toString() || "");
+      setAllowOutOfStockSale(product.allow_out_of_stock_sale ?? false);
     } else {
       setName(""); setCode(""); setDescription(""); setPrice(""); setCost(""); setCategoryId(null); setType("simple");
+      setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [product, open]);
 
@@ -370,6 +381,10 @@ function ProductSheet({
       cost_cents: costCents,
       category_id: categoryId,
       type: type as any,
+      track_stock: trackStock,
+      stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+      low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+      allow_out_of_stock_sale: allowOutOfStockSale,
     };
     
     const res = product
