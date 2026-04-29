@@ -1386,12 +1386,10 @@ export type Database = {
         }
         Returns: Json
       }
-      create_print_job_for_order:
-        | { Args: { p_order_id: string; p_source: string }; Returns: string }
-        | {
-            Args: { p_order_id: string; p_reason?: string; p_source: string }
-            Returns: string
-          }
+      create_print_job_for_order: {
+        Args: { p_order_id: string; p_reason?: string; p_source: string }
+        Returns: string
+      }
       create_public_order: {
         Args: {
           _address?: string
