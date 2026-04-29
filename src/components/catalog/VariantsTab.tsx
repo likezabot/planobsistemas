@@ -267,7 +267,7 @@ export default function VariantsTab() {
             </Select>
           </div>
           {selectedProductId && canEdit && (
-            <Button className="font-bold h-10 px-6 mt-5 md:mt-0" onClick={() => { setEditing(null); setName(""); setCode(""); setPrice(""); setCost(""); setOpen(true); }}>
+            <Button className="font-bold h-10 px-6 mt-5 md:mt-0" onClick={() => { setEditing(null); setName(""); setCode(""); setPrice(""); setCost(""); setDiameterCm(""); setSlices(""); setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false); setOpen(true); }}>
               <Plus className="w-4 h-4 mr-2" />
               Novo Tamanho
             </Button>
