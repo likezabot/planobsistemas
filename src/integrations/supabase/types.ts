@@ -811,6 +811,7 @@ export type Database = {
         }
         Returns: Json
       }
+      export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
       fail_print_job:
         | {
             Args: { p_agent_id: string; p_error: string; p_job_id: string }
@@ -914,6 +915,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      import_catalog: {
+        Args: {
+          _deactivate_missing?: boolean
+          _payload: Json
+          _restaurant_id: string
+        }
+        Returns: Json
       }
       is_member_of_restaurant: {
         Args: { _restaurant_id: string; _user_id: string }
