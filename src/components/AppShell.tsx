@@ -20,7 +20,8 @@ import {
   Calculator,
   Menu,
   User,
-  ChevronRight
+  ChevronRight,
+  ChefHat
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -63,12 +64,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isAdmin = role === "owner" || role === "manager";
   // Owner/manager sempre veem (para poder ativar). Cashier só vê quando ativo. Waiter/kitchen/anon nunca.
   const canSeeAccounting = isAdmin || (accountingEnabled && role === "cashier");
+  const canSeeKDS = role === "owner" || role === "manager" || role === "kitchen";
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
+    ...(canSeeKDS ? [{ to: "/kds", icon: ChefHat, label: "Cozinha" }] : []),
     ...(canSeeAccounting ? [{ to: "/contador", icon: Calculator, label: "Contador" }] : []),
   ];
 
