@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Script utilitário para criar um agente de teste no banco de dados.
