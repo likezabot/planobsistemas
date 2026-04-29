@@ -34,10 +34,29 @@ import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { isAdminRole } from "@/lib/catalog/money";
 import { listProducts } from "@/lib/catalog/queries";
 
+function InfoBalloon({ text }: { text: string }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="inline-flex items-center justify-center ml-1 cursor-help text-primary hover:text-primary/80 transition-colors">
+            <Info className="w-3.5 h-3.5" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-secondary text-white border-none p-3 max-w-xs shadow-xl">
+          <p className="text-xs leading-relaxed font-medium">{text}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "produtos";
-  const { currentMembership } = useRestaurant();
+  const { currentMembership, currentRestaurantId } = useRestaurant();
+  const [hasProducts, setHasProducts] = useState<boolean | null>(null);
+  
   const pizzaEnabled = currentMembership?.restaurants.pizza_module_enabled ?? false;
   const isAdmin = isAdminRole(currentMembership?.role);
   // Aba Pizzas visível quando o módulo está ligado, ou para owner/manager (para poder ligar)
@@ -46,6 +65,15 @@ export default function Catalog() {
   useEffect(() => {
     document.title = "Catálogo — Plano B";
   }, []);
+
+  useEffect(() => {
+    async function checkProducts() {
+      if (!currentRestaurantId) return;
+      const { data } = await listProducts(currentRestaurantId);
+      setHasProducts(!!data && data.length > 0);
+    }
+    checkProducts();
+  }, [currentRestaurantId]);
 
   const handleTabChange = (value: string) => {
     setSearchParams({ tab: value });
