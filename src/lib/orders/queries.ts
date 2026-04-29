@@ -114,10 +114,25 @@ export const getDashboardMetrics = async (restaurantId: string) => {
     avgPrepTime = `${Math.round(totalMinutes / completedOrders.length)} min`;
   }
 
+  // Weekly sales for chart
+  const { data: dashboardStats } = await supabase.rpc('get_dashboard_stats', {
+    _restaurant_id: restaurantId,
+    _days_back: 7
+  });
+
+  const weeklySales = (dashboardStats as any)?.daily_sales?.map((d: any) => ({
+    dayLabel: d.day.split('-').reverse().slice(0, 2).join('/'),
+    sales_cents: d.sales_cents
+  })) || [];
+
+  const maxWeeklySales = Math.max(...weeklySales.map((s: any) => s.sales_cents), 0);
+
   return {
     salesToday: totalToday,
     ordersToday: ordersCount || 0,
     avgPrepTime,
-    trend
+    trend,
+    weeklySales,
+    maxWeeklySales
   };
 };
