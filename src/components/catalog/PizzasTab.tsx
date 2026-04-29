@@ -299,6 +299,7 @@ function FlavorDialog({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [ingredients, setIngredients] = useState("");
   const [saving, setSaving] = useState(false);
   const { currentMembership } = useRestaurant();
   const [trackStock, setTrackStock] = useState(false);
