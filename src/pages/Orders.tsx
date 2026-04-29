@@ -338,10 +338,10 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
             </div>
             <h2 className="text-xl font-bold">{order.customer_name}</h2>
             <div className="flex items-center gap-3 mt-3">
-              <div className="flex items-center gap-1.5 text-xs bg-white px-2 py-1 rounded-lg border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs bg-secondary px-2 py-1 rounded-lg border border-border text-white">
                 <Phone className="w-3 h-3 text-primary" /> {order.customer_phone}
               </div>
-              <div className="flex items-center gap-1.5 text-xs bg-white px-2 py-1 rounded-lg border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs bg-secondary px-2 py-1 rounded-lg border border-border text-white">
                 {order.order_type === 'delivery' ? <Truck className="w-3 h-3 text-warning" /> : <ShoppingBag className="w-3 h-3 text-success" />}
                 {order.order_type === 'delivery' ? 'Entrega' : 'Retirada'}
               </div>
