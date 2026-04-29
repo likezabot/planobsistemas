@@ -14,17 +14,19 @@ import {
   type OptionItem
 } from "@/lib/catalog/optionsQueries";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
-import { 
-  Plus, 
-  Power, 
-  Trash2, 
-  Edit2, 
-  PlusCircle, 
-  Search, 
+import { isSuspectPizzaOptionGroup, classifyPizzaGroup } from "@/lib/catalog/suspectDetection";
+import {
+  Plus,
+  Power,
+  Trash2,
+  Edit2,
+  PlusCircle,
+  Search,
   Loader2,
   ChevronRight,
   Settings2,
-  ListFilter
+  ListFilter,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
