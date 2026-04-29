@@ -17,6 +17,7 @@ import Accounting from "./pages/Accounting.tsx";
 import KDS from "./pages/KDS.tsx";
 import Reports from "./pages/Reports.tsx";
 import Customers from "./pages/Customers.tsx";
+import DeliverySettings from "./pages/DeliverySettings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
