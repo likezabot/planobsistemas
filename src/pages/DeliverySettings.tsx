@@ -167,7 +167,10 @@ export default function DeliverySettings() {
       <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary tracking-tight">Gestão de Entregas</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-secondary tracking-tight">Gestão de Entregas</h1>
+              <InfoBalloon text="Configure as zonas de entrega para que o sistema cobre a taxa correta automaticamente no checkout. Se o restaurante tiver zonas ativas, o cliente será obrigado a selecionar uma no checkout." />
+            </div>
             <p className="text-muted-foreground text-sm mt-1">Configure taxas de entrega por bairro ou região.</p>
           </div>
           <Button onClick={handleCreate} className="rounded-lg font-bold gap-2">
