@@ -139,7 +139,7 @@ export function NewOrderDrawer({ open, onOpenChange }: { open: boolean, onOpenCh
         _restaurant_id: currentRestaurantId,
         _customer_name: customerName,
         _customer_phone: customerPhone,
-        _order_type: "takeaway", // Default PDV
+        _order_type: "pickup", // Default PDV
         _payment_method: paymentMethod,
         _idempotency_key: crypto.randomUUID(),
         _items: items,
