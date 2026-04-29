@@ -34,3 +34,31 @@ export const reprintOrder = async (orderId: string, reason: string) => {
   if (error) throw error;
   return data;
 };
+
+export const claimPrintJob = async (jobId: string, agentId: string) => {
+  const { data, error } = await supabase.rpc('claim_print_job', {
+    p_job_id: jobId,
+    p_agent_id: agentId
+  });
+  if (error) throw error;
+  return data;
+};
+
+export const completePrintJob = async (jobId: string, agentId: string) => {
+  const { data, error } = await supabase.rpc('complete_print_job', {
+    p_job_id: jobId,
+    p_agent_id: agentId
+  });
+  if (error) throw error;
+  return data;
+};
+
+export const failPrintJob = async (jobId: string, agentId: string, errorMsg: string) => {
+  const { data, error } = await supabase.rpc('fail_print_job', {
+    p_job_id: jobId,
+    p_agent_id: agentId,
+    p_error: errorMsg
+  });
+  if (error) throw error;
+  return data;
+};

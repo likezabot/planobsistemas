@@ -28,6 +28,7 @@ import {
   Clock,
   RefreshCw
 } from "lucide-react";
+import { PrintAgentSimulator } from "@/components/printing/PrintAgentSimulator";
 
 export default function PrintControlPage() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
@@ -167,28 +168,38 @@ export default function PrintControlPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-6">
-          <TabsTrigger value="active">Ativos / Falhas</TabsTrigger>
-          <TabsTrigger value="printed">Impressos</TabsTrigger>
-          <TabsTrigger value="all">Todos</TabsTrigger>
-        </TabsList>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <Tabs defaultValue="active" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsTrigger value="active">Ativos / Falhas</TabsTrigger>
+              <TabsTrigger value="printed">Impressos</TabsTrigger>
+              <TabsTrigger value="all">Todos</TabsTrigger>
+            </TabsList>
 
-        {["active", "printed", "all"].map((tab) => (
-          <TabsContent key={tab} value={tab}>
-            {filteredJobs(tab).length === 0 ? (
-              <div className="text-center py-20 text-muted-foreground">
-                <Printer className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                <p>Nenhum job de impressão encontrado</p>
-              </div>
-            ) : (
-              <div className="grid gap-0">
-                {filteredJobs(tab).map((job) => <JobCard key={job.id} job={job} />)}
-              </div>
-            )}
-          </TabsContent>
-        ))}
-      </Tabs>
+            {["active", "printed", "all"].map((tab) => (
+              <TabsContent key={tab} value={tab}>
+                {filteredJobs(tab).length === 0 ? (
+                  <div className="text-center py-20 text-muted-foreground border rounded-lg border-dashed">
+                    <Printer className="w-12 h-12 mx-auto mb-4 opacity-20" />
+                    <p>Nenhum job de impressão encontrado</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-0">
+                    {filteredJobs(tab).map((job) => <JobCard key={job.id} job={job} />)}
+                  </div>
+                )}
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
+
+        <div className="lg:col-span-1">
+          {currentRestaurantId && (
+            <PrintAgentSimulator restaurantId={currentRestaurantId} />
+          )}
+        </div>
+      </div>
 
       {/* Reprint Dialog */}
       <Dialog open={isReprintDialogOpen} onOpenChange={setIsReprintDialogOpen}>
