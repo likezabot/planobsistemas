@@ -54,15 +54,20 @@ function NavItem({ to, icon: Icon, label, active, onClick }: NavItemProps) {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth();
-  const { memberships, currentRestaurantId, setCurrentRestaurantId } = useRestaurant();
+  const { memberships, currentRestaurantId, currentMembership, setCurrentRestaurantId } = useRestaurant();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const accountingEnabled = currentMembership?.restaurants.accounting_reports_enabled ?? false;
+  const role = currentMembership?.role;
+  const canSeeAccounting = accountingEnabled && (role === "owner" || role === "manager" || role === "cashier");
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
+    ...(canSeeAccounting ? [{ to: "/contador", icon: Calculator, label: "Contador" }] : []),
   ];
 
 
