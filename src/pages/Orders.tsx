@@ -268,15 +268,17 @@ export default function OrdersPage() {
                             <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-bold text-sm">
                               {item.quantity}x
                             </span>
-                            <div>
-                              <p className="font-bold text-secondary">{item.product?.name}</p>
-                              {item.customization?.description && (
-                                <p className="text-xs text-muted-foreground mt-1 italic">{item.customization.description}</p>
-                              )}
-                              {item.note && (
-                                <p className="text-xs text-warning mt-1 font-medium">Obs: {item.note}</p>
-                              )}
-                            </div>
+                          <div>
+                            <p className="font-bold text-secondary">{item.product?.name}</p>
+                            {item.customization && typeof item.customization === 'object' && (item.customization as any).description && (
+                              <p className="text-xs text-muted-foreground mt-1 italic">
+                                {(item.customization as any).description}
+                              </p>
+                            )}
+                            {item.note && (
+                              <p className="text-xs text-warning mt-1 font-medium">Obs: {item.note}</p>
+                            )}
+                          </div>
                           </div>
                           <span className="font-bold text-secondary tabular-nums">{centsToBRL(item.total_price_cents)}</span>
                         </div>
