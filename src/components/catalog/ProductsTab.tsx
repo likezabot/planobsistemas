@@ -71,7 +71,7 @@ export default function ProductsTab() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  
+
   // Inline editing state
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [tempPrice, setTempPrice] = useState("");
@@ -80,7 +80,14 @@ export default function ProductsTab() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
+  // Suspect dialog state
+  const [suspectProduct, setSuspectProduct] = useState<Product | null>(null);
+  const [suspectOpen, setSuspectOpen] = useState(false);
+  const [dismissedTick, setDismissedTick] = useState(0); // força re-render ao dispensar
+
   const canEdit = isAdminRole(currentMembership?.role);
+  const userId = currentMembership?.user_id ?? null;
+  const scope = buildScope(currentRestaurantId, userId);
 
   const refresh = useCallback(async () => {
     if (!currentRestaurantId) return;
