@@ -382,9 +382,9 @@ export function PizzaModal({
                                       {f.name}
                                       {isFlavorOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
                                     </p>
-                                    {f.description && (
+                                    {(f.description || f.ingredients) && (
                                       <p className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">
-                                        {f.description}
+                                        {f.description || f.ingredients}
                                       </p>
                                     )}
                                   </div>
