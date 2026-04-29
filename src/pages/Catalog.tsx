@@ -2,7 +2,19 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AppShell } from "@/components/AppShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Tag, Pizza, Layers, PlusCircle, Download, ClipboardList } from "lucide-react";
+import { 
+  BookOpen, 
+  Tag, 
+  Pizza, 
+  Layers, 
+  PlusCircle, 
+  Download, 
+  ClipboardList,
+  Info,
+  HelpCircle,
+  ArrowRight,
+  CheckCircle2
+} from "lucide-react";
 import ProductsTab from "@/components/catalog/ProductsTab";
 import CategoriesTab from "@/components/catalog/CategoriesTab";
 import PizzasTab from "@/components/catalog/PizzasTab";
@@ -10,9 +22,17 @@ import VariantsTab from "@/components/catalog/VariantsTab";
 import OptionsTab from "@/components/catalog/OptionsTab";
 import InventoryTab from "@/components/catalog/InventoryTab";
 import ImportExportTab from "@/components/catalog/ImportExportTab";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { isAdminRole } from "@/lib/catalog/money";
+import { listProducts } from "@/lib/catalog/queries";
 
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
