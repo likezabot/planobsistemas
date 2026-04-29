@@ -13,6 +13,7 @@ import CatalogCategories from "./pages/CatalogCategories.tsx";
 import PublicMenu from "./pages/PublicMenu.tsx";
 import PublicCheckout from "./pages/PublicCheckout.tsx";
 import Orders from "./pages/Orders.tsx";
+import PrintControl from "./pages/PrintControl.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Orders />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/impressao"
+                element={
+                  <ProtectedRoute>
+                    <PrintControl />
                   </ProtectedRoute>
                 }
               />
