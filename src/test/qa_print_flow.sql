@@ -22,6 +22,7 @@ BEGIN
 
     -- Create an owner user (simulated)
     v_owner_id := gen_random_uuid();
+    INSERT INTO auth.users (id, email) VALUES (v_owner_id, 'qa-owner@example.com');
     INSERT INTO restaurant_members (tenant_id, restaurant_id, user_id, role)
     VALUES (v_tenant_id, v_restaurant_id, v_owner_id, 'owner');
 
