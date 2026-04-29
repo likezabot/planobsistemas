@@ -34,6 +34,7 @@ export interface PublicProduct {
   sort_order: number;
   image_url: string | null;
   type: "simple" | "variable" | "pizza" | "combo";
+  has_options: boolean;
 }
 
 export interface PublicProductDetails {
