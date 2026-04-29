@@ -1136,6 +1136,20 @@ export type Database = {
             Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
             Returns: boolean
           }
+      create_internal_order: {
+        Args: {
+          _address?: string
+          _customer_name: string
+          _customer_phone: string
+          _idempotency_key: string
+          _items: Json
+          _notes?: string
+          _order_type: Database["public"]["Enums"]["order_type"]
+          _payment_method: Database["public"]["Enums"]["payment_method"]
+          _restaurant_id: string
+        }
+        Returns: Json
+      }
       create_print_job_for_order: {
         Args: { p_order_id: string; p_reason?: string; p_source: string }
         Returns: string
