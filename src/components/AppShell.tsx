@@ -24,7 +24,8 @@ import {
   ChefHat,
   BarChart2,
   Users,
-  MapPin
+  MapPin,
+  Ticket
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
