@@ -40,6 +40,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/catalogo"
                 element={
                   <ProtectedRoute>
