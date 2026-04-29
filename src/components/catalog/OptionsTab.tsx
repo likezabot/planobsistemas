@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export default function OptionsTab() {
@@ -328,12 +329,26 @@ function ItemDialog({ open, onOpenChange, item, groupId, onSaved }: any) {
   const [price, setPrice] = useState("");
   const [cost, setCost] = useState("");
   const [saving, setSaving] = useState(false);
+  const { currentMembership } = useRestaurant();
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const inventoryMode = currentMembership?.restaurants.inventory_mode;
+  const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
 
   useEffect(() => {
     if (item) {
       setName(item.name); setCode(item.code || ""); setPrice((item.price_cents / 100).toFixed(2).replace('.', ',')); setCost((item.cost_cents || 0 / 100).toFixed(2).replace('.', ','));
+      setTrackStock(item.track_stock ?? false);
+      setStockQuantity(item.stock_quantity?.toString() || "0");
+      setLowStockAlert(item.low_stock_alert?.toString() || "");
+      setAllowOutOfStockSale(item.allow_out_of_stock_sale ?? false);
     } else {
       setName(""); setCode(""); setPrice(""); setCost("");
+      setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [item, open]);
 
@@ -343,7 +358,17 @@ function ItemDialog({ open, onOpenChange, item, groupId, onSaved }: any) {
       const priceCents = parseBRLToCents(price);
       const costCents = parseBRLToCents(cost);
       setSaving(true);
-      const payload = { name: name.trim(), code: code.trim() || null, price_cents: priceCents, cost_cents: costCents, group_id: groupId };
+      const payload = { 
+        name: name.trim(), 
+        code: code.trim() || null, 
+        price_cents: priceCents, 
+        cost_cents: costCents, 
+        group_id: groupId,
+        track_stock: trackStock,
+        stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+        low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+        allow_out_of_stock_sale: allowOutOfStockSale,
+      };
       const res = item ? await updateOptionItem(item.id, payload) : await createOptionItem(payload as any);
       setSaving(false);
       if (res.error) throw res.error;
