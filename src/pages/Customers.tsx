@@ -30,7 +30,8 @@ import {
   CreditCard,
   Calendar,
   ChevronRight,
-  Loader2
+  Loader2,
+  TrendingUp
 } from "lucide-react";
 import { centsToBRL } from "@/lib/catalog/money";
 import { format } from "date-fns";
