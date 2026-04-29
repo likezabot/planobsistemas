@@ -30,15 +30,13 @@ async function poll() {
 
   try {
     // 1. Fetch pending jobs for this restaurant created AFTER agent started
-    // Rule: Do not process backlog unless explicitly requested (backlog feature not implemented yet)
-    const { data: jobs, error } = await supabase
-      .from('print_jobs')
-      .select('*')
-      .eq('restaurant_id', RESTAURANT_ID)
-      .eq('status', 'pending')
-      .gt('created_at', startedAt)
-      .order('created_at', { ascending: true })
-      .limit(1);
+    // Using secure RPC instead of direct select to avoid RLS issues with anon key
+    const { data: jobs, error } = await supabase.rpc('get_pending_print_jobs', {
+      p_restaurant_id: RESTAURANT_ID,
+      p_agent_id: AGENT_ID,
+      p_secret_key: AGENT_SECRET,
+      p_after_timestamp: startedAt
+    });
 
     if (error) throw error;
 
