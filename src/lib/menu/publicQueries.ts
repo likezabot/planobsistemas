@@ -33,6 +33,32 @@ export interface PublicProduct {
   price_cents: number;
   sort_order: number;
   image_url: string | null;
+  type: "simple" | "variable" | "pizza" | "combo";
+}
+
+export interface PublicProductDetails {
+  variants: {
+    id: string;
+    name: string;
+    price_cents: number;
+  }[];
+  option_groups: {
+    id: string;
+    name: string;
+    min_options: number;
+    max_options: number;
+    is_required: boolean;
+    items: {
+      id: string;
+      name: string;
+      price_cents: number;
+    }[];
+  }[];
+  pizza_config?: {
+    max_flavors: number;
+    price_rule: "max" | "average" | "sum";
+    allow_edge_customization: boolean;
+  };
 }
 
 function requireSlug(slug: string | null | undefined): string {
