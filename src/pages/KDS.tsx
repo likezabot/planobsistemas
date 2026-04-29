@@ -16,7 +16,8 @@ import {
   Check, 
   AlertCircle,
   Wifi,
-  WifiOff
+  WifiOff,
+  ClipboardCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
@@ -103,7 +104,7 @@ export default function KDS() {
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-6 h-full max-w-full">
+      <div className="flex flex-col gap-6 h-full max-w-full animate-in fade-in duration-500">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-black text-secondary tracking-tight">KDS Cozinha</h1>
@@ -155,13 +156,13 @@ function KDSColumn({ title, orders, onAction, actionLabel, nextStatus, color, bo
   title: string, 
   orders: OrderWithItems[], 
   onAction: (id: string, status: Order['status']) => void,
-  actionLabel: string,
-  nextStatus: Order['status'],
+  actionLabel?: string,
+  nextStatus?: Order['status'],
   color: string,
   borderColor: string
 }) {
   return (
-    <div className={cn("flex flex-col gap-4 p-4 rounded-2xl border-2 min-h-full", color, borderColor)}>
+    <div className={cn("flex flex-col gap-4 p-4 rounded-2xl border-2 min-h-full transition-colors", color, borderColor)}>
       <div className="flex items-center justify-between px-2">
         <h2 className="text-xl font-black uppercase tracking-widest text-secondary">{title}</h2>
         <Badge variant="outline" className="font-black h-7 min-w-[28px] flex items-center justify-center border-2 border-secondary/20 text-secondary">
@@ -174,8 +175,9 @@ function KDSColumn({ title, orders, onAction, actionLabel, nextStatus, color, bo
           <KDSCard 
             key={order.id} 
             order={order} 
-            onAction={() => onAction(order.id, nextStatus)}
+            onAction={(status) => onAction(order.id, status)}
             actionLabel={actionLabel}
+            nextStatus={nextStatus}
           />
         ))}
         {orders.length === 0 && (
@@ -189,14 +191,23 @@ function KDSColumn({ title, orders, onAction, actionLabel, nextStatus, color, bo
   );
 }
 
-function KDSCard({ order, onAction, actionLabel }: { order: OrderWithItems, onAction: () => void, actionLabel: string }) {
+function KDSCard({ order, onAction, actionLabel, nextStatus }: { 
+  order: OrderWithItems, 
+  onAction: (status: Order['status']) => void, 
+  actionLabel?: string,
+  nextStatus?: Order['status']
+}) {
   const timeSince = formatDistanceToNow(new Date(order.created_at), { addSuffix: true, locale: ptBR });
   const minutesElapsed = (new Date().getTime() - new Date(order.created_at).getTime()) / (1000 * 60);
   const isDelayed = order.status === 'preparing' && minutesElapsed > 20;
 
+  // Determine current action if not fixed by column
+  const currentActionLabel = actionLabel || (order.status === 'new' ? 'Aceitar' : 'Preparar');
+  const currentNextStatus = nextStatus || (order.status === 'new' ? 'accepted' : 'preparing');
+
   return (
     <div className={cn(
-      "bg-white rounded-xl p-5 shadow-sm border-2 transition-all flex flex-col gap-4",
+      "bg-white rounded-xl p-5 shadow-sm border-2 transition-all flex flex-col gap-4 animate-in zoom-in-95 duration-300",
       isDelayed ? "border-destructive ring-2 ring-destructive/20 animate-pulse-discrete" : "border-border hover:border-secondary/30"
     )}>
       <div className="flex justify-between items-start border-b border-border pb-3">
@@ -279,12 +290,13 @@ function KDSCard({ order, onAction, actionLabel }: { order: OrderWithItems, onAc
       <Button 
         size="lg"
         className="h-14 rounded-xl text-lg font-black uppercase tracking-widest gap-3 shadow-lg transition-transform active:scale-95"
-        onClick={onAction}
+        onClick={() => onAction(currentNextStatus)}
       >
-        {actionLabel === 'Preparar' && <Play className="w-6 h-6" />}
-        {actionLabel === 'Pronto' && <CheckCircle2 className="w-6 h-6" />}
-        {actionLabel === 'Finalizar' && <Check className="w-6 h-6" />}
-        {actionLabel}
+        {currentActionLabel === 'Aceitar' && <ClipboardCheck className="w-6 h-6" />}
+        {currentActionLabel === 'Preparar' && <Play className="w-6 h-6" />}
+        {currentActionLabel === 'Pronto' && <CheckCircle2 className="w-6 h-6" />}
+        {currentActionLabel === 'Finalizar' && <Check className="w-6 h-6" />}
+        {currentActionLabel}
       </Button>
     </div>
   );
