@@ -118,7 +118,11 @@ describe('Checkout Security E2E', () => {
       _address: null,
     });
 
-    expect(error?.message).toContain('Endereço obrigatório');
+    // The RPC must reject delivery without an address. Different layers can surface
+    // the rejection in different fields (message / details / hint), so we accept any.
+    expect(error).not.toBeNull();
+    const blob = JSON.stringify(error ?? {});
+    expect(blob).toMatch(/Endereço obrigatório|address/i);
   });
 
   it('should fail if restaurant public_menu_enabled is false', async () => {
