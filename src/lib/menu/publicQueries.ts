@@ -32,6 +32,7 @@ export interface PublicProduct {
   description: string | null;
   price_cents: number;
   sort_order: number;
+  image_url: string | null;
 }
 
 function requireSlug(slug: string | null | undefined): string {
@@ -69,5 +70,6 @@ export async function getPublicProducts(slug: string): Promise<PublicProduct[]> 
     description: p.description,
     price_cents: p.price_cents,
     sort_order: p.sort_order,
+    image_url: p.image_url,
   }));
 }
