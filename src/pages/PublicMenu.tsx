@@ -118,7 +118,7 @@ export default function PublicMenu() {
     if (!restaurantSlug) return;
     
     // If complex product, open modal
-    if (product.type !== 'simple') {
+    if (product.has_options) {
       setSelectedProduct(product);
       return;
     }
