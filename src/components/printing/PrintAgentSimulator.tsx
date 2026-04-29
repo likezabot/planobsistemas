@@ -7,6 +7,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { 
   Play, 
   Pause, 
   Trash2, 
@@ -14,7 +21,8 @@ import {
   CheckCircle, 
   Settings2,
   Activity,
-  Zap
+  Zap,
+  ShieldCheck
 } from "lucide-react";
 import { claimPrintJob, completePrintJob, failPrintJob, PrintJob, getPrintAgents, PrintAgent } from "@/lib/printing/queries";
 import { format } from "date-fns";
@@ -44,6 +52,8 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [simulateNextFail, setSimulateNextFail] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
+  const [agents, setAgents] = useState<PrintAgent[]>([]);
+  const [selectedAgentId, setSelectedAgentId] = useState<string>("");
   const [metrics, setMetrics] = useState<SimulatorMetrics>({
     processed: 0,
     successes: 0,
@@ -51,8 +61,15 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
     totalTime: 0,
   });
 
-  const agentId = "Simulador-Navegador-" + restaurantId.slice(0, 4);
   const processingRef = useRef(false);
+  
+  const selectedAgent = agents.find(a => a.id === selectedAgentId);
+
+  useEffect(() => {
+    if (restaurantId) {
+      getPrintAgents(restaurantId).then(setAgents).catch(console.error);
+    }
+  }, [restaurantId, isRunning]);
 
   const addLog = (log: Omit<LogEntry, "id" | "timestamp">) => {
     setLogs(prev => [
@@ -61,12 +78,12 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
         id: Math.random().toString(36).substring(7),
         timestamp: new Date(),
       },
-      ...prev.slice(0, 49), // Keep last 50
+      ...prev.slice(0, 49),
     ]);
   };
 
   const processJob = async (job: PrintJob) => {
-    if (processingRef.current) return;
+    if (processingRef.current || !selectedAgent) return;
     processingRef.current = true;
     setIsProcessing(true);
     const start = Date.now();
@@ -77,22 +94,22 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
         orderId: job.order_id,
         action: "Capturando job",
         result: "info",
-        details: `Status: ${job.status} -> printing`
+        details: `Usando agente: ${selectedAgent.name}`
       });
 
       // 1. Claim
-      const claimed = await claimPrintJob(job.id, agentId);
+      const claimed = await claimPrintJob(job.id, selectedAgent.id, selectedAgent.secret_key);
       if (!claimed) {
-        throw new Error("Não foi possível capturar o job (já capturado ou cancelado)");
+        throw new Error("Não foi possível capturar o job (chave inválida ou já capturado)");
       }
 
-      // 2. Simulação de tempo de impressão (1.5s)
+      // 2. Simulação de tempo de impressão
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       // 3. Sucesso ou Falha
       if (simulateNextFail) {
         setSimulateNextFail(false);
-        await failPrintJob(job.id, agentId, "Simulação de falha manual do usuário");
+        await failPrintJob(job.id, selectedAgent.id, selectedAgent.secret_key, "Simulação de falha manual do usuário");
         addLog({
           jobId: job.id,
           orderId: job.order_id,
@@ -108,7 +125,7 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
           totalTime: m.totalTime + (Date.now() - start)
         }));
       } else {
-        await completePrintJob(job.id, agentId);
+        await completePrintJob(job.id, selectedAgent.id, selectedAgent.secret_key);
         addLog({
           jobId: job.id,
           orderId: job.order_id,
@@ -145,7 +162,7 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
   };
 
   useEffect(() => {
-    if (!isRunning || !restaurantId) return;
+    if (!isRunning || !restaurantId || !selectedAgentId) return;
 
     const interval = setInterval(async () => {
       if (processingRef.current) return;
@@ -175,72 +192,35 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isRunning, restaurantId, startTime, simulateNextFail]);
+  }, [isRunning, restaurantId, startTime, selectedAgentId]);
 
   const handleToggle = (checked: boolean) => {
+    if (checked && !selectedAgentId) {
+      toast.error("Selecione um agente para simular");
+      return;
+    }
     setIsRunning(checked);
     if (checked) {
       setStartTime(new Date());
-      addLog({ action: "Simulador iniciado", result: "info", details: "Aguardando novos jobs..." });
+      addLog({ action: "Simulador iniciado", result: "info", details: `Agente: ${selectedAgent?.name}` });
     } else {
       addLog({ action: "Simulador pausado", result: "info" });
-    }
-  };
-
-  const processBacklog = async () => {
-    if (processingRef.current || isRunning) {
-      toast.error("Pause o simulador automático antes de processar o backlog manual");
-      return;
-    }
-
-    const confirm = window.confirm("Deseja processar todos os jobs pendentes anteriores? Isso pode gerar muitas impressões.");
-    if (!confirm) return;
-
-    try {
-      const { data: jobs, error } = await supabase
-        .from("print_jobs")
-        .select("*")
-        .eq("restaurant_id", restaurantId)
-        .eq("status", "pending")
-        .order("created_at", { ascending: true });
-
-      if (error) throw error;
-      if (!jobs || jobs.length === 0) {
-        toast.info("Nenhum job pendente no backlog");
-        return;
-      }
-
-      toast.info(`Processando ${jobs.length} jobs do backlog...`);
-      for (const job of jobs) {
-        // We re-check running status inside loop just in case
-        if (processingRef.current) {
-           // wait a bit
-           await new Promise(r => setTimeout(r, 2000));
-        }
-        await processJob(job as PrintJob);
-      }
-      toast.success("Backlog concluído");
-    } catch (error: any) {
-      toast.error(error.message);
     }
   };
 
   const avgTime = metrics.processed > 0 ? (metrics.totalTime / metrics.processed / 1000).toFixed(1) : "0";
 
   return (
-    <Card className="border-primary/20 bg-primary/5">
+    <Card className="border-orange-200 bg-orange-50/30 mt-6">
       <CardHeader className="p-4 pb-2 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Activity className={`w-5 h-5 ${isRunning ? 'text-green-500 animate-pulse' : 'text-muted-foreground'}`} />
-            <CardTitle className="text-sm font-bold uppercase tracking-wider">
-              Simulador de Agente Local
+            <ShieldCheck className={`w-5 h-5 ${isRunning ? 'text-orange-500 animate-pulse' : 'text-muted-foreground'}`} />
+            <CardTitle className="text-xs font-bold uppercase tracking-wider">
+              Simulador (Dev Only)
             </CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Label htmlFor="simulator-toggle" className="text-xs font-medium">
-              {isRunning ? "Ativo" : "Inativo"}
-            </Label>
             <Switch 
               id="simulator-toggle" 
               checked={isRunning} 
@@ -251,99 +231,86 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
       </CardHeader>
       
       <CardContent className="p-4 space-y-4">
-        {/* Metrics */}
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase text-muted-foreground">Agente Autorizado</Label>
+          <Select value={selectedAgentId} onValueChange={setSelectedAgentId} disabled={isRunning}>
+            <SelectTrigger className="h-8 text-xs bg-background">
+              <SelectValue placeholder="Selecione um agente..." />
+            </SelectTrigger>
+            <SelectContent>
+              {agents.map(agent => (
+                <SelectItem key={agent.id} value={agent.id} className="text-xs">
+                  {agent.name}
+                </SelectItem>
+              ))}
+              {agents.length === 0 && (
+                <div className="p-2 text-xs text-muted-foreground italic">
+                  Nenhum agente criado acima
+                </div>
+              )}
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="grid grid-cols-4 gap-2 text-center">
           <div className="bg-background rounded p-2 border">
-            <div className="text-[10px] text-muted-foreground uppercase">Jobs</div>
-            <div className="font-bold">{metrics.processed}</div>
+            <div className="text-[10px] text-muted-foreground uppercase leading-tight">Jobs</div>
+            <div className="font-bold text-xs">{metrics.processed}</div>
           </div>
           <div className="bg-background rounded p-2 border">
-            <div className="text-[10px] text-muted-foreground uppercase">Sucesso</div>
-            <div className="font-bold text-green-600">{metrics.successes}</div>
+            <div className="text-[10px] text-muted-foreground uppercase leading-tight">Ok</div>
+            <div className="font-bold text-xs text-green-600">{metrics.successes}</div>
           </div>
           <div className="bg-background rounded p-2 border">
-            <div className="text-[10px] text-muted-foreground uppercase">Falha</div>
-            <div className="font-bold text-destructive">{metrics.failures}</div>
+            <div className="text-[10px] text-muted-foreground uppercase leading-tight">Err</div>
+            <div className="font-bold text-xs text-destructive">{metrics.failures}</div>
           </div>
           <div className="bg-background rounded p-2 border">
-            <div className="text-[10px] text-muted-foreground uppercase">Tempo Médio</div>
-            <div className="font-bold">{avgTime}s</div>
+            <div className="text-[10px] text-muted-foreground uppercase leading-tight">Tempo</div>
+            <div className="font-bold text-xs">{avgTime}s</div>
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="flex flex-wrap gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex-1 gap-2 text-xs"
-            onClick={processBacklog}
-            disabled={isRunning || isProcessing}
-          >
-            <Zap className="w-3 h-3" />
-            Processar Backlog
-          </Button>
-          
+        <div className="flex gap-2">
           <Button 
             variant={simulateNextFail ? "destructive" : "outline"} 
             size="sm" 
-            className="flex-1 gap-2 text-xs"
+            className="flex-1 gap-2 text-[10px] h-7"
             onClick={() => setSimulateNextFail(!simulateNextFail)}
           >
             <AlertTriangle className="w-3 h-3" />
-            {simulateNextFail ? "Cancelando falha" : "Próximo Falha"}
+            {simulateNextFail ? "Modo Falha Ativo" : "Simular Falha"}
           </Button>
           
           <Button 
             variant="ghost" 
             size="sm" 
-            className="gap-2 text-xs"
+            className="h-7 w-7 p-0"
             onClick={() => setLogs([])}
           >
             <Trash2 className="w-3 h-3" />
           </Button>
         </div>
 
-        {/* Logs */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label className="text-[10px] font-bold uppercase text-muted-foreground">Log de Atividade</Label>
-            <Badge variant="outline" className="text-[10px] h-4">ID: {agentId}</Badge>
+        <ScrollArea className="h-32 w-full rounded border bg-background p-2">
+          <div className="space-y-1">
+            {logs.length === 0 && (
+              <div className="text-center py-6 text-muted-foreground text-[10px] italic">
+                Aguardando início...
+              </div>
+            )}
+            {logs.map((log) => (
+              <div key={log.id} className="text-[9px] font-mono border-b border-muted pb-1 last:border-0 leading-tight">
+                <span className="text-muted-foreground mr-1">[{format(log.timestamp, "HH:mm:ss")}]</span>
+                <span className={`font-bold mr-1 ${log.result === 'success' ? 'text-green-600' : log.result === 'error' ? 'text-destructive' : 'text-blue-600'}`}>
+                  {log.action}
+                </span>
+                {log.orderId && <span className="text-muted-foreground">Order #{log.orderId.slice(0, 5)}</span>}
+                {log.details && <span className="text-muted-foreground ml-1 block opacity-70">{log.details}</span>}
+              </div>
+            ))}
           </div>
-          <ScrollArea className="h-40 w-full rounded border bg-background p-2">
-            <div className="space-y-1.5">
-              {logs.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground text-xs italic">
-                  Nenhuma atividade registrada
-                </div>
-              )}
-              {logs.map((log) => (
-                <div key={log.id} className="text-[10px] font-mono border-b border-muted pb-1 last:border-0">
-                  <span className="text-muted-foreground mr-1">
-                    [{format(log.timestamp, "HH:mm:ss")}]
-                  </span>
-                  <span className={`font-bold mr-1 ${
-                    log.result === 'success' ? 'text-green-600' : 
-                    log.result === 'error' ? 'text-destructive' : 
-                    'text-blue-600'
-                  }`}>
-                    {log.action}
-                  </span>
-                  {log.orderId && (
-                    <span className="text-muted-foreground">
-                      Pedido #{log.orderId.slice(0, 5)}:
-                    </span>
-                  )}
-                  {log.details && (
-                    <span className="text-muted-foreground ml-1 text-[9px] block">
-                      {log.details}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
