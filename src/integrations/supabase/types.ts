@@ -251,6 +251,7 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          public_menu_enabled: boolean
           slug: string
           tenant_id: string
           timezone: string
@@ -260,6 +261,7 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
+          public_menu_enabled?: boolean
           slug: string
           tenant_id: string
           timezone?: string
@@ -269,6 +271,7 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          public_menu_enabled?: boolean
           slug?: string
           tenant_id?: string
           timezone?: string
@@ -313,6 +316,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_public_categories: {
+        Args: { _slug: string }
+        Returns: {
+          id: string
+          name: string
+          sort_order: number
+        }[]
+      }
+      get_public_products: {
+        Args: { _slug: string }
+        Returns: {
+          category_id: string
+          description: string
+          id: string
+          name: string
+          price_cents: number
+          sort_order: number
+        }[]
+      }
+      get_public_restaurant: {
+        Args: { _slug: string }
+        Returns: {
+          id: string
+          name: string
+          public_menu_enabled: boolean
+          slug: string
+          timezone: string
+        }[]
+      }
       has_any_role_in_restaurant: {
         Args: {
           _restaurant_id: string

@@ -10,6 +10,7 @@ import Index from "./pages/Index.tsx";
 import AuthPage from "./pages/Auth.tsx";
 import CatalogProducts from "./pages/CatalogProducts.tsx";
 import CatalogCategories from "./pages/CatalogCategories.tsx";
+import PublicMenu from "./pages/PublicMenu.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,8 @@ const App = () => (
           <RestaurantProvider>
             <Routes>
               <Route path="/auth" element={<AuthPage />} />
+              {/* Cardápio público — sem ProtectedRoute, somente leitura via RPC segura */}
+              <Route path="/menu/:restaurantSlug" element={<PublicMenu />} />
               <Route
                 path="/"
                 element={

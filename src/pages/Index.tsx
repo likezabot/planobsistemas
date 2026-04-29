@@ -102,6 +102,16 @@ export default function Index() {
               <li>
                 <a className="text-accent hover:underline" href="/catalogo/categorias">→ Categorias</a>
               </li>
+              <li>
+                <a
+                  className="text-accent hover:underline"
+                  href={`/menu/${currentMembership.restaurants.slug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  → Cardápio público (somente leitura)
+                </a>
+              </li>
             </ul>
             <h2 className="mt-6 text-sm font-semibold">Próximos passos</h2>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
