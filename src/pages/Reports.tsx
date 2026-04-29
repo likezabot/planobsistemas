@@ -271,7 +271,7 @@ export default function Reports() {
                 <div className="flex items-center gap-3">
                   <div className="h-0.5 flex-1 bg-border/50" />
                   <h2 className="text-xl font-black text-secondary uppercase tracking-widest flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5 text-primary" /> Módulo Pizza
+                    <AlertCircle className="w-5 h-5 text-primary" /> Seção de Pizzas
                   </h2>
                   <div className="h-0.5 flex-1 bg-border/50" />
                 </div>
