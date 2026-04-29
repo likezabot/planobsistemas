@@ -198,7 +198,10 @@ export default function OrdersPage() {
         </div>
 
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-secondary">Monitor de Pedidos</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-secondary">Monitor de Pedidos</h1>
+            <InfoBalloon text="Acompanhe todos os pedidos do seu restaurante aqui. Use as abas para gerenciar o fluxo da cozinha até a entrega." />
+          </div>
           <div className="flex items-center gap-2">
             <Button 
               className="rounded-lg h-9 font-bold bg-primary text-white"
