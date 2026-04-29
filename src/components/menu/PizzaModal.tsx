@@ -290,6 +290,13 @@ export function PizzaModal({
                             <RadioGroupItem value={v.id} id={`var-${v.id}`} disabled={isVariantOutOfStock} />
                             <Label htmlFor={`var-${v.id}`} className={cn("font-medium", isVariantOutOfStock ? "cursor-not-allowed" : "cursor-pointer")}>
                               {v.name}
+                              {(v.diameter_cm || v.slices) && (
+                                <span className="ml-2 text-[10px] text-muted-foreground font-normal">
+                                  {v.diameter_cm ? `${v.diameter_cm}cm` : ""}
+                                  {v.diameter_cm && v.slices ? " · " : ""}
+                                  {v.slices ? `${v.slices} fatias` : ""}
+                                </span>
+                              )}
                               {isVariantOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
                             </Label>
                           </div>
