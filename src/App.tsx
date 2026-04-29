@@ -16,6 +16,7 @@ import PrintControl from "./pages/PrintControl.tsx";
 import Accounting from "./pages/Accounting.tsx";
 import KDS from "./pages/KDS.tsx";
 import Reports from "./pages/Reports.tsx";
+import Customers from "./pages/Customers.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
@@ -80,6 +81,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={['owner', 'manager']}>
                     <Reports />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/clientes"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager']}>
+                    <Customers />
                   </ProtectedRoute>
                 }
               />

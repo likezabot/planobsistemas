@@ -1183,6 +1183,7 @@ export type Database = {
             }
             Returns: boolean
           }
+      get_customer_summary: { Args: { _restaurant_id: string }; Returns: Json }
       get_dashboard_stats: {
         Args: { _days_back: number; _restaurant_id: string }
         Returns: Json
