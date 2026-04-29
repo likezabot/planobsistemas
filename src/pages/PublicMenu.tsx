@@ -34,6 +34,7 @@ export default function PublicMenu() {
   const { items, addItem, updateQuantity, getTotal } = useCart();
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
