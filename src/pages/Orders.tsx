@@ -309,6 +309,37 @@ export default function OrdersPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Reprint Dialog */}
+      <Dialog open={isReprintDialogOpen} onOpenChange={setIsReprintDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Solicitar Reimpressão</DialogTitle>
+            <DialogDescription>
+              Informe o motivo para reimprimir este pedido. Isso será registrado na auditoria.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label>Motivo</Label>
+            <Textarea 
+              placeholder="Ex: Impressora falhou, papel acabou, pedido extraviado..." 
+              value={reprintReason}
+              onChange={(e) => setReprintReason(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsReprintDialogOpen(false)}>Voltar</Button>
+            <Button 
+              disabled={reprintReason.length < 3 || reprintMutation.isPending}
+              onClick={() => reprintMutation.mutate({ 
+                orderId: selectedOrder?.id!, 
+                reason: reprintReason 
+              })}
+            >
+              Confirmar Reimpressão
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+
       {/* Cancellation Dialog */}
       <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
         <DialogContent>
