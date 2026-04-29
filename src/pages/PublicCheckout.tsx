@@ -303,17 +303,50 @@ export default function PublicCheckout() {
               </div>
 
               {orderType === "delivery" && (
-                <div className="space-y-1.5 animate-in slide-in-from-top-2 duration-200">
-                  <Label htmlFor="address" className="text-xs font-bold text-secondary uppercase tracking-wider">Endereço Completo</Label>
-                  <Textarea 
-                    id="address" 
-                    placeholder="Rua, número, bairro..." 
-                    className="min-h-[80px] rounded-xl border-border bg-white shadow-sm p-3 text-sm"
-                    {...form.register("address")}
-                  />
-                  {form.formState.errors.address && (
-                    <p className="text-xs font-bold text-destructive">{form.formState.errors.address.message}</p>
+                <div className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+                  {zones && zones.length > 0 && (
+                    <div className="space-y-1.5">
+                      <Label htmlFor="delivery_zone_id" className="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1">
+                        <MapPin className="w-3 h-3" /> Região de Entrega
+                      </Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue("delivery_zone_id", val)} 
+                        value={deliveryZoneId}
+                      >
+                        <SelectTrigger className="h-12 px-4 rounded-xl border-border bg-white shadow-sm font-bold text-secondary">
+                          <SelectValue placeholder="Selecione seu bairro / região" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border-border">
+                          {zones.map(z => (
+                            <SelectItem key={z.id} value={z.id}>
+                              <div className="flex justify-between items-center w-full gap-20">
+                                <div className="flex flex-col">
+                                  <span className="font-bold">{z.name}</span>
+                                  {z.description && <span className="text-[10px] text-muted-foreground">{z.description}</span>}
+                                </div>
+                                <span className="font-black text-primary">{z.fee_cents === 0 ? "Grátis" : centsToBRL(z.fee_cents)}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   )}
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="address" className="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1">
+                      <Truck className="w-3 h-3" /> Endereço Completo
+                    </Label>
+                    <Textarea 
+                      id="address" 
+                      placeholder="Rua, número, bairro..." 
+                      className="min-h-[80px] rounded-xl border-border bg-white shadow-sm p-3 text-sm"
+                      {...form.register("address")}
+                    />
+                    {form.formState.errors.address && (
+                      <p className="text-xs font-bold text-destructive">{form.formState.errors.address.message}</p>
+                    )}
+                  </div>
                 </div>
               )}
 
