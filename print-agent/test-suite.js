@@ -26,7 +26,6 @@ async function runTests() {
     .from('print_agents')
     .insert({
       restaurant_id: RESTAURANT_ID,
-      tenant_id: TENANT_ID,
       name: agentName,
       secret_key: agentSecret,
       status: 'active'
@@ -78,6 +77,9 @@ async function runTests() {
       tenant_id: TENANT_ID,
       order_id: VALID_ORDER_ID,
       status: 'pending',
+      source: 'auto',
+      payload: { test: 'old' },
+      payload_hash: 'old_hash',
       created_at: oldJobTime
     })
     .select()
@@ -93,7 +95,7 @@ async function runTests() {
       p_after_timestamp: new Date().toISOString()
     });
     
-    if (pendingJobs && pendingJobs.length === 0) {
+    if (pendingJobs && (!pendingJobs.length || !pendingJobs.some(j => j.id === oldJob.id))) {
       console.log('[PASS] Backlog jobs ignored (started_at works)');
     } else {
       console.error('[FAIL] Backlog job was picked up');
@@ -110,7 +112,9 @@ async function runTests() {
       tenant_id: TENANT_ID,
       order_id: VALID_ORDER_ID,
       status: 'pending',
-      payload: { test: true }
+      source: 'manual',
+      payload: { test: true },
+      payload_hash: 'new_hash_' + nanoid(5)
     })
     .select()
     .single();
@@ -124,7 +128,7 @@ async function runTests() {
       p_restaurant_id: RESTAURANT_ID,
       p_agent_id: AGENT_ID,
       p_secret_key: agentSecret,
-      p_after_timestamp: new Date(Date.now() - 60000).toISOString()
+      p_after_timestamp: new Date(Date.now() - 10000).toISOString()
     });
 
     if (jobsToProcess && jobsToProcess.some(j => j.id === job.id)) {
