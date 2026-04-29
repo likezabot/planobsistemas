@@ -129,7 +129,7 @@ describe('Reports Logic & UI', () => {
       </BrowserRouter>
     );
 
-    expect(screen.queryByText('Módulo Pizza')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Seção de Pizzas/i)).not.toBeInTheDocument();
   });
 
   it('shows empty state when no sales', () => {
