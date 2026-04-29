@@ -116,9 +116,12 @@ export default function OptionsTab() {
             <div className="p-8 text-center text-xs text-muted-foreground">Nenhum grupo cadastrado.</div>
           ) : (
             <div className="divide-y">
-              {groups.map(g => (
-                <div 
-                  key={g.id} 
+              {groups.map(g => {
+                const suspect = isSuspectPizzaOptionGroup({ id: g.id, name: g.name });
+                const subtype = suspect ? classifyPizzaGroup(g.name) : null;
+                return (
+                <div
+                  key={g.id}
                   className={cn(
                     "p-3 cursor-pointer transition-colors group relative",
                     selectedGroupId === g.id ? "bg-primary/5 border-l-4 border-l-primary" : "hover:bg-muted/30"
@@ -126,7 +129,10 @@ export default function OptionsTab() {
                   onClick={() => setSelectedGroupId(g.id)}
                 >
                   <div className="flex justify-between items-start mb-1">
-                    <span className="font-bold text-secondary text-sm">{g.name}</span>
+                    <span className="font-bold text-secondary text-sm flex items-center gap-1.5">
+                      {suspect && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />}
+                      {g.name}
+                    </span>
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {canEdit && (
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); setEditingGroup(g); setGroupDialogOpen(true); }}>
@@ -142,8 +148,24 @@ export default function OptionsTab() {
                     <span className="text-[10px] text-muted-foreground">Min {g.min_options} / Max {g.max_options}</span>
                     {g.is_required && <Badge variant="destructive" className="text-[9px] px-1 py-0 h-4">Obrigatório</Badge>}
                   </div>
+                  {suspect && (
+                    <div className="mt-2 rounded-md bg-amber-50 border border-amber-200 px-2 py-1.5 text-[10px] text-amber-900 leading-snug">
+                      Este grupo parece específico de pizza. Prefira gerenciar no módulo Pizzas.
+                      {subtype === "borda" && (
+                        <div className="mt-1 text-amber-800/80">
+                          Bordas podem usar preço por tamanho via overrides por variação.
+                        </div>
+                      )}
+                      {subtype === "sabor" && (
+                        <div className="mt-1 text-amber-800/80">
+                          Sabores de pizza devem ser <code>pizza_flavors</code>, não <code>option_items</code>.
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
