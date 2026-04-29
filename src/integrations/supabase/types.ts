@@ -1183,6 +1183,10 @@ export type Database = {
             }
             Returns: boolean
           }
+      get_dashboard_stats: {
+        Args: { _days_back: number; _restaurant_id: string }
+        Returns: Json
+      }
       get_pending_print_jobs: {
         Args: {
           p_after_timestamp?: string
