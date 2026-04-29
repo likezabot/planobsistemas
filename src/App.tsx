@@ -8,6 +8,8 @@ import { RestaurantProvider } from "@/lib/auth/RestaurantProvider";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import AuthPage from "./pages/Auth.tsx";
+import CatalogProducts from "./pages/CatalogProducts.tsx";
+import CatalogCategories from "./pages/CatalogCategories.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -27,6 +29,22 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Index />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/catalogo"
+                element={
+                  <ProtectedRoute>
+                    <CatalogProducts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/catalogo/categorias"
+                element={
+                  <ProtectedRoute>
+                    <CatalogCategories />
                   </ProtectedRoute>
                 }
               />
