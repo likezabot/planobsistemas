@@ -158,7 +158,7 @@ export default function PublicMenu() {
       </div>
 
       {/* Categorias - Solid, Sticky */}
-      <nav className="sticky top-0 z-30 bg-white border-b border-border shadow-sm">
+      <nav className="sticky top-0 z-30 bg-white border-b border-border py-3 shadow-sm">
         <div 
           ref={scrollContainerRef}
           className="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar scroll-smooth max-w-[1400px] mx-auto"
