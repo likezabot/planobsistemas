@@ -154,21 +154,27 @@ export default function Index() {
             </CardHeader>
             <CardContent className="p-6">
               <div className="h-64 flex items-end justify-between gap-2 pt-10">
-                {[45, 60, 40, 75, 55, 90, 65].map((val, i) => (
-                  <div key={i} className="flex-1 group flex flex-col items-center gap-2">
-                    <div 
-                      className="w-full bg-muted group-hover:bg-primary transition-all rounded-t-lg relative" 
-                      style={{ height: `${val}%` }}
-                    >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                        R$ {val * 10}
+                {metrics?.weeklySales && metrics.weeklySales.length > 0 ? (
+                  metrics.weeklySales.map((item, i) => (
+                    <div key={i} className="flex-1 group flex flex-col items-center gap-2">
+                      <div 
+                        className="w-full bg-muted group-hover:bg-primary transition-all rounded-t-lg relative" 
+                        style={{ height: `${Math.min((item.sales_cents / (metrics.maxWeeklySales || 1)) * 100, 100)}%` }}
+                      >
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          {centsToBRL(item.sales_cents)}
+                        </div>
                       </div>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        {item.dayLabel}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                      {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][i]}
-                    </span>
+                  ))
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm italic">
+                    Nenhum dado de venda nos últimos 7 dias.
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
