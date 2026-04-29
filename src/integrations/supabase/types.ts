@@ -964,6 +964,33 @@ export type Database = {
         }
         Relationships: []
       }
+      public_order_attempts: {
+        Row: {
+          blocked: boolean
+          created_at: string
+          id: string
+          idempotency_key: string
+          normalized_phone: string
+          restaurant_id: string
+        }
+        Insert: {
+          blocked?: boolean
+          created_at?: string
+          id?: string
+          idempotency_key: string
+          normalized_phone: string
+          restaurant_id: string
+        }
+        Update: {
+          blocked?: boolean
+          created_at?: string
+          id?: string
+          idempotency_key?: string
+          normalized_phone?: string
+          restaurant_id?: string
+        }
+        Relationships: []
+      }
       restaurant_members: {
         Row: {
           created_at: string
@@ -1244,6 +1271,10 @@ export type Database = {
       reprint_order: {
         Args: { p_order_id: string; p_reason: string }
         Returns: string
+      }
+      reset_stuck_print_jobs: {
+        Args: { p_restaurant_id: string; p_stuck_minutes?: number }
+        Returns: number
       }
       update_order_status: {
         Args: {
