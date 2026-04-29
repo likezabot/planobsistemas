@@ -65,6 +65,50 @@ export type Database = {
           },
         ]
       }
+      delivery_zones: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          fee_cents: number
+          id: string
+          name: string
+          restaurant_id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          fee_cents?: number
+          id?: string
+          name: string
+          restaurant_id: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          fee_cents?: number
+          id?: string
+          name?: string
+          restaurant_id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delivery_zones_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_logs: {
         Row: {
           change_amount: number
@@ -341,6 +385,7 @@ export type Database = {
           customer_name: string
           customer_phone: string
           delivery_fee_cents: number
+          delivery_zone_id: string | null
           id: string
           idempotency_key: string
           notes: string | null
@@ -360,6 +405,7 @@ export type Database = {
           customer_name: string
           customer_phone: string
           delivery_fee_cents?: number
+          delivery_zone_id?: string | null
           id?: string
           idempotency_key: string
           notes?: string | null
@@ -381,6 +427,7 @@ export type Database = {
           customer_name?: string
           customer_phone?: string
           delivery_fee_cents?: number
+          delivery_zone_id?: string | null
           id?: string
           idempotency_key?: string
           notes?: string | null
@@ -397,6 +444,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_delivery_zone_id_fkey"
+            columns: ["delivery_zone_id"]
+            isOneToOne: false
+            referencedRelation: "delivery_zones"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_restaurant_id_fkey"
             columns: ["restaurant_id"]
@@ -1154,20 +1208,36 @@ export type Database = {
         Args: { p_order_id: string; p_reason?: string; p_source: string }
         Returns: string
       }
-      create_public_order: {
-        Args: {
-          _address?: string
-          _customer_name: string
-          _customer_phone: string
-          _idempotency_key: string
-          _items: Json
-          _notes?: string
-          _order_type: Database["public"]["Enums"]["order_type"]
-          _payment_method: Database["public"]["Enums"]["payment_method"]
-          _restaurant_slug: string
-        }
-        Returns: Json
-      }
+      create_public_order:
+        | {
+            Args: {
+              _address?: string
+              _customer_name: string
+              _customer_phone: string
+              _idempotency_key: string
+              _items: Json
+              _notes?: string
+              _order_type: Database["public"]["Enums"]["order_type"]
+              _payment_method: Database["public"]["Enums"]["payment_method"]
+              _restaurant_slug: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _address?: string
+              _customer_name: string
+              _customer_phone: string
+              _delivery_zone_id?: string
+              _idempotency_key: string
+              _items: Json
+              _notes?: string
+              _order_type: Database["public"]["Enums"]["order_type"]
+              _payment_method: Database["public"]["Enums"]["payment_method"]
+              _restaurant_slug: string
+            }
+            Returns: Json
+          }
       export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
       fail_print_job:
         | {
@@ -1188,6 +1258,7 @@ export type Database = {
         Args: { _days_back: number; _restaurant_id: string }
         Returns: Json
       }
+      get_delivery_zones: { Args: { _slug: string }; Returns: Json }
       get_pending_print_jobs: {
         Args: {
           p_after_timestamp?: string
