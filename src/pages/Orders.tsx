@@ -35,6 +35,8 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [isReprintDialogOpen, setIsReprintDialogOpen] = useState(false);
+  const [reprintReason, setReprintReason] = useState("");
 
   const { data: orders, isLoading } = useQuery({
     queryKey: ["orders", currentRestaurantId],
