@@ -12,6 +12,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { 
   ChevronLeft, 
   ShoppingBag, 
   CheckCircle2, 
@@ -22,10 +29,20 @@ import {
   QrCode,
   User,
   Phone,
-  ClipboardList
+  ClipboardList,
+  Truck
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+interface DeliveryZone {
+  id: string;
+  name: string;
+  description: string | null;
+  fee_cents: number;
+}
 
 const checkoutSchema = z.object({
   customer_phone: z.string().min(8, "Telefone inválido"),
