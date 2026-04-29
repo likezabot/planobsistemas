@@ -236,6 +236,64 @@ export default function ProductsTab() {
         )}
       </div>
 
+      {/* Suspeitos: itens possivelmente cadastrados no lugar errado */}
+      {suspectProducts.length > 0 && (
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 shadow-sm">
+          <div className="flex items-start gap-3 mb-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-amber-900">
+                Itens possivelmente cadastrados no lugar errado ({suspectProducts.length})
+              </h3>
+              <p className="text-xs text-amber-800/80 mt-0.5">
+                Estes itens parecem ser sabores de pizza cadastrados como produto.
+                Sabores devem ser gerenciados em Pizzas › Sabores Globais.
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            {suspectProducts.map((p) => {
+              const cat = categories.find((c) => c.id === p.category_id);
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between gap-2 bg-white rounded-lg border border-amber-100 px-3 py-2"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-secondary truncate">{p.name}</div>
+                    <div className="text-[10px] text-muted-foreground">
+                      {cat?.name ?? "—"} · {centsToBRL(p.price_cents)} · {p.active ? "ativo" : "inativo"}
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => {
+                        setSuspectProduct(p);
+                        setSuspectOpen(true);
+                      }}
+                    >
+                      Resolver
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-muted-foreground"
+                      title="Ignorar aviso"
+                      onClick={() => handleDismissSuspect(p)}
+                    >
+                      <EyeOff className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
         <Table>
@@ -256,14 +314,14 @@ export default function ProductsTab() {
                   <TableCell colSpan={6} className="h-12 animate-pulse bg-muted/20" />
                 </TableRow>
               ))
-            ) : filteredProducts.length === 0 ? (
+            ) : normalProducts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-32 text-center text-muted-foreground text-sm">
                   Nenhum produto encontrado.
                 </TableCell>
               </TableRow>
             ) : (
-              filteredProducts.map(p => {
+              normalProducts.map(p => {
                 const cat = categories.find(c => c.id === p.category_id);
                 const isEditingPrice = editingPriceId === p.id;
                 
@@ -337,10 +395,7 @@ export default function ProductsTab() {
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 rounded-lg"
-                        onClick={() => {
-                          setSelectedProduct(p);
-                          setSheetOpen(true);
-                        }}
+                        onClick={() => handleProductClick(p)}
                       >
                         <ChevronRight className="w-4 h-4 text-muted-foreground" />
                       </Button>
@@ -352,6 +407,23 @@ export default function ProductsTab() {
           </TableBody>
         </Table>
       </div>
+
+      <SuspectFlavorDialog
+        open={suspectOpen}
+        onOpenChange={setSuspectOpen}
+        product={suspectProduct ? {
+          id: suspectProduct.id,
+          name: suspectProduct.name,
+          description: suspectProduct.description,
+          image_url: suspectProduct.image_url,
+          active: suspectProduct.active,
+          type: suspectProduct.type,
+        } : null}
+        onChanged={refresh}
+        onForceEdit={() => {
+          if (suspectProduct) handleProductClick(suspectProduct, true);
+        }}
+      />
 
       <ProductSheet 
         open={sheetOpen}
