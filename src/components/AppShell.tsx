@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
     ...(canSeeKDS ? [{ to: "/kds", icon: ChefHat, label: "Cozinha" }] : []),
-    ...(canSeeReports ? [{ to: "/relatorios", icon: BarChart2, label: "Relatórios" }] : []),
+    ...(canSeeReports ? [{ to: "/relatorios", icon: BarChart2, label: "Relatórios" }, { to: "/clientes", icon: Users, label: "Clientes" }] : []),
     ...(canSeeAccounting ? [{ to: "/contador", icon: Calculator, label: "Contador" }] : []),
   ];
 
