@@ -187,15 +187,30 @@ export function ProductOptionsModal({
                     onValueChange={setSelectedVariantId}
                     className="space-y-3"
                   >
-                    {details.variants.map((v) => (
-                      <div key={v.id} className="flex items-center justify-between p-3 rounded-xl border border-border hover:border-primary transition-colors cursor-pointer" onClick={() => setSelectedVariantId(v.id)}>
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem value={v.id} id={v.id} />
-                          <Label htmlFor={v.id} className="font-medium cursor-pointer">{v.name}</Label>
+                    {details.variants.map((v) => {
+                      const isVariantOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && v.track_stock && v.stock_quantity <= 0 && !v.allow_out_of_stock_sale;
+                      
+                      return (
+                        <div 
+                          key={v.id} 
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer",
+                            selectedVariantId === v.id ? "border-primary bg-primary/5" : "border-border hover:border-primary",
+                            isVariantOutOfStock && "opacity-50 cursor-not-allowed grayscale-[0.5]"
+                          )} 
+                          onClick={() => !isVariantOutOfStock && setSelectedVariantId(v.id)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem value={v.id} id={v.id} disabled={isVariantOutOfStock} />
+                            <Label htmlFor={v.id} className={cn("font-medium cursor-pointer", isVariantOutOfStock && "cursor-not-allowed")}>
+                              {v.name}
+                              {isVariantOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
+                            </Label>
+                          </div>
+                          <span className="text-sm font-bold text-secondary">{centsToBRL(v.price_cents)}</span>
                         </div>
-                        <span className="text-sm font-bold text-secondary">{centsToBRL(v.price_cents)}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </RadioGroup>
                 </section>
               )}
@@ -216,18 +231,24 @@ export function ProductOptionsModal({
                   <div className="space-y-3">
                     {group.items.map((item) => {
                       const isSelected = selectedOptions[group.id]?.includes(item.id);
+                      const isItemOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && item.track_stock && item.stock_quantity <= 0 && !item.allow_out_of_stock_sale;
+
                       return (
                         <div 
                           key={item.id} 
                           className={cn(
                             "flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer",
-                            isSelected ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30"
+                            isSelected ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30",
+                            isItemOutOfStock && "opacity-50 cursor-not-allowed grayscale-[0.5]"
                           )}
-                          onClick={() => handleToggleOption(group.id, item.id, group.max_options)}
+                          onClick={() => !isItemOutOfStock && handleToggleOption(group.id, item.id, group.max_options)}
                         >
                           <div className="flex items-center gap-3">
-                            <Checkbox checked={isSelected} id={item.id} className="rounded-md" />
-                            <Label htmlFor={item.id} className="font-medium cursor-pointer text-sm">{item.name}</Label>
+                            <Checkbox checked={isSelected} id={item.id} className="rounded-md" disabled={isItemOutOfStock} />
+                            <Label htmlFor={item.id} className={cn("font-medium cursor-pointer text-sm", isItemOutOfStock && "cursor-not-allowed")}>
+                              {item.name}
+                              {isItemOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
+                            </Label>
                           </div>
                           {item.price_cents > 0 && (
                             <span className="text-xs font-bold text-primary">+ {centsToBRL(item.price_cents)}</span>
