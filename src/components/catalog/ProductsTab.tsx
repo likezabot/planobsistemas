@@ -560,6 +560,31 @@ function ProductSheet({
                 </div>
               </>
             )}
+
+            {accountingEnabled && (
+              <>
+                <Separator className="my-2" />
+                <div className="space-y-3 pt-2">
+                  <div>
+                    <Label className="text-sm font-bold">Dados fiscais (opcional)</Label>
+                    <p className="text-[10px] text-muted-foreground">Apenas informativo. Não substitui emissão de cupom fiscal.</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <FiscalField label="NCM" value={ncm} onChange={setNcm} disabled={!canEdit} />
+                    <FiscalField label="CEST" value={cest} onChange={setCest} disabled={!canEdit} />
+                    <FiscalField label="CFOP" value={cfop} onChange={setCfop} disabled={!canEdit} />
+                    <FiscalField label="CST" value={cst} onChange={setCst} disabled={!canEdit} />
+                    <FiscalField label="CSOSN" value={csosn} onChange={setCsosn} disabled={!canEdit} />
+                    <FiscalField label="Origem" value={origin} onChange={setOrigin} disabled={!canEdit} />
+                    <FiscalField label="Unid. Fiscal" value={fiscalUnit} onChange={setFiscalUnit} disabled={!canEdit} />
+                  </div>
+                  <div>
+                    <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Observações fiscais</Label>
+                    <Textarea value={fiscalNotes} onChange={(e) => setFiscalNotes(e.target.value)} className="min-h-[60px] mt-1" disabled={!canEdit} />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
