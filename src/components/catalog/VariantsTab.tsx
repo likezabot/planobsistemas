@@ -196,8 +196,8 @@ export default function VariantsTab() {
       }
 
       const res = editing
-        ? await updateVariant(editing.id, payload)
-        : await createVariant(payload);
+        ? await updateVariant(editing.id, payload as any)
+        : await createVariant(payload as any);
 
       if (res.error) throw res.error;
 
