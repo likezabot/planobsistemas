@@ -41,6 +41,30 @@ import {
 import { centsToBRL, parseBRLToCents } from "@/lib/catalog/money";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
+
+function InfoBalloon({ text }: { text: string }) {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="inline-flex items-center justify-center ml-1 cursor-help text-primary hover:text-primary/80 transition-colors">
+            <Info className="w-3.5 h-3.5" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-secondary text-white border-none p-3 max-w-xs shadow-xl">
+          <p className="text-xs leading-relaxed font-medium">{text}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 import { format } from "date-fns";
 
 interface Coupon {
@@ -161,7 +185,10 @@ export default function Coupons() {
       <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary tracking-tight">Cupons de Desconto</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-secondary tracking-tight">Cupons de Desconto</h1>
+              <InfoBalloon text="Os cupons permitem criar descontos em reais ou porcentagem para fidelizar clientes. Você pode definir regras de uso como valor mínimo do pedido ou data de expiração." />
+            </div>
             <p className="text-muted-foreground text-sm mt-1">Gerencie campanhas promocionais e fidelize clientes.</p>
           </div>
           <Button onClick={handleCreate} className="rounded-lg font-bold gap-2">

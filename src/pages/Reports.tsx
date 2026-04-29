@@ -31,8 +31,32 @@ import {
   ShoppingBag, 
   Clock, 
   Calendar,
-  AlertCircle
+  AlertCircle,
+  Info
 } from "lucide-react";
+import {
+  Tooltip as UiTooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+function InfoBalloon({ text }: { text: string }) {
+  return (
+    <TooltipProvider>
+      <UiTooltip>
+        <TooltipTrigger asChild>
+          <div className="inline-flex items-center justify-center ml-1 cursor-help text-primary hover:text-primary/80 transition-colors">
+            <Info className="w-3.5 h-3.5" />
+          </div>
+        </TooltipTrigger>
+        <TooltipContent className="bg-secondary text-white border-none p-3 max-w-xs shadow-xl">
+          <p className="text-xs leading-relaxed font-medium">{text}</p>
+        </TooltipContent>
+      </UiTooltip>
+    </TooltipProvider>
+  );
+}
 
 interface DashboardStats {
   daily_sales: { day: string; sales_cents: number; order_count: number }[];
@@ -94,7 +118,10 @@ export default function Reports() {
       <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary tracking-tight">Relatórios de Gestão</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-secondary tracking-tight">Relatórios de Gestão</h1>
+              <InfoBalloon text="Analise o desempenho do seu restaurante através de dados visuais. Estes relatórios são baseados no histórico de pedidos concluídos." />
+            </div>
             <p className="text-muted-foreground text-sm mt-1">Análise visual de performance e tendências.</p>
           </div>
           <Select value={days} onValueChange={setDays}>
