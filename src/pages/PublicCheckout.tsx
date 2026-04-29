@@ -72,6 +72,18 @@ export default function PublicCheckout() {
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
   const [step, setStep] = useState(1);
 
+  const { data: zones } = useQuery({
+    queryKey: ["checkout-delivery-zones", restaurantSlug],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_delivery_zones", {
+        _slug: restaurantSlug
+      });
+      if (error) throw error;
+      return data as unknown as DeliveryZone[];
+    },
+    enabled: !!restaurantSlug,
+  });
+
   const form = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -81,6 +93,10 @@ export default function PublicCheckout() {
   });
 
   const orderType = form.watch("order_type");
+  const deliveryZoneId = form.watch("delivery_zone_id");
+  const selectedZone = zones?.find(z => z.id === deliveryZoneId);
+
+  const finalTotal = getTotal() + (orderType === 'delivery' ? (selectedZone?.fee_cents || 0) : 0);
 
   useEffect(() => {
     if (items.length === 0 && !orderSuccess) {
@@ -90,6 +106,12 @@ export default function PublicCheckout() {
 
   const onSubmit = async (data: CheckoutForm) => {
     if (!restaurantSlug) return;
+
+    if (data.order_type === 'delivery' && zones && zones.length > 0 && !data.delivery_zone_id) {
+      toast.error("Por favor, selecione uma zona de entrega.");
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
