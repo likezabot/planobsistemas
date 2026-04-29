@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
-import { getRestaurantOrders, updateOrderStatus, OrderWithItems } from "@/lib/orders/queries";
+import { getRestaurantOrders, updateOrderStatus, reprintOrder, OrderWithItems } from "@/lib/orders/queries";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +26,8 @@ import {
   Package, 
   MapPin,
   ClipboardList,
-  Phone
+  Phone,
+  Printer
 } from "lucide-react";
 
 export default function OrdersPage() {
@@ -35,6 +36,8 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [isReprintDialogOpen, setIsReprintDialogOpen] = useState(false);
+  const [reprintReason, setReprintReason] = useState("");
 
   const { data: orders, isLoading } = useQuery({
     queryKey: ["orders", currentRestaurantId],
@@ -55,6 +58,20 @@ export default function OrdersPage() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Erro ao atualizar status");
+    },
+  });
+
+  const reprintMutation = useMutation({
+    mutationFn: ({ orderId, reason }: { orderId: string; reason: string }) =>
+      reprintOrder(orderId, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast.success("Solicitação de reimpressão enviada!");
+      setIsReprintDialogOpen(false);
+      setReprintReason("");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao solicitar reimpressão");
     },
   });
 
@@ -116,19 +133,38 @@ export default function OrdersPage() {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
+  const PrintStatusBadge = ({ status }: { status: string }) => {
+    const configs: Record<string, { label: string; variant: any }> = {
+      none: { label: "Não impresso", variant: "outline" },
+      pending: { label: "Aguardando Impressora", variant: "secondary" },
+      printed: { label: "Impresso", variant: "default" },
+      failed: { label: "Falha na Impressão", variant: "destructive" },
+    };
+    const config = configs[status] || { label: status, variant: "outline" };
+    return (
+      <div className="flex items-center gap-1">
+        <Printer className="w-3 h-3" />
+        <Badge variant={config.variant} className="text-[10px] px-1 h-4">{config.label}</Badge>
+      </div>
+    );
+  };
+
   const OrderCard = ({ order }: { order: OrderWithItems }) => (
     <Card 
       className="mb-4 cursor-pointer hover:border-primary transition-colors"
       onClick={() => setSelectedOrder(order)}
     >
-      <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
-        <div>
+      <CardHeader className="p-4 flex flex-row items-start justify-between space-y-0">
+        <div className="space-y-1">
           <CardTitle className="text-sm font-bold">
             #{order.id.slice(0, 5)} - {order.customer_name}
           </CardTitle>
           <CardDescription className="text-xs">
             {format(new Date(order.created_at), "HH:mm '•' dd/MM", { locale: ptBR })}
           </CardDescription>
+          {(order as any).print_status && (
+            <PrintStatusBadge status={(order as any).print_status} />
+          )}
         </div>
         <StatusBadge status={order.status} />
       </CardHeader>
@@ -254,6 +290,13 @@ export default function OrdersPage() {
                     </Button>
                   )}
                   
+                  {['new', 'accepted', 'preparing', 'ready', 'completed', 'delivered'].includes(selectedOrder.status) && (
+                    <Button variant="outline" onClick={() => setIsReprintDialogOpen(true)}>
+                      <Printer className="w-4 h-4 mr-2" />
+                      Reimprimir
+                    </Button>
+                  )}
+                  
                   {['new', 'accepted', 'preparing', 'ready'].includes(selectedOrder.status) && (
                     <Button variant="outline" className="text-destructive" onClick={() => setIsCancelDialogOpen(true)}>
                       Cancelar
@@ -263,6 +306,38 @@ export default function OrdersPage() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Reprint Dialog */}
+      <Dialog open={isReprintDialogOpen} onOpenChange={setIsReprintDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Solicitar Reimpressão</DialogTitle>
+            <DialogDescription>
+              Informe o motivo para reimprimir este pedido. Isso será registrado na auditoria.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label>Motivo</Label>
+            <Textarea 
+              placeholder="Ex: Impressora falhou, papel acabou, pedido extraviado..." 
+              value={reprintReason}
+              onChange={(e) => setReprintReason(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsReprintDialogOpen(false)}>Voltar</Button>
+            <Button 
+              disabled={reprintReason.length < 3 || reprintMutation.isPending}
+              onClick={() => reprintMutation.mutate({ 
+                orderId: selectedOrder?.id!, 
+                reason: reprintReason 
+              })}
+            >
+              Confirmar Reimpressão
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

@@ -85,7 +85,8 @@ por desenho, o ponto de entrada público controlado.
 | Cancelamento exige motivo obrigatório | ✅ | RPC check |
 | Bloqueio de reativação de pedido cancelado/concluído | ✅ | RPC logic |
 | Audit log gerado para mudanças de status | ✅ | `audit_log` verification |
-| **Impedir loop de impressão: duplicata via ID+Hash bloqueada** | ✅ | unique index `idx_print_jobs_order_payload_auto` |
+| **Impedir loop de impressão: duplicata via ID+Hash bloqueada** | ✅ | `idx_print_jobs_auto_pending` |
+| **Garantir que pedido cancelado não imprime automático** | ✅ | RPC `create_print_job_for_order` |
 
 ## 6. Impressão (print_jobs)
 
@@ -94,11 +95,14 @@ por desenho, o ponto de entrada público controlado.
 | Anônimo NÃO consegue ler `print_jobs` | ✅ | `print-jobs.e2e.test.ts` |
 | Anônimo NÃO consegue criar jobs via RPC | ✅ | `print-jobs.e2e.test.ts` |
 | Anônimo NÃO consegue claim/complete/fail jobs | ✅ | `print-jobs.e2e.test.ts` |
-| `claim_print_job` só funciona para job `pending` | ✅ | RPC logic |
+| `claim_print_job` só funciona para job `pending` ou `failed` | ✅ | RPC logic |
 | `complete_print_job` exige mesmo `agent_id` que capturou | ✅ | RPC logic |
 | `reprint_order` exige role `cashier`, `manager` ou `owner` | ✅ | RPC logic |
 | Reimpressão exige motivo e gera audit log | ✅ | RPC logic |
 | Job falhado NÃO reinprime sozinho | ✅ | RPC logic |
+| Job `printed` é imutável (não pode ser reclamado novamente) | ✅ | RPC logic |
+| Agent mismatch bloqueado em transições de status | ✅ | RPC logic |
+| `print_status` no pedido atualizado pelo contrato | ✅ | RPC logic |
 
 ## 7. Genéricos
 

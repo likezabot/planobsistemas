@@ -38,3 +38,13 @@ export const updateOrderStatus = async (orderId: string, newStatus: Order['statu
 
   if (error) throw error;
 };
+
+export const reprintOrder = async (orderId: string, reason: string) => {
+  const { data, error } = await supabase.rpc('reprint_order', {
+    p_order_id: orderId,
+    p_reason: reason
+  });
+
+  if (error) throw error;
+  return data;
+};
