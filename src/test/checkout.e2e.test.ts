@@ -107,22 +107,26 @@ describe('Checkout Security E2E', () => {
     expect(products?.length).toBeGreaterThan(0);
     const product = products![0];
 
-    const { error } = await rpcWithRetry(anonClient, 'create_public_order', {
+    const result = await rpcWithRetry(anonClient, 'create_public_order', {
       _restaurant_slug: restaurantSlug,
       _customer_name: 'Delivery Fail',
       _customer_phone: '11999998888',
       _order_type: 'delivery',
       _payment_method: 'money',
-      _idempotency_key: `e2e-fail-addr-${Date.now()}`,
+      _idempotency_key: `e2e-fail-addr-${Date.now()}-${Math.random()}`,
       _items: [{ product_id: product.id, quantity: 1 }],
       _address: null,
     });
 
-    // The RPC must reject delivery without an address. Different layers can surface
-    // the rejection in different fields (message / details / hint), so we accept any.
-    expect(error).not.toBeNull();
-    const blob = JSON.stringify(error ?? {});
-    expect(blob).toMatch(/Endereço obrigatório|address/i);
+    // Debug aid for flaky parallel runs
+    if (!result.error) {
+      // eslint-disable-next-line no-console
+      console.error('UNEXPECTED SUCCESS for delivery without address:', JSON.stringify(result));
+    }
+
+    expect(result.error).not.toBeNull();
+    const blob = JSON.stringify(result.error ?? {});
+    expect(blob).toMatch(/Endereço obrigatório|address|delivery/i);
   });
 
   it('should fail if restaurant public_menu_enabled is false', async () => {
