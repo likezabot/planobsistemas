@@ -1333,13 +1333,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_items_to_order: {
+        Args: { _items: Json; _order_id: string }
+        Returns: Json
+      }
+      calculate_order_item_details: {
+        Args: { _item: Json; _restaurant_id: string }
+        Returns: Json
+      }
+      cancel_order_item: {
+        Args: { _order_item_id: string; _reason: string }
+        Returns: undefined
+      }
+      check_restaurant_role: {
+        Args: { _allowed_roles: string[]; _restaurant_id: string }
+        Returns: boolean
+      }
       claim_print_job: {
         Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
         Returns: boolean
       }
+      close_order: {
+        Args: {
+          _order_id: string
+          _payment_method: Database["public"]["Enums"]["payment_method"]
+        }
+        Returns: undefined
+      }
       complete_print_job: {
         Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
         Returns: boolean
+      }
+      create_counter_order: {
+        Args: { _restaurant_id: string }
+        Returns: string
       }
       create_internal_order: {
         Args: {
@@ -1503,6 +1530,10 @@ export type Database = {
         Args: { _tenant_id: string; _user_id: string }
         Returns: boolean
       }
+      open_table_order: {
+        Args: { _restaurant_id: string; _table_id: string }
+        Returns: string
+      }
       reprint_order: {
         Args: { p_order_id: string; p_reason: string }
         Returns: string
@@ -1511,6 +1542,7 @@ export type Database = {
         Args: { p_restaurant_id: string; p_stuck_minutes?: number }
         Returns: number
       }
+      send_order_to_kitchen: { Args: { _order_id: string }; Returns: number }
       update_order_status: {
         Args: {
           _new_status: Database["public"]["Enums"]["order_status"]
