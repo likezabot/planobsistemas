@@ -14,6 +14,7 @@ import { AppShell } from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useSearchParams } from "react-router-dom";
 import { NewOrderDrawer } from "@/components/orders/NewOrderDrawer";
+import { DiningTablesTab } from "@/components/orders/DiningTablesTab";
 import {
   Dialog,
   DialogContent,
@@ -235,14 +236,19 @@ export default function OrdersPage() {
         />
 
         <Tabs defaultValue="new" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full bg-white border border-border p-1 rounded-xl h-12 mb-6">
+          <TabsList className="grid grid-cols-5 w-full bg-white border border-border p-1 rounded-xl h-12 mb-6">
             <TabsTrigger value="new" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">
               Novos {stats.new > 0 && <Badge className="ml-2 bg-primary text-[9px] h-4 px-1.5">{stats.new}</Badge>}
             </TabsTrigger>
             <TabsTrigger value="preparing" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Preparo</TabsTrigger>
             <TabsTrigger value="ready" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Prontos</TabsTrigger>
+            <TabsTrigger value="tables" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Mesas</TabsTrigger>
             <TabsTrigger value="finished" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Histórico</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="tables" className="animate-in fade-in duration-300">
+            <DiningTablesTab />
+          </TabsContent>
 
           {["new", "preparing", "ready", "finished"].map((group) => (
             <TabsContent key={group} value={group} className="animate-in fade-in duration-300">

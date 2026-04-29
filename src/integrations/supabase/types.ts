@@ -171,6 +171,53 @@ export type Database = {
           },
         ]
       }
+      dining_tables: {
+        Row: {
+          active: boolean
+          area: string | null
+          created_at: string | null
+          id: string
+          name: string
+          restaurant_id: string
+          seats: number | null
+          sort_order: number
+          tenant_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean
+          area?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          restaurant_id: string
+          seats?: number | null
+          sort_order?: number
+          tenant_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean
+          area?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          restaurant_id?: string
+          seats?: number | null
+          sort_order?: number
+          tenant_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dining_tables_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inventory_logs: {
         Row: {
           change_amount: number
@@ -388,37 +435,52 @@ export type Database = {
       }
       order_items: {
         Row: {
+          cancel_reason: string | null
+          cancelled_at: string | null
           created_at: string
+          created_by: string | null
           customization: Json | null
           id: string
           note: string | null
           order_id: string
           product_id: string
           quantity: number
+          sent_to_kitchen_at: string | null
+          status: string | null
           subtotal_cents: number | null
           total_price_cents: number
           unit_price_cents: number
         }
         Insert: {
+          cancel_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
+          created_by?: string | null
           customization?: Json | null
           id?: string
           note?: string | null
           order_id: string
           product_id: string
           quantity: number
+          sent_to_kitchen_at?: string | null
+          status?: string | null
           subtotal_cents?: number | null
           total_price_cents: number
           unit_price_cents: number
         }
         Update: {
+          cancel_reason?: string | null
+          cancelled_at?: string | null
           created_at?: string
+          created_by?: string | null
           customization?: Json | null
           id?: string
           note?: string | null
           order_id?: string
           product_id?: string
           quantity?: number
+          sent_to_kitchen_at?: string | null
+          status?: string | null
           subtotal_cents?: number | null
           total_price_cents?: number
           unit_price_cents?: number
@@ -443,6 +505,7 @@ export type Database = {
       orders: {
         Row: {
           address: string | null
+          closed_at: string | null
           coupon_code: string | null
           created_at: string
           customer_name: string
@@ -453,18 +516,24 @@ export type Database = {
           id: string
           idempotency_key: string
           notes: string | null
+          opened_by: string | null
           order_type: Database["public"]["Enums"]["order_type"]
+          paid_at: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
+          payment_status: string | null
           print_status: Database["public"]["Enums"]["order_print_status"] | null
           restaurant_id: string
+          service_mode: string | null
           status: Database["public"]["Enums"]["order_status"]
           subtotal_cents: number
+          table_id: string | null
           tenant_id: string
           total_cents: number
           updated_at: string
         }
         Insert: {
           address?: string | null
+          closed_at?: string | null
           coupon_code?: string | null
           created_at?: string
           customer_name: string
@@ -475,20 +544,26 @@ export type Database = {
           id?: string
           idempotency_key: string
           notes?: string | null
+          opened_by?: string | null
           order_type: Database["public"]["Enums"]["order_type"]
+          paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_status?: string | null
           print_status?:
             | Database["public"]["Enums"]["order_print_status"]
             | null
           restaurant_id: string
+          service_mode?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_cents?: number
+          table_id?: string | null
           tenant_id: string
           total_cents?: number
           updated_at?: string
         }
         Update: {
           address?: string | null
+          closed_at?: string | null
           coupon_code?: string | null
           created_at?: string
           customer_name?: string
@@ -499,14 +574,19 @@ export type Database = {
           id?: string
           idempotency_key?: string
           notes?: string | null
+          opened_by?: string | null
           order_type?: Database["public"]["Enums"]["order_type"]
+          paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          payment_status?: string | null
           print_status?:
             | Database["public"]["Enums"]["order_print_status"]
             | null
           restaurant_id?: string
+          service_mode?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_cents?: number
+          table_id?: string | null
           tenant_id?: string
           total_cents?: number
           updated_at?: string
@@ -524,6 +604,13 @@ export type Database = {
             columns: ["restaurant_id"]
             isOneToOne: false
             referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "dining_tables"
             referencedColumns: ["id"]
           },
           {
@@ -1246,13 +1333,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_items_to_order: {
+        Args: { _items: Json; _order_id: string }
+        Returns: Json
+      }
+      calculate_order_item_details: {
+        Args: { _item: Json; _restaurant_id: string }
+        Returns: Json
+      }
+      cancel_order_item: {
+        Args: { _order_item_id: string; _reason: string }
+        Returns: undefined
+      }
+      check_restaurant_role: {
+        Args: { _allowed_roles: string[]; _restaurant_id: string }
+        Returns: boolean
+      }
       claim_print_job: {
         Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
         Returns: boolean
       }
+      close_order: {
+        Args: {
+          _order_id: string
+          _payment_method: Database["public"]["Enums"]["payment_method"]
+        }
+        Returns: undefined
+      }
       complete_print_job: {
         Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
         Returns: boolean
+      }
+      create_counter_order: {
+        Args: { _restaurant_id: string }
+        Returns: string
       }
       create_internal_order: {
         Args: {
@@ -1416,6 +1530,10 @@ export type Database = {
         Args: { _tenant_id: string; _user_id: string }
         Returns: boolean
       }
+      open_table_order: {
+        Args: { _restaurant_id: string; _table_id: string }
+        Returns: string
+      }
       reprint_order: {
         Args: { p_order_id: string; p_reason: string }
         Returns: string
@@ -1424,6 +1542,7 @@ export type Database = {
         Args: { p_restaurant_id: string; p_stuck_minutes?: number }
         Returns: number
       }
+      send_order_to_kitchen: { Args: { _order_id: string }; Returns: number }
       update_order_status: {
         Args: {
           _new_status: Database["public"]["Enums"]["order_status"]
