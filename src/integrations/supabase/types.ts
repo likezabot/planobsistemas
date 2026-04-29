@@ -125,6 +125,7 @@ export type Database = {
           notes: string | null
           order_type: Database["public"]["Enums"]["order_type"]
           payment_method: Database["public"]["Enums"]["payment_method"]
+          print_status: Database["public"]["Enums"]["order_print_status"] | null
           restaurant_id: string
           status: Database["public"]["Enums"]["order_status"]
           subtotal_cents: number
@@ -143,6 +144,9 @@ export type Database = {
           notes?: string | null
           order_type: Database["public"]["Enums"]["order_type"]
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          print_status?:
+            | Database["public"]["Enums"]["order_print_status"]
+            | null
           restaurant_id: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_cents?: number
@@ -161,6 +165,9 @@ export type Database = {
           notes?: string | null
           order_type?: Database["public"]["Enums"]["order_type"]
           payment_method?: Database["public"]["Enums"]["payment_method"]
+          print_status?:
+            | Database["public"]["Enums"]["order_print_status"]
+            | null
           restaurant_id?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_cents?: number
@@ -517,10 +524,12 @@ export type Database = {
         Args: { p_agent_id: string; p_job_id: string }
         Returns: boolean
       }
-      create_print_job_for_order: {
-        Args: { p_order_id: string; p_source: string }
-        Returns: string
-      }
+      create_print_job_for_order:
+        | { Args: { p_order_id: string; p_source: string }; Returns: string }
+        | {
+            Args: { p_order_id: string; p_reason?: string; p_source: string }
+            Returns: string
+          }
       create_public_order: {
         Args: {
           _address?: string
@@ -621,6 +630,7 @@ export type Database = {
         | "waiter"
         | "kitchen"
         | "support"
+      order_print_status: "none" | "pending" | "printed" | "failed"
       order_status:
         | "new"
         | "accepted"
@@ -760,6 +770,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["owner", "manager", "cashier", "waiter", "kitchen", "support"],
+      order_print_status: ["none", "pending", "printed", "failed"],
       order_status: [
         "new",
         "accepted",
