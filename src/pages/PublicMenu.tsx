@@ -266,7 +266,7 @@ export default function PublicMenu() {
                 <span>Ver Carrinho</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="bg-white/20 px-3 py-1 rounded text-xs font-bold">
+                <span className="bg-secondary px-3 py-1 rounded text-xs font-bold text-white">
                   {centsToBRL(getTotal())}
                 </span>
                 <ChevronRight className="w-4 h-4 opacity-50" />
