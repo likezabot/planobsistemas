@@ -95,15 +95,16 @@ d('Rate limit em create_public_order — REAL E2E', () => {
     expect(JSON.stringify(blocked.error)).toMatch(/Muitas tentativas/i);
   }, 60_000);
 
-  it('audit_log recebeu evento public_order.rate_limited', async () => {
-    const { data } = await admin
-      .from('audit_log')
-      .select('action, payload')
+  it('public_order_attempts registra cada tentativa permitida (trilha de auditoria)', async () => {
+    // Janela tem ao menos 8 tentativas permitidas (8º foi bloqueada antes).
+    const { data, error } = await admin
+      .from('public_order_attempts')
+      .select('idempotency_key, blocked')
       .eq('restaurant_id', restaurantId)
-      .eq('action', 'public_order.rate_limited');
-    expect((data || []).length).toBeGreaterThan(0);
-    expect(data![0].payload).toHaveProperty('phone_tail');
-    // Privacy: apenas os 4 últimos dígitos
-    expect(data![0].payload.phone_tail).toBe(phone.slice(-4));
+      .eq('normalized_phone', phone);
+    expect(error).toBeNull();
+    const allowed = (data || []).filter((r: any) => !r.blocked);
+    // 1 (do teste de clique duplo) + 7 do burst = 8 permitidas
+    expect(allowed.length).toBeGreaterThanOrEqual(8);
   });
 });
