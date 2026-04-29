@@ -82,10 +82,53 @@ export default function VariantsTab() {
 
   const canEdit = isAdminRole(currentMembership?.role);
 
-  // Filter products that can have variants
-  const variantProducts = useMemo(() => 
-    products.filter(p => p.type === 'variable' || p.type === 'pizza' || p.type === 'combo'),
-  [products]);
+  // Dropdown de produtos: variable | pizza | combo, dedup defensivo por id, ordenado por nome.
+  const variantProducts = useMemo(() => {
+    const seen = new Set<string>();
+    const list: Product[] = [];
+    for (const p of products) {
+      if (p.type !== "variable" && p.type !== "pizza" && p.type !== "combo") continue;
+      if (seen.has(p.id)) continue;
+      seen.add(p.id);
+      list.push(p);
+    }
+    return list.sort((a, b) => a.name.localeCompare(b.name));
+  }, [products]);
+
+  // Pizzas duplicadas (mesmo nome ignorando caixa, mesmo restaurant_id, type='pizza')
+  const duplicatePizzaGroups = useMemo(
+    () => findDuplicatePizzas(products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      type: p.type,
+      created_at: (p as unknown as { created_at: string }).created_at ?? "",
+    }))),
+    [products],
+  );
+  const [dedupingDup, setDedupingDup] = useState(false);
+
+  async function handleDedupePizzas() {
+    if (dedupingDup) return;
+    const idsToInactivate = duplicatePizzaGroups.flatMap((g) => g.ids.slice(1));
+    if (idsToInactivate.length === 0) return;
+    if (!confirm(
+      `Inativar ${idsToInactivate.length} duplicata(s), mantendo a mais antiga de cada nome?\n\nNenhum produto será excluído.`
+    )) return;
+    setDedupingDup(true);
+    try {
+      const { error } = await supabase
+        .from("products")
+        .update({ active: false })
+        .in("id", idsToInactivate);
+      if (error) throw error;
+      toast({ title: `${idsToInactivate.length} duplicata(s) inativada(s)` });
+      await loadProducts();
+    } catch (e) {
+      toast({ title: "Falhou", description: (e as Error).message, variant: "destructive" });
+    } finally {
+      setDedupingDup(false);
+    }
+  }
 
   const loadProducts = useCallback(async () => {
     if (!currentRestaurantId) return;
