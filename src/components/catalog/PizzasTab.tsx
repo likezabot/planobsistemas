@@ -316,6 +316,7 @@ function FlavorDialog({
       setName(flavor.name);
       setDescription(flavor.description ?? "");
       setCategory(flavor.category ?? "");
+      setIngredients((flavor as any).ingredients ?? "");
       setTrackStock(flavor.track_stock ?? false);
       setStockQuantity(flavor.stock_quantity?.toString() || "0");
       setLowStockAlert(flavor.low_stock_alert?.toString() || "");
@@ -324,6 +325,7 @@ function FlavorDialog({
       setName("");
       setDescription("");
       setCategory("");
+      setIngredients("");
       setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [flavor, open]);
