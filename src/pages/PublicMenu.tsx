@@ -81,8 +81,11 @@ export default function PublicMenu() {
 
   const productsByCategory = useMemo(() => {
     if (state.status !== "ok") return new Map<string | null, PublicProduct[]>();
+    const pizzaOn = state.restaurant.pizza_module_enabled;
     const map = new Map<string | null, PublicProduct[]>();
     for (const p of state.products) {
+      // Defesa em profundidade: backend já filtra, mas garantimos no front
+      if (p.type === "pizza" && !pizzaOn) continue;
       const key = p.category_id;
       const arr = map.get(key) ?? [];
       arr.push(p);
