@@ -833,14 +833,22 @@ export type Database = {
           active: boolean
           allow_out_of_stock_sale: boolean | null
           category_id: string | null
+          cest: string | null
+          cfop: string | null
           code: string | null
           cost_cents: number
           created_at: string
+          csosn: string | null
+          cst: string | null
           description: string | null
+          fiscal_notes: string | null
+          fiscal_unit: string | null
           id: string
           image_url: string | null
           low_stock_alert: number | null
           name: string
+          ncm: string | null
+          origin: string | null
           price_cents: number
           restaurant_id: string
           sort_order: number
@@ -854,14 +862,22 @@ export type Database = {
           active?: boolean
           allow_out_of_stock_sale?: boolean | null
           category_id?: string | null
+          cest?: string | null
+          cfop?: string | null
           code?: string | null
           cost_cents?: number
           created_at?: string
+          csosn?: string | null
+          cst?: string | null
           description?: string | null
+          fiscal_notes?: string | null
+          fiscal_unit?: string | null
           id?: string
           image_url?: string | null
           low_stock_alert?: number | null
           name: string
+          ncm?: string | null
+          origin?: string | null
           price_cents?: number
           restaurant_id: string
           sort_order?: number
@@ -875,14 +891,22 @@ export type Database = {
           active?: boolean
           allow_out_of_stock_sale?: boolean | null
           category_id?: string | null
+          cest?: string | null
+          cfop?: string | null
           code?: string | null
           cost_cents?: number
           created_at?: string
+          csosn?: string | null
+          cst?: string | null
           description?: string | null
+          fiscal_notes?: string | null
+          fiscal_unit?: string | null
           id?: string
           image_url?: string | null
           low_stock_alert?: number | null
           name?: string
+          ncm?: string | null
+          origin?: string | null
           price_cents?: number
           restaurant_id?: string
           sort_order?: number
@@ -984,6 +1008,7 @@ export type Database = {
       }
       restaurants: {
         Row: {
+          accounting_reports_enabled: boolean
           created_at: string
           id: string
           inventory_enabled: boolean | null
@@ -996,6 +1021,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accounting_reports_enabled?: boolean
           created_at?: string
           id?: string
           inventory_enabled?: boolean | null
@@ -1008,6 +1034,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accounting_reports_enabled?: boolean
           created_at?: string
           id?: string
           inventory_enabled?: boolean | null
