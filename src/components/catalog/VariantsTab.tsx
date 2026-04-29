@@ -13,16 +13,18 @@ import {
   type ProductVariant 
 } from "@/lib/catalog/pizzaQueries";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
-import { 
-  Plus, 
-  Power, 
-  Trash2, 
-  Edit2, 
-  Layers, 
-  Search, 
+import { findDuplicatePizzas } from "@/lib/catalog/suspectDetection";
+import {
+  Plus,
+  Power,
+  Trash2,
+  Edit2,
+  Layers,
+  Search,
   Loader2,
   AlertCircle,
-  Package
+  AlertTriangle,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
