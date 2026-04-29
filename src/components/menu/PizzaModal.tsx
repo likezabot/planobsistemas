@@ -420,21 +420,25 @@ export function PizzaModal({
                             const price = selectedVariantId
                               ? it.price_overrides?.[selectedVariantId] ?? it.price_cents
                               : it.price_cents;
+                            const isItemOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && it.track_stock && it.stock_quantity <= 0 && !it.allow_out_of_stock_sale;
+
                             return (
                               <div
                                 key={it.id}
                                 className={cn(
-                                  "flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all",
+                                  "flex items-center justify-between p-3 rounded-xl border transition-all",
                                   checked
                                     ? "border-primary bg-primary/5"
                                     : "border-border hover:border-muted-foreground/30",
+                                  isItemOutOfStock ? "opacity-50 cursor-not-allowed grayscale-[0.5]" : "cursor-pointer",
                                 )}
-                                onClick={() => toggleOption(g.id, it.id, g.max_options)}
+                                onClick={() => !isItemOutOfStock && toggleOption(g.id, it.id, g.max_options)}
                               >
                                 <div className="flex items-center gap-3">
-                                  <Checkbox checked={checked} className="rounded-md" />
-                                  <Label className="text-sm font-medium cursor-pointer">
+                                  <Checkbox checked={checked} disabled={isItemOutOfStock} className="rounded-md" />
+                                  <Label className={cn("text-sm font-medium", isItemOutOfStock ? "cursor-not-allowed" : "cursor-pointer")}>
                                     {it.name}
+                                    {isItemOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
                                   </Label>
                                 </div>
                                 {price > 0 && (
