@@ -12,7 +12,7 @@ import {
   listCategories, createCategory, setCategoryActive, type Category,
 } from "@/lib/catalog/queries";
 import { isAdminRole } from "@/lib/catalog/money";
-import { Plus, Power, Tag, Package, Loader2, Edit2, Search } from "lucide-react";
+import { Plus, Power, Tag, Package, Loader2, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -73,22 +73,21 @@ export default function CatalogCategories() {
 
   return (
     <AppShell>
-      <div className="flex flex-col gap-8">
-        {/* Page Header */}
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-display font-bold text-secondary">Categorias</h1>
-            <p className="text-muted-foreground font-medium mt-1">Organize seus produtos em grupos para facilitar a navegação.</p>
+            <h1 className="text-2xl font-bold text-secondary">Categorias</h1>
+            <p className="text-muted-foreground text-sm mt-1">Organize seus produtos no cardápio.</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="rounded-xl border-border h-12">
-              <Link to="/catalogo/products">
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" className="rounded-lg border-border h-10">
+              <Link to="/catalogo">
                 <Package className="w-4 h-4 mr-2" />
                 Produtos
               </Link>
             </Button>
             {canEdit && (
-              <Button className="rounded-xl h-12 shadow-button" onClick={() => setOpen(true)}>
+              <Button className="rounded-lg h-10 shadow-sm" onClick={() => setOpen(true)}>
                 <Plus className="w-4 h-4 mr-2" /> 
                 Nova Categoria
               </Button>
@@ -96,112 +95,86 @@ export default function CatalogCategories() {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="relative max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input 
+        <div className="relative max-w-md bg-white p-1 rounded-lg">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input 
             placeholder="Buscar categoria..." 
-            className="h-12 pl-11 rounded-2xl border-border bg-card shadow-sm"
+            className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-        {/* Categories List */}
-        <div className="bg-card rounded-[2.5rem] border border-border shadow-card overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {loading ? (
-            <div className="p-12 space-y-4">
-              {[1, 2, 3].map(i => <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />)}
-            </div>
+            [1, 2, 3].map(i => <div key={i} className="h-24 bg-muted rounded-xl animate-pulse" />)
           ) : filteredCategories.length === 0 ? (
-            <div className="text-center py-32">
-              <Tag className="w-16 h-16 mx-auto mb-4 opacity-10 text-secondary" />
-              <p className="text-muted-foreground font-medium">Nenhuma categoria encontrada.</p>
+            <div className="col-span-full text-center py-20 bg-white rounded-xl border border-dashed border-border">
+              <Tag className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
+              <p className="text-muted-foreground text-sm font-medium">Nenhuma categoria encontrada.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-muted/30 border-b border-border">
-                    <th className="px-8 py-5 text-left text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Nome da Categoria</th>
-                    <th className="px-6 py-5 text-center text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Status</th>
-                    <th className="px-8 py-5"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {filteredCategories.map((c) => (
-                    <tr key={c.id} className="hover:bg-muted/20 transition-colors group">
-                      <td className="px-8 py-5">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                            <Tag className="w-5 h-5" />
-                          </div>
-                          <span className="font-bold text-secondary text-lg">{c.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-5 text-center">
-                        <Badge variant={c.active ? "secondary" : "outline"} className={cn(
-                          "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest",
-                          c.active ? "bg-success/10 text-success border-success/20" : "bg-muted text-muted-foreground opacity-50"
-                        )}>
-                          {c.active ? "Ativa" : "Inativa"}
-                        </Badge>
-                      </td>
-                      <td className="px-8 py-5 text-right">
-                        {canEdit && (
-                          <div className="flex justify-end gap-2">
-                            <Button 
-                              size="icon" 
-                              variant="ghost" 
-                              className={cn(
-                                "rounded-xl hover:bg-white hover:shadow-sm",
-                                c.active ? "text-success hover:text-destructive" : "text-muted-foreground hover:text-success"
-                              )}
-                              onClick={() => toggle(c)}
-                            >
-                              <Power className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            filteredCategories.map((c) => (
+              <div key={c.id} className="bg-white rounded-xl border border-border p-4 shadow-sm flex items-center justify-between group hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
+                    <Tag className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-secondary text-sm truncate">{c.name}</h3>
+                    <Badge variant={c.active ? "secondary" : "outline"} className={cn(
+                      "rounded-md px-1.5 py-0 uppercase text-[8px] font-bold tracking-widest border-none mt-0.5",
+                      c.active ? "bg-success text-white" : "bg-muted text-muted-foreground"
+                    )}>
+                      {c.active ? "Ativa" : "Inativa"}
+                    </Badge>
+                  </div>
+                </div>
+                {canEdit && (
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className={cn(
+                      "h-8 w-8 rounded-lg transition-colors",
+                      c.active ? "text-success hover:text-destructive" : "text-muted-foreground hover:text-success"
+                    )}
+                    onClick={() => toggle(c)}
+                  >
+                    <Power className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))
           )}
         </div>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="rounded-[2.5rem] p-0 overflow-hidden border-none shadow-premium">
-          <DialogHeader className="p-8 bg-secondary text-white">
-            <DialogTitle className="text-2xl font-display font-bold">Nova Categoria</DialogTitle>
-            <DialogDescription className="text-white/60">
-              Crie uma nova categoria para organizar seus produtos no cardápio.
-            </DialogDescription>
+        <DialogContent className="max-w-md rounded-xl p-0 overflow-hidden border-none shadow-2xl">
+          <DialogHeader className="p-6 bg-secondary text-white">
+            <DialogTitle className="text-xl font-bold">Nova Categoria</DialogTitle>
+            <DialogDescription className="text-white/60 text-sm">Organize seus produtos.</DialogDescription>
           </DialogHeader>
-          <div className="p-8 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="c-name" className="font-bold text-secondary ml-1">Nome da Categoria</Label>
+          <div className="p-6 space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="c-name" className="text-xs font-bold text-secondary uppercase tracking-wider">Nome da Categoria</Label>
               <Input 
                 id="c-name" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="h-14 rounded-2xl border-border bg-card shadow-sm text-lg"
-                placeholder="Ex: Bebidas Geladas"
+                className="h-10 rounded-lg border-border bg-white"
+                placeholder="Ex: Bebidas"
               />
             </div>
           </div>
-          <DialogFooter className="p-8 bg-muted/50 border-t border-border gap-2">
-            <Button variant="ghost" className="rounded-xl font-bold" onClick={() => setOpen(false)}>Cancelar</Button>
+          <DialogFooter className="p-6 bg-[#F8FAFC] border-t border-border gap-2">
+            <Button variant="ghost" className="rounded-lg font-bold" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button 
               onClick={handleCreate} 
-              disabled={saving}
-              className="rounded-xl h-12 px-8 font-bold shadow-premium"
+              disabled={saving || !name.trim()}
+              className="rounded-lg h-10 px-6 font-bold shadow-sm"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Criar Categoria
+              {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Criar Categoria"}
             </Button>
           </DialogFooter>
         </DialogContent>
