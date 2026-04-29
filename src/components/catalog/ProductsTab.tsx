@@ -11,15 +11,24 @@ import {
   type Category
 } from "@/lib/catalog/queries";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
-import { 
-  Search, 
-  Plus, 
-  Power, 
-  Edit2, 
-  Package, 
+import {
+  isSuspectFlavorProduct,
+  isDismissed,
+  dismiss,
+  buildScope,
+} from "@/lib/catalog/suspectDetection";
+import SuspectFlavorDialog from "./SuspectFlavorDialog";
+import {
+  Search,
+  Plus,
+  Power,
+  Edit2,
+  Package,
   Loader2,
   Check,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
