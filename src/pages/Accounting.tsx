@@ -113,8 +113,8 @@ export default function Accounting() {
               Contador
             </h1>
             <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-              Relatórios operacionais para conferência contábil. <strong>Não é cupom fiscal</strong>,
-              não substitui o contador, não envia dados para SEFAZ e não gera documento fiscal oficial.
+              Relatório operacional para conferência contábil. Não é documento fiscal,
+              não substitui cupom fiscal, NFC-e, SAT, XML, SEFAZ ou contador.
             </p>
           </div>
           {isAdmin && enabled && (
