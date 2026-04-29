@@ -9,10 +9,10 @@ import {
   ShoppingBag, 
   Clock, 
   ArrowUpRight, 
-  ChevronRight,
   Store,
   ExternalLink,
-  Plus
+  Plus,
+  Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,7 +56,7 @@ export default function Index() {
     return (
       <AppShell>
         <div className="flex items-center justify-center h-[60vh]">
-          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
         </div>
       </AppShell>
     );
@@ -65,16 +65,16 @@ export default function Index() {
   if (!currentMembership) {
     return (
       <AppShell>
-        <div className="bg-card shadow-premium border border-border p-12 text-center rounded-[2.5rem] max-w-2xl mx-auto">
-          <div className="w-20 h-20 bg-muted rounded-[2rem] flex items-center justify-center mx-auto mb-6">
-            <Store className="w-10 h-10 text-muted-foreground" />
+        <div className="bg-white border border-border p-12 text-center rounded-2xl max-w-xl mx-auto shadow-sm">
+          <div className="w-16 h-16 bg-muted rounded-xl flex items-center justify-center mx-auto mb-6">
+            <Store className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h2 className="text-2xl font-display font-bold text-secondary">Nenhum restaurante encontrado</h2>
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            Você ainda não pertence a nenhum estabelecimento. Peça ao proprietário para te adicionar usando seu e-mail.
+          <h2 className="text-xl font-bold text-secondary">Bem-vindo ao Plano B</h2>
+          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+            Você ainda não pertence a nenhum estabelecimento cadastrado.
           </p>
-          <Button className="mt-8 rounded-2xl h-14 px-8 font-bold" variant="secondary">
-            Ver convites pendentes
+          <Button className="mt-8 rounded-lg h-12 px-8 font-bold" variant="secondary">
+            Verificar Convites
           </Button>
         </div>
       </AppShell>
@@ -83,85 +83,78 @@ export default function Index() {
 
   return (
     <AppShell>
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        {/* Welcome Header */}
+      <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-display font-bold text-secondary">Olá, bem-vindo de volta!</h1>
-            <p className="text-muted-foreground font-medium mt-1">
-              Aqui está o que está acontecendo no <span className="text-primary font-bold">{currentMembership.restaurants.name}</span> hoje.
+            <h1 className="text-2xl font-bold text-secondary tracking-tight">Painel de Controle</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Bem-vindo ao <span className="text-primary font-bold">{currentMembership.restaurants.name}</span>.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" className="rounded-xl border-border h-12">
+          <div className="flex items-center gap-2">
+            <Button asChild variant="outline" className="rounded-lg border-border h-10 shadow-sm">
               <Link to={`/menu/${currentMembership.restaurants.slug}`} target="_blank">
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Ver Cardápio Público
+                Abrir Cardápio
               </Link>
             </Button>
-            <Button className="rounded-xl h-12 shadow-button">
+            <Button className="rounded-lg h-10 shadow-sm font-bold">
               <Plus className="w-4 h-4 mr-2" />
-              Novo Pedido (PDV)
+              Novo Pedido
             </Button>
           </div>
         </div>
 
-        {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <DashboardStat 
             label="Vendas Hoje" 
             value="R$ 1.240,00" 
             trend="+12%" 
             icon={<TrendingUp className="w-5 h-5" />} 
-            color="text-primary bg-primary/10" 
+            color="bg-primary" 
           />
           <DashboardStat 
-            label="Pedidos Concluídos" 
+            label="Pedidos" 
             value="42" 
             trend="+5" 
             icon={<ShoppingBag className="w-5 h-5" />} 
-            color="text-success bg-success/10" 
+            color="bg-success" 
           />
           <DashboardStat 
-            label="Membros Ativos" 
+            label="Equipe" 
             value={members.length.toString()} 
             icon={<Users className="w-5 h-5" />} 
-            color="text-secondary bg-secondary/10" 
+            color="bg-secondary" 
           />
           <DashboardStat 
-            label="Tempo Médio" 
+            label="Médio Preparo" 
             value="18 min" 
             trend="-2 min" 
             icon={<Clock className="w-5 h-5" />} 
-            color="text-warning bg-warning/10" 
+            color="bg-warning" 
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Chart Area (Mock) */}
-          <Card className="lg:col-span-2 rounded-[2rem] border-none shadow-card overflow-hidden">
-            <CardHeader className="p-8 border-b border-border bg-card">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2 rounded-xl border-border bg-white shadow-sm overflow-hidden">
+            <CardHeader className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl font-display font-bold text-secondary">Desempenho Semanal</CardTitle>
-                <Select defaultValue="7d">
-                  <option value="7d">Últimos 7 dias</option>
-                  <option value="30d">Últimos 30 dias</option>
-                </Select>
+                <CardTitle className="text-lg font-bold text-secondary">Vendas Semanais</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="p-8">
-              <div className="h-64 flex items-end justify-between gap-2">
+            <CardContent className="p-6">
+              <div className="h-64 flex items-end justify-between gap-2 pt-10">
                 {[45, 60, 40, 75, 55, 90, 65].map((val, i) => (
                   <div key={i} className="flex-1 group flex flex-col items-center gap-2">
                     <div 
-                      className="w-full bg-primary/20 group-hover:bg-primary transition-all rounded-t-lg relative" 
+                      className="w-full bg-muted group-hover:bg-primary transition-all rounded-t-lg relative" 
                       style={{ height: `${val}%` }}
                     >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                         R$ {val * 10}
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][i]}
                     </span>
                   </div>
@@ -170,39 +163,37 @@ export default function Index() {
             </CardContent>
           </Card>
 
-          {/* Members Sidebar */}
-          <Card className="rounded-[2.5rem] border-none shadow-card overflow-hidden h-fit">
-            <CardHeader className="p-8 border-b border-border bg-card">
+          <Card className="rounded-xl border-border bg-white shadow-sm overflow-hidden h-fit">
+            <CardHeader className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-display font-bold text-secondary">Equipe Ativa</CardTitle>
-                <Badge className="bg-success/10 text-success border-success/20 uppercase text-[9px]">Online</Badge>
+                <CardTitle className="text-lg font-bold text-secondary">Equipe</CardTitle>
+                <Badge className="bg-success text-white uppercase text-[8px] font-bold tracking-widest border-none">Online</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
               {loadingMembers ? (
-                <div className="p-8 space-y-4">
-                  {[1, 2, 3].map(i => <div key={i} className="h-12 bg-muted rounded-xl animate-pulse" />)}
+                <div className="p-6 space-y-4">
+                  {[1, 2, 3].map(i => <div key={i} className="h-10 bg-muted rounded-lg animate-pulse" />)}
                 </div>
               ) : (
                 <div className="divide-y divide-border">
                   {members.map((m) => (
-                    <div key={m.id} className="p-6 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                    <div key={m.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">
-                          {m.user_id.slice(0, 2).toUpperCase()}
+                        <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-white font-bold text-xs">
+                          {m.user_id.slice(0, 1).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-secondary">{m.user_id.slice(0, 8)}</p>
-                          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{m.role}</p>
+                          <p className="text-sm font-bold text-secondary truncate w-32">{m.user_id.slice(0, 12)}</p>
+                          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{m.role}</p>
                         </div>
                       </div>
-                      <ChevronRight className="w-4 h-4 text-muted-foreground" />
                     </div>
                   ))}
                 </div>
               )}
-              <div className="p-6">
-                <Button variant="ghost" className="w-full rounded-xl text-xs font-bold text-primary hover:bg-primary/5">
+              <div className="p-4">
+                <Button variant="ghost" className="w-full rounded-lg text-xs font-bold text-primary hover:bg-muted">
                   Gerenciar Equipe
                 </Button>
               </div>
@@ -216,33 +207,25 @@ export default function Index() {
 
 function DashboardStat({ label, value, trend, icon, color }: { label: string, value: string, trend?: string, icon: React.ReactNode, color: string }) {
   return (
-    <Card className="border-none shadow-card hover:shadow-premium transition-all overflow-hidden bg-card">
+    <Card className="border-border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", color)}>
+          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm", color)}>
             {icon}
           </div>
           {trend && (
             <div className={cn(
-              "flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full",
-              trend.startsWith('+') ? "text-success bg-success/10" : "text-destructive bg-destructive/10"
+              "flex items-center text-[10px] font-bold px-2 py-0.5 rounded border border-current opacity-70",
+              trend.startsWith('+') ? "text-success" : "text-destructive"
             )}>
               {trend.startsWith('+') ? <ArrowUpRight className="w-3 h-3 mr-0.5" /> : null}
               {trend}
             </div>
           )}
         </div>
-        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{label}</p>
-        <p className="text-2xl font-display font-bold text-secondary mt-1">{value}</p>
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{label}</p>
+        <p className="text-xl font-bold text-secondary mt-1 tracking-tight">{value}</p>
       </CardContent>
     </Card>
-  );
-}
-
-function Select({ children, defaultValue }: { children: React.ReactNode, defaultValue?: string }) {
-  return (
-    <select defaultValue={defaultValue} className="text-xs font-bold bg-muted border-none rounded-lg px-3 py-2 outline-none cursor-pointer hover:bg-muted/80 transition-colors">
-      {children}
-    </select>
   );
 }

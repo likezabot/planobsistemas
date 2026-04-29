@@ -8,7 +8,7 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
+    --background: 0 0% 100%; /* Pure White */
     --foreground: 215 50% 15%;
 
     --card: 0 0% 100%;
@@ -21,12 +21,12 @@
     --primary-foreground: 0 0% 100%;
 
     --secondary: 215 50% 23%; /* Navy Blue #1D3557 */
-    --secondary-foreground: 210 20% 98%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 20% 96%;
+    --muted: 210 20% 96%; /* Solid light grey */
     --muted-foreground: 215 15% 45%;
 
-    --accent: 182 25% 76%; /* Soft Cyan #A8DADC */
+    --accent: 182 25% 90%; /* Solid very light cyan */
     --accent-foreground: 215 50% 23%;
 
     --destructive: 354 44% 50%;
@@ -42,13 +42,13 @@
     --input: 215 20% 92%;
     --ring: 354 77% 56%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 215 50% 12%;
+    --sidebar-background: 215 50% 12%; /* Solid Dark Navy */
     --sidebar-foreground: 210 20% 90%;
     --sidebar-primary: 354 77% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 40% 18%;
+    --sidebar-accent: 215 40% 18%; /* Solid accent */
     --sidebar-accent-foreground: 210 20% 96%;
     --sidebar-border: 215 40% 20%;
     --sidebar-ring: 354 77% 56%;

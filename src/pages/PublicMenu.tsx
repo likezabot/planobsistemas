@@ -141,11 +141,11 @@ export default function PublicMenu() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] pb-32 font-sans">
+    <main className="min-h-screen bg-white pb-32 font-sans">
       {/* Header Solid */}
       <div className="relative h-48 bg-secondary overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-50 scale-105" />
+        <div className="absolute inset-0 bg-black z-10 opacity-60" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-70 scale-105" />
         <div className="absolute bottom-6 left-6 right-6 z-20">
           <h1 className="text-2xl font-bold text-white tracking-tight">
             {restaurant.name}

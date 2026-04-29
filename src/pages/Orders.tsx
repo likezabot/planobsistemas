@@ -447,13 +447,13 @@ const StatusBadge = ({ status }: { status: string }) => {
 const PrintStatusBadge = ({ status }: { status: string }) => {
   const configs: Record<string, { label: string; className: string }> = {
     none: { label: "Pendente", className: "bg-muted text-muted-foreground" },
-    pending: { label: "Imprimindo...", className: "bg-warning/10 text-warning" },
-    printed: { label: "Impresso", className: "bg-success/10 text-success" },
-    failed: { label: "Falhou", className: "bg-destructive/10 text-destructive" },
+    pending: { label: "Imprimindo...", className: "bg-warning text-white" },
+    printed: { label: "Impresso", className: "bg-success text-white" },
+    failed: { label: "Falhou", className: "bg-destructive text-white" },
   };
   const config = configs[status] || { label: status, className: "bg-muted text-muted-foreground" };
   return (
-    <span className={cn("text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border border-current opacity-70", config.className)}>
+    <span className={cn("text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm", config.className)}>
       {config.label}
     </span>
   );
