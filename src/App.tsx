@@ -18,6 +18,7 @@ import KDS from "./pages/KDS.tsx";
 import Reports from "./pages/Reports.tsx";
 import Customers from "./pages/Customers.tsx";
 import DeliverySettings from "./pages/DeliverySettings.tsx";
+import Coupons from "./pages/Coupons.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
