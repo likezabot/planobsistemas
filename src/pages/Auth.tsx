@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth/AuthProvider";
@@ -23,6 +23,8 @@ const signUpSchema = signInSchema.extend({
 export default function AuthPage() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname || "/";
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function AuthPage() {
   }, []);
 
   if (loading) return null;
-  if (session) return <Navigate to="/" replace />;
+  if (session) return <Navigate to={from} replace />;
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +55,7 @@ export default function AuthPage() {
       toast.error(error.message);
       return;
     }
-    navigate("/", { replace: true });
+    navigate(from, { replace: true });
   };
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
@@ -89,7 +91,7 @@ export default function AuthPage() {
       return;
     }
     toast.success("Conta criada. Verifique seu email se necessário.");
-    navigate("/", { replace: true });
+    navigate(from, { replace: true });
   };
 
   return (

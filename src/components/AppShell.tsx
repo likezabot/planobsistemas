@@ -58,8 +58,9 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/orders", icon: ClipboardList, label: "Pedidos" },
-    { to: "/catalog/products", icon: BookOpen, label: "Cardápio" },
+    { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
+    { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
+    { to: "/catalogo/categorias", icon: Store, label: "Categorias" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
   ];
 
