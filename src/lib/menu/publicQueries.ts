@@ -17,6 +17,8 @@ export interface PublicRestaurant {
   slug: string;
   timezone: string;
   public_menu_enabled: boolean;
+  inventory_enabled: boolean;
+  inventory_mode: "simple" | "advanced";
 }
 
 export interface PublicCategory {
@@ -35,6 +37,9 @@ export interface PublicProduct {
   image_url: string | null;
   type: "simple" | "variable" | "pizza" | "combo";
   has_options: boolean;
+  track_stock: boolean;
+  stock_quantity: number;
+  allow_out_of_stock_sale: boolean;
 }
 
 export interface PublicProductDetails {
@@ -42,6 +47,9 @@ export interface PublicProductDetails {
     id: string;
     name: string;
     price_cents: number;
+    track_stock: boolean;
+    stock_quantity: number;
+    allow_out_of_stock_sale: boolean;
   }[];
   option_groups: {
     id: string;
@@ -55,6 +63,9 @@ export interface PublicProductDetails {
       price_cents: number;
       // override por variant_id (preço final substitui price_cents)
       price_overrides?: Record<string, number>;
+      track_stock: boolean;
+      stock_quantity: number;
+      allow_out_of_stock_sale: boolean;
     }[];
   }[];
   pizza_config?: {
@@ -70,6 +81,9 @@ export interface PublicProductDetails {
     image_url: string | null;
     // preço por variant_id (default 0 quando não listado)
     prices: Record<string, number>;
+    track_stock: boolean;
+    stock_quantity: number;
+    allow_out_of_stock_sale: boolean;
   }[];
 }
 
@@ -109,6 +123,9 @@ export async function getPublicProducts(slug: string): Promise<PublicProduct[]> 
     image_url: p.image_url,
     type: p.type,
     has_options: p.has_options,
+    track_stock: p.track_stock,
+    stock_quantity: Number(p.stock_quantity || 0),
+    allow_out_of_stock_sale: p.allow_out_of_stock_sale,
   }));
 }
 

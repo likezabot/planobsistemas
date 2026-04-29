@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export default function OptionsTab() {
@@ -328,12 +329,26 @@ function ItemDialog({ open, onOpenChange, item, groupId, onSaved }: any) {
   const [price, setPrice] = useState("");
   const [cost, setCost] = useState("");
   const [saving, setSaving] = useState(false);
+  const { currentMembership } = useRestaurant();
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const inventoryMode = currentMembership?.restaurants.inventory_mode;
+  const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
 
   useEffect(() => {
     if (item) {
       setName(item.name); setCode(item.code || ""); setPrice((item.price_cents / 100).toFixed(2).replace('.', ',')); setCost((item.cost_cents || 0 / 100).toFixed(2).replace('.', ','));
+      setTrackStock(item.track_stock ?? false);
+      setStockQuantity(item.stock_quantity?.toString() || "0");
+      setLowStockAlert(item.low_stock_alert?.toString() || "");
+      setAllowOutOfStockSale(item.allow_out_of_stock_sale ?? false);
     } else {
       setName(""); setCode(""); setPrice(""); setCost("");
+      setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [item, open]);
 
@@ -343,7 +358,17 @@ function ItemDialog({ open, onOpenChange, item, groupId, onSaved }: any) {
       const priceCents = parseBRLToCents(price);
       const costCents = parseBRLToCents(cost);
       setSaving(true);
-      const payload = { name: name.trim(), code: code.trim() || null, price_cents: priceCents, cost_cents: costCents, group_id: groupId };
+      const payload = { 
+        name: name.trim(), 
+        code: code.trim() || null, 
+        price_cents: priceCents, 
+        cost_cents: costCents, 
+        group_id: groupId,
+        track_stock: trackStock,
+        stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+        low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+        allow_out_of_stock_sale: allowOutOfStockSale,
+      };
       const res = item ? await updateOptionItem(item.id, payload) : await createOptionItem(payload as any);
       setSaving(false);
       if (res.error) throw res.error;
@@ -382,6 +407,58 @@ function ItemDialog({ open, onOpenChange, item, groupId, onSaved }: any) {
               <Input value={cost} onChange={e => setCost(e.target.value)} placeholder="0,00" />
             </div>
           </div>
+
+          {showInventoryFields && (
+            <>
+              <Separator className="my-2" />
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold">Controlar estoque</Label>
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Ativar para este opcional</p>
+                  </div>
+                  <Switch 
+                    checked={trackStock} 
+                    onCheckedChange={setTrackStock} 
+                  />
+                </div>
+
+                {trackStock && (
+                  <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Qtd Atual</Label>
+                      <Input 
+                        type="number"
+                        value={stockQuantity} 
+                        onChange={e => setStockQuantity(e.target.value)} 
+                        className="h-9 font-bold tabular-nums" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Alerta Baixo</Label>
+                      <Input 
+                        type="number"
+                        value={lowStockAlert} 
+                        onChange={e => setLowStockAlert(e.target.value)} 
+                        className="h-9 font-bold tabular-nums" 
+                        placeholder="Ex: 5"
+                      />
+                    </div>
+                    <div className="col-span-2 flex items-center justify-between p-2 rounded-lg bg-muted/30 border border-border/50">
+                      <div className="space-y-0.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider">Vender sem estoque</Label>
+                        <p className="text-[9px] text-muted-foreground">Permitir venda se zerado</p>
+                      </div>
+                      <Switch 
+                        checked={allowOutOfStockSale} 
+                        onCheckedChange={setAllowOutOfStockSale} 
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>

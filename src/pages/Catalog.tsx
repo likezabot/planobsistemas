@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AppShell } from "@/components/AppShell";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Tag, Pizza, Layers, PlusCircle, Download } from "lucide-react";
+import { BookOpen, Tag, Pizza, Layers, PlusCircle, Download, ClipboardList } from "lucide-react";
 import ProductsTab from "@/components/catalog/ProductsTab";
 import CategoriesTab from "@/components/catalog/CategoriesTab";
 import PizzasTab from "@/components/catalog/PizzasTab";
 import VariantsTab from "@/components/catalog/VariantsTab";
 import OptionsTab from "@/components/catalog/OptionsTab";
+import InventoryTab from "@/components/catalog/InventoryTab";
 import ImportExportTab from "@/components/catalog/ImportExportTab";
 
 export default function Catalog() {
@@ -54,6 +55,10 @@ export default function Catalog() {
               <PlusCircle className="w-3.5 h-3.5 mr-2" />
               Adicionais
             </TabsTrigger>
+            <TabsTrigger value="estoque" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-4 py-2 text-xs font-bold uppercase tracking-wider">
+              <ClipboardList className="w-3.5 h-3.5 mr-2" />
+              Estoque
+            </TabsTrigger>
             <TabsTrigger value="import" className="data-[state=active]:bg-white data-[state=active]:shadow-sm px-4 py-2 text-xs font-bold uppercase tracking-wider">
               <Download className="w-3.5 h-3.5 mr-2" />
               Importar/Exportar
@@ -75,6 +80,9 @@ export default function Catalog() {
             </TabsContent>
             <TabsContent value="adicionais">
               <OptionsTab />
+            </TabsContent>
+            <TabsContent value="estoque">
+              <InventoryTab />
             </TabsContent>
             <TabsContent value="import">
               <ImportExportTab />

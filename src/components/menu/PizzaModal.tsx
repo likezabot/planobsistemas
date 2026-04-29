@@ -24,6 +24,8 @@ interface PizzaModalProps {
   product: PublicProduct | null;
   restaurantSlug: string | null;
   onClose: () => void;
+  inventoryEnabled?: boolean;
+  inventoryMode?: "simple" | "advanced";
 }
 
 /**
@@ -34,7 +36,13 @@ interface PizzaModalProps {
  *  - Observação
  *  - Mostra total estimado, mas backend recalcula tudo
  */
-export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps) {
+export function PizzaModal({ 
+  product, 
+  restaurantSlug, 
+  onClose,
+  inventoryEnabled,
+  inventoryMode 
+}: PizzaModalProps) {
   const [details, setDetails] = useState<PublicProductDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -263,28 +271,34 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                     }}
                     className="space-y-2"
                   >
-                    {details.variants.map((v) => (
-                      <div
-                        key={v.id}
-                        className={cn(
-                          "flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all",
-                          selectedVariantId === v.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-muted-foreground/30",
-                        )}
-                        onClick={() => setSelectedVariantId(v.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem value={v.id} id={`var-${v.id}`} />
-                          <Label htmlFor={`var-${v.id}`} className="font-medium cursor-pointer">
-                            {v.name}
-                          </Label>
+                    {details.variants.map((v) => {
+                      const isVariantOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && v.track_stock && v.stock_quantity <= 0 && !v.allow_out_of_stock_sale;
+                      
+                      return (
+                        <div
+                          key={v.id}
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-xl border transition-all",
+                            selectedVariantId === v.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border hover:border-muted-foreground/30",
+                            isVariantOutOfStock ? "opacity-50 cursor-not-allowed grayscale-[0.5]" : "cursor-pointer",
+                          )}
+                          onClick={() => !isVariantOutOfStock && setSelectedVariantId(v.id)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem value={v.id} id={`var-${v.id}`} disabled={isVariantOutOfStock} />
+                            <Label htmlFor={`var-${v.id}`} className={cn("font-medium", isVariantOutOfStock ? "cursor-not-allowed" : "cursor-pointer")}>
+                              {v.name}
+                              {isVariantOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
+                            </Label>
+                          </div>
+                          <span className="text-sm font-bold text-secondary tabular-nums">
+                            {centsToBRL(v.price_cents)}
+                          </span>
                         </div>
-                        <span className="text-sm font-bold text-secondary tabular-nums">
-                          {centsToBRL(v.price_cents)}
-                        </span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </RadioGroup>
                 </section>
               )}
@@ -329,6 +343,7 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                           {list.map((f) => {
                             const checked = selectedFlavorIds.includes(f.id);
                             const extra = selectedVariantId ? f.prices?.[selectedVariantId] ?? 0 : 0;
+                            const isFlavorOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && f.track_stock && f.stock_quantity <= 0 && !f.allow_out_of_stock_sale;
                             const reachedMax =
                               selectedFlavorIds.length >= maxFlavors && !checked;
                             return (
@@ -341,9 +356,10 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                                     : reachedMax
                                       ? "border-border opacity-50 cursor-not-allowed"
                                       : "border-border hover:border-muted-foreground/30 cursor-pointer",
+                                  isFlavorOutOfStock && "opacity-50 cursor-not-allowed grayscale-[0.5]"
                                 )}
                                 onClick={() => {
-                                  if (reachedMax) return;
+                                  if (reachedMax || isFlavorOutOfStock) return;
                                   toggleFlavor(f.id);
                                 }}
                                 data-testid={`flavor-${f.id}`}
@@ -351,11 +367,14 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                                 <div className="flex gap-3 min-w-0">
                                   <Checkbox
                                     checked={checked}
-                                    disabled={reachedMax}
+                                    disabled={reachedMax || isFlavorOutOfStock}
                                     className="mt-0.5 rounded-md"
                                   />
                                   <div className="min-w-0">
-                                    <p className="font-medium text-sm text-secondary">{f.name}</p>
+                                    <p className="font-medium text-sm text-secondary">
+                                      {f.name}
+                                      {isFlavorOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
+                                    </p>
                                     {f.description && (
                                       <p className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">
                                         {f.description}
@@ -401,21 +420,25 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                             const price = selectedVariantId
                               ? it.price_overrides?.[selectedVariantId] ?? it.price_cents
                               : it.price_cents;
+                            const isItemOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && it.track_stock && it.stock_quantity <= 0 && !it.allow_out_of_stock_sale;
+
                             return (
                               <div
                                 key={it.id}
                                 className={cn(
-                                  "flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all",
+                                  "flex items-center justify-between p-3 rounded-xl border transition-all",
                                   checked
                                     ? "border-primary bg-primary/5"
                                     : "border-border hover:border-muted-foreground/30",
+                                  isItemOutOfStock ? "opacity-50 cursor-not-allowed grayscale-[0.5]" : "cursor-pointer",
                                 )}
-                                onClick={() => toggleOption(g.id, it.id, g.max_options)}
+                                onClick={() => !isItemOutOfStock && toggleOption(g.id, it.id, g.max_options)}
                               >
                                 <div className="flex items-center gap-3">
-                                  <Checkbox checked={checked} className="rounded-md" />
-                                  <Label className="text-sm font-medium cursor-pointer">
+                                  <Checkbox checked={checked} disabled={isItemOutOfStock} className="rounded-md" />
+                                  <Label className={cn("text-sm font-medium", isItemOutOfStock ? "cursor-not-allowed" : "cursor-pointer")}>
                                     {it.name}
+                                    {isItemOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
                                   </Label>
                                 </div>
                                 {price > 0 && (

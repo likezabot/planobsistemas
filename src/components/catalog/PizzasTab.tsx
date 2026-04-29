@@ -24,6 +24,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { Plus, Pizza, Power, Trash2, Edit2, Save } from "lucide-react";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
 import { supabase } from "@/integrations/supabase/client";
@@ -259,16 +260,30 @@ function FlavorDialog({
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [saving, setSaving] = useState(false);
+  const { currentMembership } = useRestaurant();
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const inventoryMode = currentMembership?.restaurants.inventory_mode;
+  const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
 
   useEffect(() => {
     if (flavor) {
       setName(flavor.name);
       setDescription(flavor.description ?? "");
       setCategory(flavor.category ?? "");
+      setTrackStock(flavor.track_stock ?? false);
+      setStockQuantity(flavor.stock_quantity?.toString() || "0");
+      setLowStockAlert(flavor.low_stock_alert?.toString() || "");
+      setAllowOutOfStockSale(flavor.allow_out_of_stock_sale ?? false);
     } else {
       setName("");
       setDescription("");
       setCategory("");
+      setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [flavor, open]);
 
@@ -282,6 +297,10 @@ function FlavorDialog({
       name: name.trim(),
       description: description.trim() || null,
       category: category.trim() || null,
+      track_stock: trackStock,
+      stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+      low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+      allow_out_of_stock_sale: allowOutOfStockSale,
     };
     const res = flavor
       ? await updatePizzaFlavor(flavor.id, payload)
@@ -326,6 +345,58 @@ function FlavorDialog({
               rows={3}
             />
           </div>
+
+          {showInventoryFields && (
+            <>
+              <Separator className="my-2" />
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold">Controlar estoque</Label>
+                    <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Ativar para este sabor</p>
+                  </div>
+                  <Switch 
+                    checked={trackStock} 
+                    onCheckedChange={setTrackStock} 
+                  />
+                </div>
+
+                {trackStock && (
+                  <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Qtd Atual</Label>
+                      <Input 
+                        type="number"
+                        value={stockQuantity} 
+                        onChange={e => setStockQuantity(e.target.value)} 
+                        className="h-9 font-bold tabular-nums" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Alerta Baixo</Label>
+                      <Input 
+                        type="number"
+                        value={lowStockAlert} 
+                        onChange={e => setLowStockAlert(e.target.value)} 
+                        className="h-9 font-bold tabular-nums" 
+                        placeholder="Ex: 5"
+                      />
+                    </div>
+                    <div className="col-span-2 flex items-center justify-between p-2 rounded-lg bg-muted/30 border border-border/50">
+                      <div className="space-y-0.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider">Vender sem estoque</Label>
+                        <p className="text-[9px] text-muted-foreground">Permitir venda se zerado</p>
+                      </div>
+                      <Switch 
+                        checked={allowOutOfStockSale} 
+                        onCheckedChange={setAllowOutOfStockSale} 
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>

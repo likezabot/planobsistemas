@@ -14,6 +14,8 @@ export interface RestaurantMembership {
     name: string;
     slug: string;
     tenant_id: string;
+    inventory_enabled: boolean;
+    inventory_mode: "simple" | "advanced";
   };
 }
 
@@ -46,7 +48,7 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     const { data, error } = await supabase
       .from("restaurant_members")
-      .select("restaurant_id, tenant_id, role, restaurants!inner(id, name, slug, tenant_id)")
+      .select("restaurant_id, tenant_id, role, restaurants!inner(id, name, slug, tenant_id, inventory_enabled, inventory_mode)")
       .eq("user_id", user.id);
 
     if (error) {

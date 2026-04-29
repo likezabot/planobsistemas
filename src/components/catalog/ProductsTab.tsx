@@ -48,6 +48,8 @@ import {
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export default function ProductsTab() {
@@ -331,7 +333,13 @@ function ProductSheet({
   const [cost, setCost] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [type, setType] = useState<string>("simple");
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
 
   useEffect(() => {
     if (product) {
@@ -342,8 +350,13 @@ function ProductSheet({
       setCost((product.cost_cents / 100).toFixed(2).replace(".", ","));
       setCategoryId(product.category_id);
       setType(product.type || "simple");
+      setTrackStock(product.track_stock ?? false);
+      setStockQuantity(product.stock_quantity?.toString() || "0");
+      setLowStockAlert(product.low_stock_alert?.toString() || "");
+      setAllowOutOfStockSale(product.allow_out_of_stock_sale ?? false);
     } else {
       setName(""); setCode(""); setDescription(""); setPrice(""); setCost(""); setCategoryId(null); setType("simple");
+      setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
     }
   }, [product, open]);
 
@@ -370,6 +383,10 @@ function ProductSheet({
       cost_cents: costCents,
       category_id: categoryId,
       type: type as any,
+      track_stock: trackStock,
+      stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+      low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+      allow_out_of_stock_sale: allowOutOfStockSale,
     };
     
     const res = product
@@ -457,6 +474,64 @@ function ProductSheet({
                 <Input value={cost} onChange={e => setCost(e.target.value)} className="h-12 text-center text-lg font-bold text-muted-foreground" placeholder="0,00" disabled={!canEdit} />
               </div>
             </div>
+
+            {inventoryEnabled && (
+              <>
+                <Separator className="my-2" />
+                <div className="space-y-4 pt-2">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Controlar estoque</Label>
+                      <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Ativar rastreio para este produto</p>
+                    </div>
+                    <Switch 
+                      checked={trackStock} 
+                      onCheckedChange={setTrackStock} 
+                      disabled={!canEdit}
+                    />
+                  </div>
+
+                  {trackStock && (
+                    <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="stock" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Qtd Atual</Label>
+                        <Input 
+                          id="stock" 
+                          type="number"
+                          value={stockQuantity} 
+                          onChange={e => setStockQuantity(e.target.value)} 
+                          className="h-9 font-bold tabular-nums" 
+                          disabled={!canEdit} 
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="alert" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Alerta Baixo</Label>
+                        <Input 
+                          id="alert" 
+                          type="number"
+                          value={lowStockAlert} 
+                          onChange={e => setLowStockAlert(e.target.value)} 
+                          className="h-9 font-bold tabular-nums" 
+                          placeholder="Ex: 5"
+                          disabled={!canEdit} 
+                        />
+                      </div>
+                      <div className="col-span-2 flex items-center justify-between p-2 rounded-lg bg-muted/30 border border-border/50">
+                        <div className="space-y-0.5">
+                          <Label className="text-[10px] font-bold uppercase tracking-wider">Vender sem estoque</Label>
+                          <p className="text-[9px] text-muted-foreground">Permitir venda mesmo se zerado</p>
+                        </div>
+                        <Switch 
+                          checked={allowOutOfStockSale} 
+                          onCheckedChange={setAllowOutOfStockSale} 
+                          disabled={!canEdit}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
 

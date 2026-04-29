@@ -21,9 +21,12 @@ import {
   Layers, 
   Search, 
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { 
   Select, 
@@ -65,7 +68,15 @@ export default function VariantsTab() {
   const [code, setCode] = useState("");
   const [price, setPrice] = useState("");
   const [cost, setCost] = useState("");
+  const [trackStock, setTrackStock] = useState(false);
+  const [stockQuantity, setStockQuantity] = useState("0");
+  const [lowStockAlert, setLowStockAlert] = useState("");
+  const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const inventoryMode = currentMembership?.restaurants.inventory_mode;
+  const showInventoryFields = inventoryEnabled && inventoryMode === 'advanced';
 
   const canEdit = isAdminRole(currentMembership?.role);
 
@@ -122,6 +133,10 @@ export default function VariantsTab() {
         price_cents: priceCents,
         cost_cents: costCents,
         product_id: selectedProductId,
+        track_stock: trackStock,
+        stock_quantity: Number(stockQuantity.replace(',', '.')) || 0,
+        low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
+        allow_out_of_stock_sale: allowOutOfStockSale,
       };
 
       const res = editing
@@ -217,6 +232,10 @@ export default function VariantsTab() {
                             setCode(v.code || "");
                             setPrice((v.price_cents / 100).toFixed(2).replace('.', ','));
                             setCost((v.cost_cents || 0 / 100).toFixed(2).replace('.', ','));
+                            setTrackStock(v.track_stock ?? false);
+                            setStockQuantity(v.stock_quantity?.toString() || "0");
+                            setLowStockAlert(v.low_stock_alert?.toString() || "");
+                            setAllowOutOfStockSale(v.allow_out_of_stock_sale ?? false);
                             setOpen(true);
                           }}>
                             <Edit2 className="w-3.5 h-3.5" />
@@ -262,6 +281,63 @@ export default function VariantsTab() {
                 <Input value={cost} onChange={e => setCost(e.target.value)} placeholder="0,00" className="h-10" />
               </div>
             </div>
+
+            {showInventoryFields && (
+              <>
+                <Separator className="my-2" />
+                <div className="space-y-4 pt-2">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Controlar estoque</Label>
+                      <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Ativar para esta variação</p>
+                    </div>
+                    <Switch 
+                      checked={trackStock} 
+                      onCheckedChange={setTrackStock} 
+                      disabled={!canEdit}
+                    />
+                  </div>
+
+                  {trackStock && (
+                    <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Qtd Atual</Label>
+                        <Input 
+                          type="number"
+                          value={stockQuantity} 
+                          onChange={e => setStockQuantity(e.target.value)} 
+                          className="h-9 font-bold tabular-nums" 
+                          disabled={!canEdit} 
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Alerta Baixo</Label>
+                        <Input 
+                          type="number"
+                          value={lowStockAlert} 
+                          onChange={e => setLowStockAlert(e.target.value)} 
+                          className="h-9 font-bold tabular-nums" 
+                          placeholder="Ex: 5"
+                          disabled={!canEdit} 
+                        />
+                      </div>
+                      <div className="col-span-2 flex items-center justify-between p-2 rounded-lg bg-muted/30 border border-border/50">
+                        <div className="space-y-0.5">
+                          <Label className="text-[10px] font-bold uppercase tracking-wider">Vender sem estoque</Label>
+                          <p className="text-[9px] text-muted-foreground">Permitir venda se zerado</p>
+                        </div>
+                        <Switch 
+                          checked={allowOutOfStockSale} 
+                          onCheckedChange={setAllowOutOfStockSale} 
+                          disabled={!canEdit}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
             {editing && (
               <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-amber-800 text-[10px]">
                 <AlertCircle className="w-4 h-4 shrink-0" />
