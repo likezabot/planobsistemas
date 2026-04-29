@@ -39,27 +39,25 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   // -------- 1. Acesso direto a tabelas internas é bloqueado --------
 
   it("anônimo NÃO consegue SELECT direto em public.products", async () => {
-    const { data, error } = await anon!.from("products").select("id").limit(1);
-    // Esperado: ou erro de permissão, ou data vazio (RLS bloqueia silenciosamente).
-    // O que NÃO pode acontecer: vir produto.
+    const { data, error } = await queryWithRetry(() => anon!.from("products").select("id").limit(1));
     expect(error || (data && data.length === 0)).toBeTruthy();
     if (data) expect(data.length).toBe(0);
   });
 
   it("anônimo NÃO consegue SELECT em public.audit_log", async () => {
-    const { data, error } = await anon!.from("audit_log").select("id").limit(1);
+    const { data, error } = await queryWithRetry(() => anon!.from("audit_log").select("id").limit(1));
     expect(error || (data && data.length === 0)).toBeTruthy();
     if (data) expect(data.length).toBe(0);
   });
 
   it("anônimo NÃO consegue SELECT em public.restaurant_members", async () => {
-    const { data, error } = await anon!.from("restaurant_members").select("id").limit(1);
+    const { data, error } = await queryWithRetry(() => anon!.from("restaurant_members").select("id").limit(1));
     expect(error || (data && data.length === 0)).toBeTruthy();
     if (data) expect(data.length).toBe(0);
   });
 
   it("anônimo NÃO consegue SELECT em public.product_categories", async () => {
-    const { data, error } = await anon!.from("product_categories").select("id").limit(1);
+    const { data, error } = await queryWithRetry(() => anon!.from("product_categories").select("id").limit(1));
     expect(error || (data && data.length === 0)).toBeTruthy();
     if (data) expect(data.length).toBe(0);
   });
@@ -67,32 +65,32 @@ d("Cardápio Público — E2E (cliente anônimo, banco real)", () => {
   // -------- 2. Mutações bloqueadas --------
 
   it("anônimo NÃO consegue INSERT em products", async () => {
-    const { error } = await anon!.from("products").insert({
-      // valores fictícios — não importam, RLS deve barrar antes
-      tenant_id: "00000000-0000-0000-0000-000000000000",
-      restaurant_id: "00000000-0000-0000-0000-000000000000",
-      name: "hack",
-      price_cents: 1,
-    });
+    const { error } = await queryWithRetry(() =>
+      anon!.from("products").insert({
+        tenant_id: "00000000-0000-0000-0000-000000000000",
+        restaurant_id: "00000000-0000-0000-0000-000000000000",
+        name: "hack",
+        price_cents: 1,
+      })
+    );
     expect(error).toBeTruthy();
   });
 
   it("anônimo NÃO consegue UPDATE em products", async () => {
-    const { error, data } = await anon!
-      .from("products")
-      .update({ price_cents: 1 })
-      .eq("name", "E2E Produto Ativo")
-      .select();
-    // ou erro, ou nenhuma linha afetada
+    const { error, data } = await queryWithRetry(() =>
+      anon!
+        .from("products")
+        .update({ price_cents: 1 })
+        .eq("name", "E2E Produto Ativo")
+        .select()
+    );
     expect(error || (Array.isArray(data) && data.length === 0)).toBeTruthy();
   });
 
   it("anônimo NÃO consegue DELETE em products", async () => {
-    const { error, data } = await anon!
-      .from("products")
-      .delete()
-      .eq("name", "E2E Produto Ativo")
-      .select();
+    const { error, data } = await queryWithRetry(() =>
+      anon!.from("products").delete().eq("name", "E2E Produto Ativo").select()
+    );
     expect(error || (Array.isArray(data) && data.length === 0)).toBeTruthy();
   });
 
