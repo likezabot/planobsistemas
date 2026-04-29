@@ -62,15 +62,17 @@ por desenho, o ponto de entrada público controlado.
 | Preço/custo negativo é bloqueado | ✅ | trigger `validate_product_money` + `catalog.test.ts` |
 | `restaurant_id` precisa pertencer ao `tenant_id` | ✅ | trigger `validate_product_money` |
 
-## 4. Checkout (próximo módulo) — BLOQUEADORES desde o desenho
+## 4. Checkout (Público)
 
-| Item | Status |
-|---|---|
-| Cliente nunca envia total confiável; backend recalcula | ❌ pendente |
-| `idempotency_key` impede pedido duplicado em clique duplo | ❌ pendente |
-| Produto `active=false` não pode ser comprado | ❌ pendente |
-| Preço alterado no navegador é ignorado pelo servidor | ❌ pendente |
-| Checkout só cria pedido se `public_menu_enabled=true` | ❌ pendente |
+| Item | Status | Onde |
+|---|---|---|
+| Cliente nunca envia total confiável; backend recalcula | ✅ | RPC `create_public_order` |
+| `idempotency_key` impede pedido duplicado em clique duplo | ✅ | `orders_idempotency_unique` + RPC logic |
+| Produto `active=false` não pode ser comprado | ✅ | RPC check; `checkout.e2e.test.ts` |
+| Preço alterado no navegador é ignorado pelo servidor | ✅ | RPC recalculates from product table |
+| Checkout só cria pedido se `public_menu_enabled=true` | ✅ | `checkout.e2e.test.ts` |
+| Telefone é normalizado (remove formatação) | ✅ | RPC logic |
+| Anônimo NÃO consegue INSERT direto em `orders` ou `order_items` | ✅ | `checkout.e2e.test.ts` |
 
 ## 5. Genéricos
 

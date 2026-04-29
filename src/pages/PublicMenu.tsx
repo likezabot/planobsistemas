@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getPublicRestaurant,
   getPublicCategories,
@@ -9,6 +9,10 @@ import {
   type PublicProduct,
 } from "@/lib/menu/publicQueries";
 import { centsToBRL } from "@/lib/catalog/money";
+import { useCart } from "@/lib/cart/cartStore";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Plus, Minus } from "lucide-react";
+import { toast } from "sonner";
 
 type State =
   | { status: "loading" }
@@ -25,6 +29,8 @@ type State =
 export default function PublicMenu() {
   const { restaurantSlug } = useParams<{ restaurantSlug: string }>();
   const [state, setState] = useState<State>({ status: "loading" });
+  const { items, addItem, removeItem, updateQuantity, getTotal } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -36,8 +42,6 @@ export default function PublicMenu() {
       try {
         const restaurant = await getPublicRestaurant(restaurantSlug);
         if (!restaurant) {
-          // RPC só devolve se public_menu_enabled=true; se vier null,
-          // é "não existe" OU "desabilitado". Tratamos como indisponível.
           setState({ status: "not_found" });
           return;
         }
@@ -104,8 +108,19 @@ export default function PublicMenu() {
   const { restaurant, categories, products } = state;
   const uncategorized = productsByCategory.get(null) ?? [];
 
+  const handleAddToCart = (product: PublicProduct) => {
+    if (!restaurantSlug) return;
+    addItem(restaurantSlug, {
+      product_id: product.id,
+      name: product.name,
+      price_cents: product.price_cents,
+      quantity: 1
+    });
+    toast.success(`${product.name} adicionado ao carrinho`);
+  };
+
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pb-32">
       <header className="border-b border-border bg-card">
         <div className="mx-auto max-w-2xl px-4 py-6">
           <p className="text-mono-tag">cardápio</p>
@@ -121,47 +136,125 @@ export default function PublicMenu() {
         ) : (
           <div className="grid gap-8">
             {categories.map((cat) => {
-              const items = productsByCategory.get(cat.id) ?? [];
-              if (items.length === 0) return null;
-              return <CategoryBlock key={cat.id} title={cat.name} items={items} />;
+              const itemsInCat = productsByCategory.get(cat.id) ?? [];
+              if (itemsInCat.length === 0) return null;
+              return (
+                <CategoryBlock 
+                  key={cat.id} 
+                  title={cat.name} 
+                  items={itemsInCat} 
+                  onAdd={handleAddToCart}
+                  cartItems={items}
+                  onUpdateQty={updateQuantity}
+                />
+              );
             })}
             {uncategorized.length > 0 && (
-              <CategoryBlock title="Outros" items={uncategorized} />
+              <CategoryBlock 
+                title="Outros" 
+                items={uncategorized} 
+                onAdd={handleAddToCart}
+                cartItems={items}
+                onUpdateQty={updateQuantity}
+              />
             )}
           </div>
         )}
       </div>
 
-      <footer className="mt-12 border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Cardápio somente leitura · sem pedidos online ainda
-      </footer>
+      {items.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-md border-t border-border animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="mx-auto max-w-2xl">
+            <Button 
+              className="w-full h-14 text-lg font-semibold flex justify-between px-6"
+              onClick={() => navigate(`/menu/${restaurantSlug}/checkout`)}
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                <span>Ver Carrinho</span>
+              </div>
+              <span>{centsToBRL(getTotal())}</span>
+            </Button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
 
-function CategoryBlock({ title, items }: { title: string; items: PublicProduct[] }) {
+function CategoryBlock({ 
+  title, 
+  items, 
+  onAdd,
+  cartItems,
+  onUpdateQty
+}: { 
+  title: string; 
+  items: PublicProduct[]; 
+  onAdd: (p: PublicProduct) => void;
+  cartItems: any[];
+  onUpdateQty: (id: string, qty: number) => void;
+}) {
   return (
     <section>
       <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {title}
       </h2>
       <ul className="grid gap-3">
-        {items.map((p) => (
-          <li
-            key={p.id}
-            className="surface-panel flex items-start justify-between gap-4 p-4"
-          >
-            <div className="min-w-0 flex-1">
-              <p className="font-medium">{p.name}</p>
-              {p.description && (
-                <p className="mt-0.5 text-sm text-muted-foreground">{p.description}</p>
-              )}
-            </div>
-            <p className="shrink-0 text-sm font-semibold tabular-nums">
-              {centsToBRL(p.price_cents)}
-            </p>
-          </li>
-        ))}
+        {items.map((p) => {
+          const cartItem = cartItems.find(i => i.product_id === p.id);
+          return (
+            <li
+              key={p.id}
+              className="surface-panel flex items-start justify-between gap-4 p-4"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="font-medium">{p.name}</p>
+                {p.description && (
+                  <p className="mt-0.5 text-sm text-muted-foreground line-clamp-2">{p.description}</p>
+                )}
+                <p className="mt-2 font-semibold tabular-nums text-primary">
+                  {centsToBRL(p.price_cents)}
+                </p>
+              </div>
+              
+              <div className="shrink-0 flex items-center gap-2">
+                {!cartItem ? (
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="rounded-full w-10 h-10"
+                    onClick={() => onAdd(p)}
+                  >
+                    <Plus className="w-5 h-5" />
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-3 bg-secondary rounded-full p-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="rounded-full w-8 h-8"
+                      onClick={() => onUpdateQty(p.id, cartItem.quantity - 1)}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </Button>
+                    <span className="font-semibold text-sm w-4 text-center">
+                      {cartItem.quantity}
+                    </span>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="rounded-full w-8 h-8"
+                      onClick={() => onUpdateQty(p.id, cartItem.quantity + 1)}
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
