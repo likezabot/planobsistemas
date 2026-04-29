@@ -154,14 +154,17 @@ export default function OrdersPage() {
       className="mb-4 cursor-pointer hover:border-primary transition-colors"
       onClick={() => setSelectedOrder(order)}
     >
-      <CardHeader className="p-4 flex flex-row items-center justify-between space-y-0">
-        <div>
+      <CardHeader className="p-4 flex flex-row items-start justify-between space-y-0">
+        <div className="space-y-1">
           <CardTitle className="text-sm font-bold">
             #{order.id.slice(0, 5)} - {order.customer_name}
           </CardTitle>
           <CardDescription className="text-xs">
             {format(new Date(order.created_at), "HH:mm '•' dd/MM", { locale: ptBR })}
           </CardDescription>
+          {(order as any).print_status && (
+            <PrintStatusBadge status={(order as any).print_status} />
+          )}
         </div>
         <StatusBadge status={order.status} />
       </CardHeader>
