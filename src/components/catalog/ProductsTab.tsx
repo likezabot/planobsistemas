@@ -600,3 +600,12 @@ function ProductSheet({
     </Sheet>
   );
 }
+
+function FiscalField({ label, value, onChange, disabled }: { label: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{label}</Label>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled} className="h-9" />
+    </div>
+  );
+}
