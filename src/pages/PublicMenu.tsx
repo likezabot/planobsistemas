@@ -253,7 +253,7 @@ export default function PublicMenu() {
         <div className="fixed bottom-6 left-0 right-0 px-4 z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="mx-auto max-w-lg">
             <Button 
-              className="w-full h-14 rounded-xl text-base font-bold flex justify-between px-6 bg-primary hover:bg-primary shadow-xl border-t border-white/10 group"
+              className="w-full h-14 rounded-xl text-base font-bold flex justify-between px-6 bg-primary hover:bg-primary shadow-xl border-t border-secondary group"
               onClick={() => navigate(`/menu/${restaurantSlug}/checkout`)}
             >
               <div className="flex items-center gap-3">
