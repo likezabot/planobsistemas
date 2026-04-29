@@ -8,14 +8,14 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* Pure White */
-    --foreground: 215 50% 15%;
+    --background: 222 47% 4%; /* Gray-950 roughly */
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 50% 15%;
+    --card: 222 47% 11%; /* Gray-800/900 roughly */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 50% 15%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
     --primary: 354 77% 56%; /* Tomato Red #E63946 */
     --primary-foreground: 0 0% 100%;
@@ -23,11 +23,11 @@
     --secondary: 215 50% 23%; /* Navy Blue #1D3557 */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 20% 96%; /* Solid light grey */
-    --muted-foreground: 215 15% 45%;
+    --muted: 222 47% 15%;
+    --muted-foreground: 215 15% 65%;
 
-    --accent: 182 25% 90%; /* Solid very light cyan */
-    --accent-foreground: 215 50% 23%;
+    --accent: 222 47% 20%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 354 44% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -38,19 +38,19 @@
     --success: 172 57% 39%; /* Emerald #2A9D8F */
     --success-foreground: 0 0% 100%;
 
-    --border: 215 20% 92%;
-    --input: 215 20% 92%;
+    --border: 222 47% 15%;
+    --input: 222 47% 15%;
     --ring: 354 77% 56%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 215 50% 12%; /* Solid Dark Navy */
+    --sidebar-background: 222 47% 4%;
     --sidebar-foreground: 210 20% 90%;
     --sidebar-primary: 354 77% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 40% 18%; /* Solid accent */
+    --sidebar-accent: 222 47% 12%;
     --sidebar-accent-foreground: 210 20% 96%;
-    --sidebar-border: 215 40% 20%;
+    --sidebar-border: 222 47% 12%;
     --sidebar-ring: 354 77% 56%;
   }
 
