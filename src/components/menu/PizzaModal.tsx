@@ -343,6 +343,7 @@ export function PizzaModal({
                           {list.map((f) => {
                             const checked = selectedFlavorIds.includes(f.id);
                             const extra = selectedVariantId ? f.prices?.[selectedVariantId] ?? 0 : 0;
+                            const isFlavorOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && f.track_stock && f.stock_quantity <= 0 && !f.allow_out_of_stock_sale;
                             const reachedMax =
                               selectedFlavorIds.length >= maxFlavors && !checked;
                             return (
