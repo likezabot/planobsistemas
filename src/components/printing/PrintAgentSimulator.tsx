@@ -193,6 +193,9 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
       return;
     }
 
+    const confirm = window.confirm("Deseja processar todos os jobs pendentes anteriores? Isso pode gerar muitas impressões.");
+    if (!confirm) return;
+
     try {
       const { data: jobs, error } = await supabase
         .from("print_jobs")
@@ -209,6 +212,11 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
 
       toast.info(`Processando ${jobs.length} jobs do backlog...`);
       for (const job of jobs) {
+        // We re-check running status inside loop just in case
+        if (processingRef.current) {
+           // wait a bit
+           await new Promise(r => setTimeout(r, 2000));
+        }
         await processJob(job as PrintJob);
       }
       toast.success("Backlog concluído");
