@@ -14,7 +14,7 @@ DECLARE
     v_res BOOLEAN;
 BEGIN
     -- 1. Setup
-    INSERT INTO tenants (name) VALUES ('Test Tenant') RETURNING id INTO v_tenant_id;
+    INSERT INTO tenants (name, slug) VALUES ('Test Tenant', 'test-tenant') RETURNING id INTO v_tenant_id;
     INSERT INTO restaurants (tenant_id, name, slug) VALUES (v_tenant_id, 'Rest A', 'rest-a') RETURNING id INTO v_restaurant_id;
     INSERT INTO restaurants (tenant_id, name, slug) VALUES (v_tenant_id, 'Rest B', 'rest-b') RETURNING id INTO v_restaurant_b_id;
     
