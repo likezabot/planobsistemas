@@ -1,4 +1,13 @@
 import "@testing-library/jest-dom";
+import { afterEach } from "vitest";
+import { cleanup } from "@testing-library/react";
+
+// Garante que o DOM é limpo entre testes (importante quando vitest roda em singleFork
+// e múltiplos arquivos compartilham o mesmo jsdom — sem cleanup, componentes anteriores
+// persistem e quebram queries com "Found multiple elements").
+afterEach(() => {
+  cleanup();
+});
 
 const localStorageMock = (() => {
   let store: Record<string, string> = {};

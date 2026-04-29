@@ -112,7 +112,7 @@ describe('Reports Logic & UI', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByRole('heading', { name: /Módulo Pizza/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Seção de Pizzas/i })).toBeInTheDocument();
     expect(screen.getByText('Top 5 Sabores de Pizza')).toBeInTheDocument();
     expect(screen.getByText('Top 3 Tamanhos')).toBeInTheDocument();
   });
@@ -129,7 +129,7 @@ describe('Reports Logic & UI', () => {
       </BrowserRouter>
     );
 
-    expect(screen.queryByText('Módulo Pizza')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Seção de Pizzas/i)).not.toBeInTheDocument();
   });
 
   it('shows empty state when no sales', () => {
