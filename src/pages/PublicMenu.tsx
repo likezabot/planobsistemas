@@ -116,6 +116,13 @@ export default function PublicMenu() {
 
   const handleAddToCart = (product: PublicProduct) => {
     if (!restaurantSlug) return;
+    
+    // If complex product, open modal
+    if (product.type !== 'simple') {
+      setSelectedProduct(product);
+      return;
+    }
+
     addItem(restaurantSlug, {
       product_id: product.id,
       name: product.name,
