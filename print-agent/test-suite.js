@@ -5,6 +5,7 @@ const { nanoid } = require('nanoid');
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const RESTAURANT_ID = '3e2e5243-3a4d-4cd8-aa26-6e82d9473500';
+const TENANT_ID = '054f9c82-3e99-4749-b7fd-fd9d38e8cc5d';
 const VALID_ORDER_ID = 'd26b3f1a-a102-4eb5-8fbb-06aeb867546c';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
@@ -25,6 +26,7 @@ async function runTests() {
     .from('print_agents')
     .insert({
       restaurant_id: RESTAURANT_ID,
+      tenant_id: TENANT_ID,
       name: agentName,
       secret_key: agentSecret,
       status: 'active'
@@ -73,6 +75,7 @@ async function runTests() {
     .from('print_jobs')
     .insert({
       restaurant_id: RESTAURANT_ID,
+      tenant_id: TENANT_ID,
       order_id: VALID_ORDER_ID,
       status: 'pending',
       created_at: oldJobTime
@@ -104,6 +107,7 @@ async function runTests() {
     .from('print_jobs')
     .insert({
       restaurant_id: RESTAURANT_ID,
+      tenant_id: TENANT_ID,
       order_id: VALID_ORDER_ID,
       status: 'pending',
       payload: { test: true }
@@ -120,7 +124,7 @@ async function runTests() {
       p_restaurant_id: RESTAURANT_ID,
       p_agent_id: AGENT_ID,
       p_secret_key: agentSecret,
-      p_after_timestamp: new Date(Date.now() - 5000).toISOString()
+      p_after_timestamp: new Date(Date.now() - 60000).toISOString()
     });
 
     if (jobsToProcess && jobsToProcess.some(j => j.id === job.id)) {
