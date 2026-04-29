@@ -19,8 +19,11 @@ export function centsToBRL(cents: number): string {
 export function parseBRLToCents(input: string): number {
   const trimmed = input.trim().replace(/\s/g, "");
   if (trimmed === "") return 0;
-  // aceita vírgula ou ponto como decimal
-  const normalized = trimmed.replace(/\./g, "").replace(",", ".");
+  // Se há vírgula → ponto é separador de milhar (formato pt-BR).
+  // Se não há vírgula → ponto é decimal.
+  const normalized = trimmed.includes(",")
+    ? trimmed.replace(/\./g, "").replace(",", ".")
+    : trimmed;
   const num = Number(normalized);
   if (!Number.isFinite(num)) {
     throw new Error("Valor inválido");
