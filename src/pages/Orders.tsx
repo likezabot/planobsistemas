@@ -33,16 +33,16 @@ import {
 } from "lucide-react";
 
 export default function OrdersPage() {
-  const { selectedRestaurant } = useRestaurant();
+  const { currentRestaurantId } = useRestaurant();
   const queryClient = useQueryClient();
   const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(null);
   const [cancelReason, setCancelReason] = useState("");
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
   const { data: orders, isLoading } = useQuery({
-    queryKey: ["orders", selectedRestaurant?.id],
-    queryFn: () => getRestaurantOrders(selectedRestaurant!.id),
-    enabled: !!selectedRestaurant,
+    queryKey: ["orders", currentRestaurantId],
+    queryFn: () => getRestaurantOrders(currentRestaurantId!),
+    enabled: !!currentRestaurantId,
     refetchInterval: 5000, // Poll every 5s as fallback
   });
 
