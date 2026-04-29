@@ -68,6 +68,7 @@ export type Database = {
       option_groups: {
         Row: {
           active: boolean
+          code: string | null
           created_at: string
           id: string
           is_required: boolean
@@ -80,6 +81,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           is_required?: boolean
@@ -92,6 +94,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           is_required?: boolean
@@ -115,6 +118,7 @@ export type Database = {
       option_items: {
         Row: {
           active: boolean
+          code: string | null
           cost_cents: number | null
           created_at: string
           group_id: string
@@ -126,6 +130,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           group_id: string
@@ -137,6 +142,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           group_id?: string
@@ -435,6 +441,7 @@ export type Database = {
       product_categories: {
         Row: {
           active: boolean
+          code: string | null
           created_at: string
           id: string
           name: string
@@ -445,6 +452,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           name: string
@@ -455,6 +463,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           name?: string
@@ -516,6 +525,7 @@ export type Database = {
       product_variants: {
         Row: {
           active: boolean
+          code: string | null
           cost_cents: number | null
           created_at: string
           id: string
@@ -527,6 +537,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           id?: string
@@ -538,6 +549,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           id?: string
@@ -561,6 +573,7 @@ export type Database = {
         Row: {
           active: boolean
           category_id: string | null
+          code: string | null
           cost_cents: number
           created_at: string
           description: string | null
@@ -577,6 +590,7 @@ export type Database = {
         Insert: {
           active?: boolean
           category_id?: string | null
+          code?: string | null
           cost_cents?: number
           created_at?: string
           description?: string | null
@@ -593,6 +607,7 @@ export type Database = {
         Update: {
           active?: boolean
           category_id?: string | null
+          code?: string | null
           cost_cents?: number
           created_at?: string
           description?: string | null
