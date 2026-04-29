@@ -52,6 +52,7 @@ const checkoutSchema = z.object({
   delivery_zone_id: z.string().optional(),
   payment_method: z.enum(["money", "card", "pix", "online"]),
   notes: z.string().optional(),
+  coupon_code: z.string().optional(),
 }).refine((data) => {
   if (data.order_type === "delivery" && (!data.address || data.address.length < 5)) {
     return false;
