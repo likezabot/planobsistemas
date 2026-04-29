@@ -104,5 +104,5 @@ export async function getPublicProductDetails(productId: string): Promise<Public
     _product_id: productId 
   });
   if (error) throw error;
-  return data as PublicProductDetails;
+  return data as unknown as PublicProductDetails;
 }
