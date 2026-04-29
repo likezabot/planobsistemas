@@ -124,7 +124,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </nav>
           </div>
 
-          <div className="p-4 border-t border-sidebar-border bg-sidebar-background">
+          <div className="p-4 border-t border-sidebar-border bg-sidebar-background opacity-100">
             <div className="flex items-center gap-3 px-2 mb-3">
               <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center text-primary border border-sidebar-border shrink-0">
                 <User className="w-4 h-4" />
