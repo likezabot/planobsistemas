@@ -232,6 +232,10 @@ export default function VariantsTab() {
                             setCode(v.code || "");
                             setPrice((v.price_cents / 100).toFixed(2).replace('.', ','));
                             setCost((v.cost_cents || 0 / 100).toFixed(2).replace('.', ','));
+                            setTrackStock(v.track_stock ?? false);
+                            setStockQuantity(v.stock_quantity?.toString() || "0");
+                            setLowStockAlert(v.low_stock_alert?.toString() || "");
+                            setAllowOutOfStockSale(v.allow_out_of_stock_sale ?? false);
                             setOpen(true);
                           }}>
                             <Edit2 className="w-3.5 h-3.5" />
