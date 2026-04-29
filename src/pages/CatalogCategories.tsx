@@ -76,11 +76,11 @@ export default function CatalogCategories() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">Categorias</h1>
-            <p className="text-gray-400 text-sm mt-1">Organize seus produtos no cardápio.</p>
+            <h1 className="text-2xl font-bold text-secondary">Categorias</h1>
+            <p className="text-muted-foreground text-sm mt-1">Organize seus produtos no cardápio.</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" className="rounded-lg border-gray-700 h-10">
+            <Button asChild variant="outline" className="rounded-lg border-border h-10">
               <Link to="/catalogo">
                 <Package className="w-4 h-4 mr-2" />
                 Produtos
@@ -95,11 +95,11 @@ export default function CatalogCategories() {
           </div>
         </div>
 
-        <div className="relative max-w-md bg-gray-800 p-1 rounded-lg">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <div className="relative max-w-md bg-white p-1 rounded-lg">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input 
             placeholder="Buscar categoria..." 
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-gray-700 bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -107,24 +107,24 @@ export default function CatalogCategories() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {loading ? (
-            [1, 2, 3].map(i => <div key={i} className="h-24 bg-gray-800 rounded-xl animate-pulse" />)
+            [1, 2, 3].map(i => <div key={i} className="h-24 bg-muted rounded-xl animate-pulse" />)
           ) : filteredCategories.length === 0 ? (
-            <div className="col-span-full text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
-              <Tag className="w-12 h-12 mx-auto mb-4 opacity-10 text-white" />
-              <p className="text-gray-400 text-sm font-medium">Nenhuma categoria encontrada.</p>
+            <div className="col-span-full text-center py-20 bg-white rounded-xl border border-dashed border-border">
+              <Tag className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
+              <p className="text-muted-foreground text-sm font-medium">Nenhuma categoria encontrada.</p>
             </div>
           ) : (
             filteredCategories.map((c) => (
-              <div key={c.id} className="bg-gray-800 rounded-xl border border-gray-700 p-4 shadow-sm flex items-center justify-between group hover:shadow-md transition-shadow">
+              <div key={c.id} className="bg-white rounded-xl border border-border p-4 shadow-sm flex items-center justify-between group hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white shrink-0">
                     <Tag className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="font-bold text-white text-sm truncate">{c.name}</h3>
+                    <h3 className="font-bold text-secondary text-sm truncate">{c.name}</h3>
                     <Badge variant={c.active ? "secondary" : "outline"} className={cn(
                       "rounded-md px-1.5 py-0 uppercase text-[8px] font-bold tracking-widest border-none mt-0.5",
-                      c.active ? "bg-success text-white" : "bg-gray-800 text-gray-400"
+                      c.active ? "bg-success text-white" : "bg-muted text-muted-foreground"
                     )}>
                       {c.active ? "Ativa" : "Inativa"}
                     </Badge>
@@ -136,7 +136,7 @@ export default function CatalogCategories() {
                     variant="ghost" 
                     className={cn(
                       "h-8 w-8 rounded-lg transition-colors",
-                      c.active ? "text-success hover:text-destructive" : "text-gray-400 hover:text-success"
+                      c.active ? "text-success hover:text-destructive" : "text-muted-foreground hover:text-success"
                     )}
                     onClick={() => toggle(c)}
                   >
@@ -151,23 +151,23 @@ export default function CatalogCategories() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md rounded-xl p-0 overflow-hidden border-none shadow-2xl">
-          <DialogHeader className="p-6 bg-gray-900 text-white">
+          <DialogHeader className="p-6 bg-secondary text-white">
             <DialogTitle className="text-xl font-bold">Nova Categoria</DialogTitle>
             <DialogDescription className="text-white/60 text-sm">Organize seus produtos.</DialogDescription>
           </DialogHeader>
           <div className="p-6 space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="c-name" className="text-xs font-bold text-white uppercase tracking-wider">Nome da Categoria</Label>
+              <Label htmlFor="c-name" className="text-xs font-bold text-secondary uppercase tracking-wider">Nome da Categoria</Label>
               <Input 
                 id="c-name" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
-                className="h-10 rounded-lg border-gray-700 bg-gray-800"
+                className="h-10 rounded-lg border-border bg-white"
                 placeholder="Ex: Bebidas"
               />
             </div>
           </div>
-          <DialogFooter className="p-6 bg-[#F8FAFC] border-t border-gray-700 gap-2">
+          <DialogFooter className="p-6 bg-[#F8FAFC] border-t border-border gap-2">
             <Button variant="ghost" className="rounded-lg font-bold" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button 
               onClick={handleCreate} 

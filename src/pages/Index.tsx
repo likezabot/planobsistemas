@@ -65,12 +65,12 @@ export default function Index() {
   if (!currentMembership) {
     return (
       <AppShell>
-        <div className="bg-gray-800 border border-gray-700 p-12 text-center rounded-2xl max-w-xl mx-auto shadow-sm text-white">
-          <div className="w-16 h-16 bg-gray-700 rounded-xl flex items-center justify-center mx-auto mb-6">
-            <Store className="w-8 h-8 text-gray-400" />
+        <div className="bg-white border border-border p-12 text-center rounded-2xl max-w-xl mx-auto shadow-sm">
+          <div className="w-16 h-16 bg-muted rounded-xl flex items-center justify-center mx-auto mb-6">
+            <Store className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h2 className="text-xl font-bold">Bem-vindo ao Plano B</h2>
-          <p className="mt-3 text-sm text-gray-400 leading-relaxed">
+          <h2 className="text-xl font-bold text-secondary">Bem-vindo ao Plano B</h2>
+          <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
             Você ainda não pertence a nenhum estabelecimento cadastrado.
           </p>
           <Button className="mt-8 rounded-lg h-12 px-8 font-bold" variant="secondary">
@@ -86,19 +86,19 @@ export default function Index() {
       <div className="flex flex-col gap-8 animate-in fade-in duration-500">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Painel de Controle</h1>
-            <p className="text-gray-400 text-sm mt-1">
+            <h1 className="text-2xl font-bold text-secondary tracking-tight">Painel de Controle</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               Bem-vindo ao <span className="text-primary font-bold">{currentMembership.restaurants.name}</span>.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button asChild variant="outline" className="rounded-lg border-gray-700 text-white hover:bg-gray-800 h-10 shadow-sm">
+            <Button asChild variant="outline" className="rounded-lg border-border h-10 shadow-sm">
               <Link to={`/menu/${currentMembership.restaurants.slug}`} target="_blank">
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Abrir Cardápio
               </Link>
             </Button>
-            <Button className="rounded-lg h-10 shadow-sm font-bold bg-red-600 hover:bg-red-700 text-white border-none">
+            <Button className="rounded-lg h-10 shadow-sm font-bold">
               <Plus className="w-4 h-4 mr-2" />
               Novo Pedido
             </Button>
@@ -118,28 +118,28 @@ export default function Index() {
             value="42" 
             trend="+5" 
             icon={<ShoppingBag className="w-5 h-5" />} 
-            color="bg-green-600" 
+            color="bg-success" 
           />
           <DashboardStat 
             label="Equipe" 
             value={members.length.toString()} 
             icon={<Users className="w-5 h-5" />} 
-            color="bg-blue-600" 
+            color="bg-secondary" 
           />
           <DashboardStat 
             label="Médio Preparo" 
             value="18 min" 
             trend="-2 min" 
             icon={<Clock className="w-5 h-5" />} 
-            color="bg-orange-500" 
+            color="bg-warning" 
           />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 rounded-xl border-gray-800 bg-gray-800 shadow-sm overflow-hidden text-white">
-            <CardHeader className="p-6 border-b border-gray-700">
+          <Card className="lg:col-span-2 rounded-xl border-border bg-white shadow-sm overflow-hidden">
+            <CardHeader className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-bold text-white">Vendas Semanais</CardTitle>
+                <CardTitle className="text-lg font-bold text-secondary">Vendas Semanais</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-6">
@@ -147,14 +147,14 @@ export default function Index() {
                 {[45, 60, 40, 75, 55, 90, 65].map((val, i) => (
                   <div key={i} className="flex-1 group flex flex-col items-center gap-2">
                     <div 
-                      className="w-full bg-gray-700 group-hover:bg-primary transition-all rounded-t-lg relative" 
+                      className="w-full bg-muted group-hover:bg-primary transition-all rounded-t-lg relative" 
                       style={{ height: `${val}%` }}
                     >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 border border-gray-700">
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                         R$ {val * 10}
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                       {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'][i]}
                     </span>
                   </div>
@@ -163,29 +163,29 @@ export default function Index() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-xl border-gray-800 bg-gray-800 shadow-sm overflow-hidden h-fit text-white">
-            <CardHeader className="p-6 border-b border-gray-700">
+          <Card className="rounded-xl border-border bg-white shadow-sm overflow-hidden h-fit">
+            <CardHeader className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-bold text-white">Equipe</CardTitle>
-                <Badge className="bg-green-600 text-white uppercase text-[8px] font-bold tracking-widest border-none">Online</Badge>
+                <CardTitle className="text-lg font-bold text-secondary">Equipe</CardTitle>
+                <Badge className="bg-success text-white uppercase text-[8px] font-bold tracking-widest border-none">Online</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
               {loadingMembers ? (
                 <div className="p-6 space-y-4">
-                  {[1, 2, 3].map(i => <div key={i} className="h-10 bg-gray-700 rounded-lg animate-pulse" />)}
+                  {[1, 2, 3].map(i => <div key={i} className="h-10 bg-muted rounded-lg animate-pulse" />)}
                 </div>
               ) : (
-                <div className="divide-y divide-gray-700">
+                <div className="divide-y divide-border">
                   {members.map((m) => (
-                    <div key={m.id} className="p-4 flex items-center justify-between hover:bg-gray-700/50 transition-colors">
+                    <div key={m.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center text-white font-bold text-xs">
+                        <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-white font-bold text-xs">
                           {m.user_id.slice(0, 1).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-white truncate w-32">{m.user_id.slice(0, 12)}</p>
-                          <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">{m.role}</p>
+                          <p className="text-sm font-bold text-secondary truncate w-32">{m.user_id.slice(0, 12)}</p>
+                          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{m.role}</p>
                         </div>
                       </div>
                     </div>
@@ -193,7 +193,7 @@ export default function Index() {
                 </div>
               )}
               <div className="p-4">
-                <Button variant="ghost" className="w-full rounded-lg text-xs font-bold text-primary hover:bg-gray-700">
+                <Button variant="ghost" className="w-full rounded-lg text-xs font-bold text-primary hover:bg-muted">
                   Gerenciar Equipe
                 </Button>
               </div>
@@ -207,7 +207,7 @@ export default function Index() {
 
 function DashboardStat({ label, value, trend, icon, color }: { label: string, value: string, trend?: string, icon: React.ReactNode, color: string }) {
   return (
-    <Card className="border-gray-800 bg-gray-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden text-white">
+    <Card className="border-border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm", color)}>
@@ -216,15 +216,15 @@ function DashboardStat({ label, value, trend, icon, color }: { label: string, va
           {trend && (
             <div className={cn(
               "flex items-center text-[10px] font-bold px-2 py-0.5 rounded border border-current opacity-70",
-              trend.startsWith('+') ? "text-green-500" : "text-red-500"
+              trend.startsWith('+') ? "text-success" : "text-destructive"
             )}>
               {trend.startsWith('+') ? <ArrowUpRight className="w-3 h-3 mr-0.5" /> : null}
               {trend}
             </div>
           )}
         </div>
-        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{label}</p>
-        <p className="text-xl font-bold text-white mt-1 tracking-tight">{value}</p>
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{label}</p>
+        <p className="text-xl font-bold text-secondary mt-1 tracking-tight">{value}</p>
       </CardContent>
     </Card>
   );

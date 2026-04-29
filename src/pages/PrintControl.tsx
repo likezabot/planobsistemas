@@ -83,7 +83,7 @@ export default function PrintControlPage() {
       <AppShell>
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <p className="text-gray-400 font-medium animate-pulse">Carregando fila de impressão...</p>
+          <p className="text-muted-foreground font-medium animate-pulse">Carregando fila de impressão...</p>
         </div>
       </AppShell>
     );
@@ -101,13 +101,13 @@ export default function PrintControlPage() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">Controle de Impressão</h1>
-            <p className="text-gray-400 text-sm mt-1">Gerencie a fila de impressão e os agentes locais.</p>
+            <h1 className="text-2xl font-bold text-secondary">Controle de Impressão</h1>
+            <p className="text-muted-foreground text-sm mt-1">Gerencie a fila de impressão e os agentes locais.</p>
           </div>
           <Button 
             variant="outline" 
             size="sm"
-            className="rounded-lg h-9 border-gray-700"
+            className="rounded-lg h-9 border-border"
             onClick={() => queryClient.invalidateQueries({ queryKey: ["print_jobs"] })}
           >
             <RefreshCw className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
@@ -118,18 +118,18 @@ export default function PrintControlPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
             <Tabs defaultValue="active" className="w-full">
-              <TabsList className="grid grid-cols-3 w-full bg-gray-800 border border-gray-700 p-1 rounded-xl h-12 mb-6">
-                <TabsTrigger value="active" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Ativos / Falhas</TabsTrigger>
-                <TabsTrigger value="printed" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Concluídos</TabsTrigger>
-                <TabsTrigger value="all" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Histórico</TabsTrigger>
+              <TabsList className="grid grid-cols-3 w-full bg-white border border-border p-1 rounded-xl h-12 mb-6">
+                <TabsTrigger value="active" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Ativos / Falhas</TabsTrigger>
+                <TabsTrigger value="printed" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Concluídos</TabsTrigger>
+                <TabsTrigger value="all" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Histórico</TabsTrigger>
               </TabsList>
 
               {["active", "printed", "all"].map((tab) => (
                 <TabsContent key={tab} value={tab} className="animate-in fade-in duration-300">
                   {filteredJobs(tab).length === 0 ? (
-                    <div className="text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
-                      <Printer className="w-12 h-12 mx-auto mb-4 opacity-10 text-white" />
-                      <p className="text-gray-400 text-sm">Nenhum job encontrado.</p>
+                    <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
+                      <Printer className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
+                      <p className="text-muted-foreground text-sm">Nenhum job encontrado.</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -146,10 +146,10 @@ export default function PrintControlPage() {
           <div className="lg:col-span-1 space-y-6">
             {currentRestaurantId && (
               <>
-                <div className="bg-gray-800 rounded-xl border border-gray-700 p-4 shadow-sm">
+                <div className="bg-white rounded-xl border border-border p-4 shadow-sm">
                   <PrintAgentManager restaurantId={currentRestaurantId} />
                 </div>
-                <div className="bg-gray-800 rounded-xl border border-gray-700 p-4">
+                <div className="bg-muted/30 rounded-xl border border-border p-4">
                   <PrintAgentSimulator restaurantId={currentRestaurantId} />
                 </div>
               </>
@@ -167,10 +167,10 @@ export default function PrintControlPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-2">
-            <Label className="text-xs font-bold uppercase tracking-wider text-white">Motivo</Label>
+            <Label className="text-xs font-bold uppercase tracking-wider text-secondary">Motivo</Label>
             <Textarea 
               placeholder="Ex: Falha na impressora, papel acabou..." 
-              className="rounded-lg border-gray-700 focus:ring-primary min-h-[100px]"
+              className="rounded-lg border-border focus:ring-primary min-h-[100px]"
               value={reprintReason}
               onChange={(e) => setReprintReason(e.target.value)}
             />
@@ -194,7 +194,7 @@ export default function PrintControlPage() {
 
 function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: boolean, onReprint: (job: PrintJob) => void }) {
   return (
-    <Card className="rounded-xl border-gray-700 bg-gray-800 shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
+    <Card className="rounded-xl border-border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
       <CardContent className="p-4 flex flex-col gap-4">
         <div className="flex justify-between items-start">
           <div className="flex items-center gap-3">
@@ -206,21 +206,21 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
             </div>
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
                   <Hash className="w-2.5 h-2.5" />
                   {job.order_id.slice(0, 5)}
                 </span>
-                <Badge variant="outline" className="text-[8px] uppercase tracking-tighter h-3.5 bg-gray-800 border-none px-1.5">
+                <Badge variant="outline" className="text-[8px] uppercase tracking-tighter h-3.5 bg-muted border-none px-1.5">
                   {job.source}
                 </Badge>
               </div>
-              <h3 className="font-bold text-white text-xs truncate">Job #{job.id.slice(0, 4)}</h3>
+              <h3 className="font-bold text-secondary text-xs truncate">Job #{job.id.slice(0, 4)}</h3>
             </div>
           </div>
           <StatusBadge status={job.status} />
         </div>
 
-        <div className="flex items-center justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3 h-3" />
             {format(new Date(job.created_at), "HH:mm:ss '•' dd/MM", { locale: ptBR })}
@@ -234,14 +234,14 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
         </div>
         
         {job.last_error && (
-          <div className="p-2 bg-accent text-destructive rounded-lg text-[10px] flex gap-1.5 border border-destructive font-medium leading-tight">
+          <div className="p-2 bg-destructive/5 text-destructive rounded-lg text-[10px] flex gap-1.5 border border-destructive/10 font-medium leading-tight">
             <AlertCircle className="w-3 h-3 shrink-0 mt-0.5" />
             <p className="line-clamp-2"><strong>Erro:</strong> {job.last_error}</p>
           </div>
         )}
 
-        <div className="pt-3 border-t border-dashed border-gray-700 flex justify-between items-center">
-          <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+        <div className="pt-3 border-t border-dashed border-border flex justify-between items-center">
+          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
             <RefreshCw className="w-2.5 h-2.5" />
             Tentativas: {job.attempts}
           </span>
@@ -249,7 +249,7 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-7 w-7 rounded-lg hover:bg-accent hover:text-primary transition-colors"
+              className="h-7 w-7 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
               onClick={() => onReprint(job)}
             >
               <RefreshCw className="w-3 h-3" />
@@ -263,12 +263,12 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
 
 function StatusBadge({ status }: { status: string }) {
   const configs: Record<string, { label: string; className: string; icon: any }> = {
-    pending: { label: "Pendente", className: "bg-gray-800 text-gray-400", icon: Clock },
+    pending: { label: "Pendente", className: "bg-muted text-muted-foreground", icon: Clock },
     printing: { label: "Imprimindo", className: "bg-primary text-white", icon: Loader2 },
     printed: { label: "Impresso", className: "bg-success text-white", icon: CheckCircle2 },
     failed: { label: "Falhou", className: "bg-destructive text-white", icon: AlertCircle },
   };
-  const config = configs[status] || { label: status, className: "bg-gray-800 text-gray-400", icon: Clock };
+  const config = configs[status] || { label: status, className: "bg-muted text-muted-foreground", icon: Clock };
   const Icon = config.icon;
   
   return (
