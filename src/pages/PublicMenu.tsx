@@ -141,7 +141,7 @@ export default function PublicMenu() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] pb-32 font-sans">
+    <main className="min-h-screen bg-white pb-32 font-sans">
       {/* Header Solid */}
       <div className="relative h-48 bg-secondary overflow-hidden">
         <div className="absolute inset-0 bg-black z-10 opacity-60" />
