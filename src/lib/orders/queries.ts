@@ -11,6 +11,7 @@ export type OrderItem = Database['public']['Tables']['order_items']['Row'] & {
 
 export type OrderWithItems = Order & {
   order_items: OrderItem[];
+  delivery_zone?: { name: string } | null;
 };
 
 export const getRestaurantOrders = async (restaurantId: string) => {
@@ -21,13 +22,14 @@ export const getRestaurantOrders = async (restaurantId: string) => {
       order_items (
         *,
         product:products (name)
-      )
+      ),
+      delivery_zone:delivery_zones (name)
     `)
     .eq('restaurant_id', restaurantId)
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  return data as OrderWithItems[];
+  return data as unknown as OrderWithItems[];
 };
 
 export const updateOrderStatus = async (orderId: string, newStatus: Order['status'], reason?: string) => {

@@ -19,6 +19,7 @@ export interface CheckoutParams {
   items: CheckoutItem[];
   address?: string;
   notes?: string;
+  delivery_zone_id?: string;
 }
 
 export const createPublicOrder = async (params: CheckoutParams) => {
@@ -33,6 +34,7 @@ export const createPublicOrder = async (params: CheckoutParams) => {
     _items: params.items as any,
     _address: params.address,
     _notes: params.notes,
+    _delivery_zone_id: params.delivery_zone_id
   });
 
   if (error) throw error;

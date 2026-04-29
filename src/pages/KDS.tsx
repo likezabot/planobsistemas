@@ -220,7 +220,7 @@ function KDSCard({ order, onAction, actionLabel, nextStatus }: {
         <div className="flex flex-col items-end gap-1">
           <Badge variant={order.order_type === 'delivery' ? 'warning' : 'success'} className="h-7 gap-1.5 px-3 uppercase text-[10px] font-black tracking-widest">
             {order.order_type === 'delivery' ? <Truck className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-            {order.order_type === 'delivery' ? 'Entrega' : 'Retirada'}
+            {order.order_type === 'delivery' ? (order.delivery_zone?.name || 'Entrega') : 'Retirada'}
           </Badge>
           <div className="flex items-center gap-1.5 text-muted-foreground text-[11px] font-bold">
             <Clock className="w-3.5 h-3.5" />

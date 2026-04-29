@@ -53,6 +53,8 @@ export interface ReceiptPayload {
     notes?: string | null;
     total_cents?: number;
     created_at?: string;
+    delivery_fee_cents?: number | null;
+    delivery_zone_name?: string | null;
   };
   items?: ReceiptItem[];
 }
@@ -136,6 +138,10 @@ export function renderReceiptText(payload: ReceiptPayload): string {
   }
 
   lines.push("--------------------------------");
+  if (order.delivery_fee_cents && order.delivery_fee_cents > 0) {
+    const zone = order.delivery_zone_name ? ` (${order.delivery_zone_name})` : "";
+    lines.push(`TAXA ENTREGA${zone}: ${fmtMoney(order.delivery_fee_cents)}`);
+  }
   lines.push(`TOTAL: ${fmtMoney(order.total_cents)}`);
   if (order.notes && String(order.notes).trim()) {
     lines.push("");

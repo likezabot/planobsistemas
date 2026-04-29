@@ -17,6 +17,7 @@ import Accounting from "./pages/Accounting.tsx";
 import KDS from "./pages/KDS.tsx";
 import Reports from "./pages/Reports.tsx";
 import Customers from "./pages/Customers.tsx";
+import DeliverySettings from "./pages/DeliverySettings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
@@ -89,6 +90,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={['owner', 'manager']}>
                     <Customers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/configuracoes/entrega"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager']}>
+                    <DeliverySettings />
                   </ProtectedRoute>
                 }
               />

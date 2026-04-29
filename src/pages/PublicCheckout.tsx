@@ -12,6 +12,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { 
   ChevronLeft, 
   ShoppingBag, 
   CheckCircle2, 
@@ -22,16 +29,27 @@ import {
   QrCode,
   User,
   Phone,
-  ClipboardList
+  ClipboardList,
+  Truck
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+interface DeliveryZone {
+  id: string;
+  name: string;
+  description: string | null;
+  fee_cents: number;
+}
 
 const checkoutSchema = z.object({
   customer_phone: z.string().min(8, "Telefone inválido"),
   customer_name: z.string().min(2, "Nome muito curto"),
   order_type: z.enum(["pickup", "delivery"]),
   address: z.string().optional(),
+  delivery_zone_id: z.string().optional(),
   payment_method: z.enum(["money", "card", "pix", "online"]),
   notes: z.string().optional(),
 }).refine((data) => {
@@ -54,6 +72,18 @@ export default function PublicCheckout() {
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
   const [step, setStep] = useState(1);
 
+  const { data: zones } = useQuery({
+    queryKey: ["checkout-delivery-zones", restaurantSlug],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_delivery_zones", {
+        _slug: restaurantSlug
+      });
+      if (error) throw error;
+      return data as unknown as DeliveryZone[];
+    },
+    enabled: !!restaurantSlug,
+  });
+
   const form = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
@@ -63,6 +93,10 @@ export default function PublicCheckout() {
   });
 
   const orderType = form.watch("order_type");
+  const deliveryZoneId = form.watch("delivery_zone_id");
+  const selectedZone = zones?.find(z => z.id === deliveryZoneId);
+
+  const finalTotal = getTotal() + (orderType === 'delivery' ? (selectedZone?.fee_cents || 0) : 0);
 
   useEffect(() => {
     if (items.length === 0 && !orderSuccess) {
@@ -72,6 +106,12 @@ export default function PublicCheckout() {
 
   const onSubmit = async (data: CheckoutForm) => {
     if (!restaurantSlug) return;
+
+    if (data.order_type === 'delivery' && zones && zones.length > 0 && !data.delivery_zone_id) {
+      toast.error("Por favor, selecione uma zona de entrega.");
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -93,7 +133,8 @@ export default function PublicCheckout() {
           pizza_flavors: i.pizza_flavors ?? [],
         })),
         address: data.address,
-        notes: data.notes
+        notes: data.notes,
+        delivery_zone_id: data.delivery_zone_id
       });
 
       setOrderSuccess(result.order_id);
@@ -262,17 +303,50 @@ export default function PublicCheckout() {
               </div>
 
               {orderType === "delivery" && (
-                <div className="space-y-1.5 animate-in slide-in-from-top-2 duration-200">
-                  <Label htmlFor="address" className="text-xs font-bold text-secondary uppercase tracking-wider">Endereço Completo</Label>
-                  <Textarea 
-                    id="address" 
-                    placeholder="Rua, número, bairro..." 
-                    className="min-h-[80px] rounded-xl border-border bg-white shadow-sm p-3 text-sm"
-                    {...form.register("address")}
-                  />
-                  {form.formState.errors.address && (
-                    <p className="text-xs font-bold text-destructive">{form.formState.errors.address.message}</p>
+                <div className="space-y-6 animate-in slide-in-from-top-2 duration-200">
+                  {zones && zones.length > 0 && (
+                    <div className="space-y-1.5">
+                      <Label htmlFor="delivery_zone_id" className="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1">
+                        <MapPin className="w-3 h-3" /> Região de Entrega
+                      </Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue("delivery_zone_id", val)} 
+                        value={deliveryZoneId}
+                      >
+                        <SelectTrigger className="h-12 px-4 rounded-xl border-border bg-white shadow-sm font-bold text-secondary">
+                          <SelectValue placeholder="Selecione seu bairro / região" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border-border">
+                          {zones.map(z => (
+                            <SelectItem key={z.id} value={z.id}>
+                              <div className="flex justify-between items-center w-full gap-20">
+                                <div className="flex flex-col">
+                                  <span className="font-bold">{z.name}</span>
+                                  {z.description && <span className="text-[10px] text-muted-foreground">{z.description}</span>}
+                                </div>
+                                <span className="font-black text-primary">{z.fee_cents === 0 ? "Grátis" : centsToBRL(z.fee_cents)}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   )}
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="address" className="text-xs font-bold text-secondary uppercase tracking-wider flex items-center gap-1">
+                      <Truck className="w-3 h-3" /> Endereço Completo
+                    </Label>
+                    <Textarea 
+                      id="address" 
+                      placeholder="Rua, número, bairro..." 
+                      className="min-h-[80px] rounded-xl border-border bg-white shadow-sm p-3 text-sm"
+                      {...form.register("address")}
+                    />
+                    {form.formState.errors.address && (
+                      <p className="text-xs font-bold text-destructive">{form.formState.errors.address.message}</p>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -331,10 +405,17 @@ export default function PublicCheckout() {
                       )}
                     </div>
                   ))}
+                  {orderType === 'delivery' && selectedZone && (
+                    <div className="flex justify-between items-center text-sm mb-3">
+                      <span className="text-muted-foreground font-bold uppercase text-[10px]">Taxa de Entrega ({selectedZone.name})</span>
+                      <span className="tabular-nums font-bold text-secondary">{centsToBRL(selectedZone.fee_cents)}</span>
+                    </div>
+                  )}
+
                   <div className="border-t border-dashed border-border pt-4 flex justify-between items-center">
-                    <span className="text-base font-bold text-secondary">Total</span>
-                    <span className="text-xl font-bold text-primary tabular-nums">
-                      {centsToBRL(getTotal())}
+                    <span className="text-base font-bold text-secondary uppercase tracking-widest">Total</span>
+                    <span className="text-xl font-black text-primary tabular-nums">
+                      {centsToBRL(finalTotal)}
                     </span>
                   </div>
                 </div>
