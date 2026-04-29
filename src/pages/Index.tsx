@@ -109,7 +109,7 @@ export default function Index() {
               </Link>
             </Button>
             <Button asChild className="rounded-lg h-10 shadow-sm font-bold">
-              <Link to="/orders?novo=1">
+              <Link to="/pedidos?novo=1">
                 <Plus className="w-4 h-4 mr-2" />
                 Novo Pedido
               </Link>
