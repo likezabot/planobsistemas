@@ -94,9 +94,17 @@ export default function Index() {
           </section>
 
           <section className="surface-panel p-6">
-            <h2 className="text-sm font-semibold">Próximos passos da fundação</h2>
+            <h2 className="text-sm font-semibold">Módulos</h2>
+            <ul className="mt-3 grid gap-2 text-sm">
+              <li>
+                <a className="text-accent hover:underline" href="/catalogo">→ Catálogo de produtos</a>
+              </li>
+              <li>
+                <a className="text-accent hover:underline" href="/catalogo/categorias">→ Categorias</a>
+              </li>
+            </ul>
+            <h2 className="mt-6 text-sm font-semibold">Próximos passos</h2>
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-              <li>Catálogo de produtos com preço e custo (server-side).</li>
               <li>Cardápio público por restaurante.</li>
               <li>Checkout idempotente com cálculo no banco.</li>
               <li>Pedidos, PDV e print_jobs.</li>
