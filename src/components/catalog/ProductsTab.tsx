@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+import { useAuth } from "@/lib/auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { 
   listProducts, 
@@ -86,7 +87,8 @@ export default function ProductsTab() {
   const [dismissedTick, setDismissedTick] = useState(0); // força re-render ao dispensar
 
   const canEdit = isAdminRole(currentMembership?.role);
-  const userId = currentMembership?.user_id ?? null;
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
   const scope = buildScope(currentRestaurantId, userId);
 
   const refresh = useCallback(async () => {
