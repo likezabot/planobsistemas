@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Info, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ProductOptionsModal } from "@/components/menu/ProductOptionsModal";
 
 type State =
   | { status: "loading" }
