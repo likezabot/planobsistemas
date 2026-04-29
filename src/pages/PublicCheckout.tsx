@@ -30,7 +30,8 @@ import {
   User,
   Phone,
   ClipboardList,
-  Truck
+  Truck,
+  Ticket
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
