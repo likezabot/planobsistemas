@@ -197,7 +197,10 @@ export default function PrintControlPage() {
 
         <div className="lg:col-span-1">
           {currentRestaurantId && (
-            <PrintAgentSimulator restaurantId={currentRestaurantId} />
+            <div className="space-y-6">
+              <PrintAgentManager restaurantId={currentRestaurantId} />
+              <PrintAgentSimulator restaurantId={currentRestaurantId} />
+            </div>
           )}
         </div>
       </div>
