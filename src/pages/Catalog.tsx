@@ -51,6 +51,28 @@ function InfoBalloon({ text }: { text: string }) {
   );
 }
 
+function TutorialStep({ num, title, desc, onClick, isLast }: { num: string, title: string, desc: string, onClick?: () => void, isLast?: boolean }) {
+  return (
+    <div 
+      className={cn(
+        "relative p-4 bg-white rounded-xl border border-border shadow-sm flex flex-col gap-1 transition-all",
+        onClick && "cursor-pointer hover:border-primary/50 hover:shadow-md active:scale-95"
+      )}
+      onClick={onClick}
+    >
+      <div className="flex items-center justify-between">
+        <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">
+          {num}
+        </span>
+        {!isLast && <ArrowRight className="w-4 h-4 text-muted-foreground/30" />}
+        {isLast && <CheckCircle2 className="w-4 h-4 text-success" />}
+      </div>
+      <h4 className="font-bold text-secondary text-sm mt-2">{title}</h4>
+      <p className="text-[11px] text-muted-foreground leading-tight">{desc}</p>
+    </div>
+  );
+}
+
 export default function Catalog() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "produtos";
