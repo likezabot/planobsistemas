@@ -43,7 +43,8 @@ import {
   DollarSign,
   TrendingDown,
   ChevronRight,
-  Package
+  Package,
+  Loader2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -220,7 +221,7 @@ export default function CatalogProducts() {
                           <span className="text-xs font-medium text-muted-foreground tabular-nums">{centsToBRL(p.cost_cents)}</span>
                         </td>
                         <td className="px-6 py-5 text-center">
-                          <Badge variant={p.active ? "success" : "outline"} className={cn(
+                          <Badge variant={p.active ? "secondary" : "outline"} className={cn(
                             "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest",
                             p.active ? "bg-success/10 text-success border-success/20" : "bg-muted text-muted-foreground opacity-50"
                           )}>
