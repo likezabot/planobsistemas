@@ -70,23 +70,25 @@ export default function DeliverySettings() {
 
   const saveMutation = useMutation({
     mutationFn: async (zone: Partial<DeliveryZone>) => {
+      const payload = {
+        name: zone.name!,
+        description: zone.description,
+        fee_cents: zone.fee_cents || 0,
+        active: zone.active ?? true,
+        sort_order: zone.sort_order || 0
+      };
+
       if (zone.id) {
         const { error } = await supabase
           .from("delivery_zones")
-          .update({
-            name: zone.name,
-            description: zone.description,
-            fee_cents: zone.fee_cents,
-            active: zone.active,
-            sort_order: zone.sort_order
-          })
+          .update(payload)
           .eq("id", zone.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from("delivery_zones")
           .insert({
-            ...zone,
+            ...payload,
             restaurant_id: currentRestaurantId!
           });
         if (error) throw error;
