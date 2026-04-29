@@ -10,18 +10,19 @@ export type ImportResult = {
   variants: number;
 };
 
+export type ValidationResult =
+  | { ok: true; data: CatalogPayload; errors?: undefined }
+  | { ok: false; errors: string[]; data?: undefined };
+
 /**
  * Valida o JSON localmente (Zod). Retorna lista de erros se inválido.
  */
-export function validateCatalogJson(raw: unknown): {
-  ok: true;
-  data: CatalogPayload;
-} | { ok: false; errors: string[] } {
+export function validateCatalogJson(raw: unknown): ValidationResult {
   const parsed = catalogPayloadSchema.safeParse(raw);
   if (!parsed.success) {
     return { ok: false, errors: formatZodErrors(parsed.error) };
   }
-  return { ok: true, data: parsed.data };
+  return { ok: true, data: parsed.data as CatalogPayload };
 }
 
 /**
