@@ -363,9 +363,18 @@ function ProductSheet({
       setStockQuantity(product.stock_quantity?.toString() || "0");
       setLowStockAlert(product.low_stock_alert?.toString() || "");
       setAllowOutOfStockSale(product.allow_out_of_stock_sale ?? false);
+      setNcm((product as any).ncm ?? "");
+      setCest((product as any).cest ?? "");
+      setCfop((product as any).cfop ?? "");
+      setCst((product as any).cst ?? "");
+      setCsosn((product as any).csosn ?? "");
+      setOrigin((product as any).origin ?? "");
+      setFiscalUnit((product as any).fiscal_unit ?? "");
+      setFiscalNotes((product as any).fiscal_notes ?? "");
     } else {
       setName(""); setCode(""); setDescription(""); setPrice(""); setCost(""); setCategoryId(null); setType("simple");
       setTrackStock(false); setStockQuantity("0"); setLowStockAlert(""); setAllowOutOfStockSale(false);
+      setNcm(""); setCest(""); setCfop(""); setCst(""); setCsosn(""); setOrigin(""); setFiscalUnit(""); setFiscalNotes("");
     }
   }, [product, open]);
 
@@ -384,7 +393,7 @@ function ProductSheet({
       return;
     }
     setSaving(true);
-    const payload = {
+    const payload: Record<string, unknown> = {
       name: name.trim(),
       code: code.trim() || null,
       description: description.trim() || null,
@@ -397,6 +406,16 @@ function ProductSheet({
       low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
       allow_out_of_stock_sale: allowOutOfStockSale,
     };
+    if (accountingEnabled) {
+      payload.ncm = ncm.trim() || null;
+      payload.cest = cest.trim() || null;
+      payload.cfop = cfop.trim() || null;
+      payload.cst = cst.trim() || null;
+      payload.csosn = csosn.trim() || null;
+      payload.origin = origin.trim() || null;
+      payload.fiscal_unit = fiscalUnit.trim() || null;
+      payload.fiscal_notes = fiscalNotes.trim() || null;
+    }
     
     const res = product
       ? await updateProduct(product.id, payload)
