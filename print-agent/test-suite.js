@@ -4,7 +4,8 @@ const { nanoid } = require('nanoid');
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
-const RESTAURANT_ID = process.env.RESTAURANT_ID || '3e2e5243-3a4d-4cd8-aa26-6e82d9473500';
+const RESTAURANT_ID = '3e2e5243-3a4d-4cd8-aa26-6e82d9473500';
+const VALID_ORDER_ID = 'd26b3f1a-a102-4eb5-8fbb-06aeb867546c';
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   console.error('Missing SUPABASE_URL or SUPABASE_ANON_KEY');
@@ -46,10 +47,10 @@ async function runTests() {
     p_secret_key: 'wrong_secret',
     p_after_timestamp: new Date().toISOString()
   });
-  if (invalidSecretError && invalidSecretError.message.includes('Invalid agent or secret key')) {
+  if (invalidSecretError && invalidSecretError.message.includes('Invalid agent credentials')) {
     console.log('[PASS] Invalid secret key correctly blocked');
   } else {
-    console.error('[FAIL] Invalid secret key allowed or wrong error:', invalidSecretError);
+    console.error('[FAIL] Invalid secret key allowed or wrong error:', invalidSecretError ? invalidSecretError.message : 'No error');
   }
 
   // 3. Test: Wrong Restaurant ID
@@ -60,24 +61,21 @@ async function runTests() {
     p_secret_key: agentSecret,
     p_after_timestamp: new Date().toISOString()
   });
-  if (wrongRestaurantError && wrongRestaurantError.message.includes('Agent cannot access this restaurant')) {
+  if (wrongRestaurantError && wrongRestaurantError.message.includes('Invalid agent credentials')) {
     console.log('[PASS] Wrong restaurant ID correctly blocked');
   } else {
-    // If it just returns empty array, it might be RLS or the RPC check. 
-    // Let's assume the RPC check is there.
     console.log('[INFO] Wrong restaurant request status:', wrongRestaurantError ? wrongRestaurantError.message : 'No error (likely empty result)');
   }
 
   // 4. Test: Started At prevents backlog
-  // Create an old job
-  const oldOrderId = nanoid(10);
+  const oldJobTime = new Date(Date.now() - 60000).toISOString();
   const { data: oldJob, error: oldJobError } = await supabase
     .from('print_jobs')
     .insert({
       restaurant_id: RESTAURANT_ID,
-      order_id: oldOrderId,
+      order_id: VALID_ORDER_ID,
       status: 'pending',
-      created_at: new Date(Date.now() - 60000).toISOString() // 1 minute ago
+      created_at: oldJobTime
     })
     .select()
     .single();
@@ -97,15 +95,16 @@ async function runTests() {
     } else {
       console.error('[FAIL] Backlog job was picked up');
     }
+    // Cleanup old job
+    await supabase.from('print_jobs').delete().eq('id', oldJob.id);
   }
 
   // 5. Test: Happy Path (Create Job -> Claim -> Complete)
-  const orderId = nanoid(10);
   const { data: job, error: jobError } = await supabase
     .from('print_jobs')
     .insert({
       restaurant_id: RESTAURANT_ID,
-      order_id: orderId,
+      order_id: VALID_ORDER_ID,
       status: 'pending',
       payload: { test: true }
     })
@@ -155,6 +154,8 @@ async function runTests() {
     } else {
       console.error('[FAIL] New job NOT found by RPC');
     }
+    // Cleanup job
+    await supabase.from('print_jobs').delete().eq('id', job.id);
   }
 
   // Cleanup
