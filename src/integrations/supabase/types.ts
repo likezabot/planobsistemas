@@ -1246,18 +1246,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      claim_print_job:
-        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
-        | {
-            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
-            Returns: boolean
-          }
-      complete_print_job:
-        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
-        | {
-            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
-            Returns: boolean
-          }
+      claim_print_job: {
+        Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+        Returns: boolean
+      }
+      complete_print_job: {
+        Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+        Returns: boolean
+      }
       create_internal_order: {
         Args: {
           _address?: string
@@ -1293,20 +1289,15 @@ export type Database = {
         Returns: Json
       }
       export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
-      fail_print_job:
-        | {
-            Args: { p_agent_id: string; p_error: string; p_job_id: string }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              p_agent_id: string
-              p_error: string
-              p_job_id: string
-              p_secret_key: string
-            }
-            Returns: boolean
-          }
+      fail_print_job: {
+        Args: {
+          p_agent_id: string
+          p_error: string
+          p_job_id: string
+          p_secret_key: string
+        }
+        Returns: boolean
+      }
       get_customer_summary: { Args: { _restaurant_id: string }; Returns: Json }
       get_dashboard_stats: {
         Args: { _days_back: number; _restaurant_id: string }
