@@ -15,7 +15,8 @@ Este é o agente local de impressão. Ele consome `print_jobs` do Supabase e env
    - `RESTAURANT_ID`: ID do restaurante que este agente vai atender.
    - `AGENT_ID`: UUID do agente (criado no banco de dados).
    - `AGENT_SECRET`: Secret Key do agente (gerada no banco de dados).
-   - `MODE`: `dry_run` (apenas logs) ou `spooler_powershell` (futuro).
+   - `MODE`: `dry_run` (apenas logs) ou `spooler_powershell` (impressão física via Windows).
+   - `PRINTER_NAME`: Nome exato da impressora no Windows (necessário se MODE=spooler_powershell).
 
 ## Como Rodar
 ```bash
@@ -30,3 +31,6 @@ npm start
 - **Prevenção de Backlog**: Ao iniciar, o agente captura apenas jobs criados **após** o seu horário de início (`started_at`).
 - **Logs**: Registra tudo em `agent.log` e no console.
 - **Fail-safe**: Se houver erro na impressão, marca o job como `failed` no banco com a mensagem de erro.
+
+## Validação de Impressão Física
+Antes de gerar o EXE, siga o [Guia de Validação Manual](./manual-test-guide.md).

@@ -63,6 +63,54 @@ async function printDryRun(job) {
   return true;
 }
 
+function formatReceipt(payload) {
+  if (typeof payload !== 'object') return String(payload);
+  
+  const { order, items, restaurant } = payload;
+  let text = '';
+  
+  text += `--- ${restaurant?.name || 'PEDIDO'} ---\n`;
+  text += `Pedido #${order?.id?.split('-')[0] || '---'}\n`;
+  text += `Cliente: ${order?.customer_name || '---'}\n`;
+  text += `Data: ${new Date(order?.created_at).toLocaleString('pt-BR')}\n`;
+  text += `--------------------------------\n`;
+  
+  if (Array.isArray(items)) {
+    items.forEach(item => {
+      text += `${item.quantity}x ${item.product_name}\n`;
+      
+      // Handle customization (pizzas, add-ons, etc.)
+      if (item.customization) {
+        if (item.customization.variants) {
+          item.customization.variants.forEach(v => text += `  > ${v.name}\n`);
+        }
+        if (item.customization.options) {
+          item.customization.options.forEach(opt => {
+            text += `  [${opt.group_name}]\n`;
+            opt.items.forEach(i => text += `    + ${i.name}\n`);
+          });
+        }
+        if (item.customization.half_pizzas) {
+          text += `  Sabores:\n`;
+          item.customization.half_pizzas.forEach(s => text += `    - ${s.name}\n`);
+        }
+      }
+      
+      if (item.note) text += `  Obs: ${item.note}\n`;
+      text += `\n`;
+    });
+  }
+  
+  text += `--------------------------------\n`;
+  text += `Total: R$ ${(order?.total_cents / 100).toFixed(2)}\n`;
+  text += `Pgto: ${order?.payment_method || '---'}\n`;
+  if (order?.notes) text += `Obs Geral: ${order.notes}\n`;
+  text += `--------------------------------\n`;
+  text += `Lovable POS - ${new Date().toLocaleDateString()}\n`;
+  
+  return text;
+}
+
 async function printPowerShell(job, printerName, isBase64) {
   const payload = job.payload;
   
@@ -89,10 +137,10 @@ async function printPowerShell(job, printerName, isBase64) {
         // Important: Printer must be shared locally for this to work
         psCommand = `powershell.exe -Command "$data = [System.IO.File]::ReadAllBytes('${winTempFile}'); [System.IO.File]::WriteAllBytes('\\\\\\\\localhost\\\\${printerName}', $data)"`;
       } else {
-        // Text/JSON fallback
-        const text = typeof payload === 'object' ? JSON.stringify(payload, null, 2) : String(payload);
-        fs.writeFileSync(tempFile, text);
-        psCommand = `powershell.exe -Command "Get-Content '${winTempFile}' | Out-Printer -Name '${printerName}'"`;
+        // Text/JSON formatting
+        const text = formatReceipt(payload);
+        fs.writeFileSync(tempFile, text, 'utf8');
+        psCommand = `powershell.exe -Command "Get-Content '${winTempFile}' -Raw | Out-Printer -Name '${printerName}'"`;
       }
 
       const startTime = Date.now();
