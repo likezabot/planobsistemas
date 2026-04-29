@@ -337,9 +337,18 @@ function ProductSheet({
   const [stockQuantity, setStockQuantity] = useState("0");
   const [lowStockAlert, setLowStockAlert] = useState("");
   const [allowOutOfStockSale, setAllowOutOfStockSale] = useState(false);
+  const [ncm, setNcm] = useState("");
+  const [cest, setCest] = useState("");
+  const [cfop, setCfop] = useState("");
+  const [cst, setCst] = useState("");
+  const [csosn, setCsosn] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [fiscalUnit, setFiscalUnit] = useState("");
+  const [fiscalNotes, setFiscalNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
   const inventoryEnabled = currentMembership?.restaurants.inventory_enabled;
+  const accountingEnabled = currentMembership?.restaurants.accounting_reports_enabled;
 
   useEffect(() => {
     if (product) {
