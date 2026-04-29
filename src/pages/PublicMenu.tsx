@@ -11,8 +11,9 @@ import {
 import { centsToBRL } from "@/lib/catalog/money";
 import { useCart } from "@/lib/cart/cartStore";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Plus, Minus, Info, ChevronRight } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Info, ChevronRight, Ban } from "lucide-react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ProductOptionsModal } from "@/components/menu/ProductOptionsModal";
 import { PizzaModal } from "@/components/menu/PizzaModal";
@@ -233,6 +234,7 @@ export default function PublicMenu() {
                         onAdd={handleAddToCart}
                         cartItem={items.find(i => i.product_id === p.id)}
                         onUpdateQty={updateQuantity}
+                        inventoryEnabled={restaurant.inventory_enabled}
                       />
                     ))}
                   </div>
@@ -253,6 +255,7 @@ export default function PublicMenu() {
                       onAdd={handleAddToCart}
                       cartItem={items.find(i => i.product_id === p.id)}
                       onUpdateQty={updateQuantity}
+                      inventoryEnabled={restaurant.inventory_enabled}
                     />
                   ))}
                 </div>
@@ -314,12 +317,23 @@ function ProductCard({
   onAdd: (p: PublicProduct) => void;
   cartItem?: any;
   onUpdateQty: (id: string, qty: number) => void;
+  inventoryEnabled?: boolean;
 }) {
+  const isOutOfStock = inventoryEnabled && product.track_stock && product.stock_quantity <= 0 && !product.allow_out_of_stock_sale;
+
   return (
     <div 
-      className="group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3 cursor-pointer"
-      onClick={() => onAdd(product)}
+      className={cn(
+        "group bg-white rounded-xl border border-border p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3 cursor-pointer relative",
+        isOutOfStock && "opacity-60 cursor-not-allowed"
+      )}
+      onClick={() => !isOutOfStock && onAdd(product)}
     >
+      {isOutOfStock && (
+        <div className="absolute top-2 right-2 z-10">
+          <Badge variant="destructive" className="text-[9px] uppercase font-bold px-1.5 py-0">Indisponível</Badge>
+        </div>
+      )}
       <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-muted">
         {product.image_url ? (
           <img 
