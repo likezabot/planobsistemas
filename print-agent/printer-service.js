@@ -34,6 +34,13 @@ async function printJob(job, config) {
     throw new Error('Invalid payload: payload is empty');
   }
 
+  // Fingerprint check
+  if (payload.fingerprint) {
+    log(`Job ${job.id} has fingerprint: ${payload.fingerprint}`);
+  } else if (typeof payload === 'object') {
+    log(`Warning: Job ${job.id} is missing a fingerprint!`, 'warn');
+  }
+
   // Handle both legacy JSON payload and new ESC/POS base64 payload
   const isBase64 = typeof payload === 'string' && /^[A-Za-z0-9+/=]+$/.test(payload);
   
