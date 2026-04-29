@@ -192,6 +192,47 @@ export type Database = {
           },
         ]
       }
+      print_agents: {
+        Row: {
+          created_at: string
+          id: string
+          last_seen_at: string | null
+          name: string
+          restaurant_id: string
+          secret_key: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_seen_at?: string | null
+          name: string
+          restaurant_id: string
+          secret_key?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_seen_at?: string | null
+          name?: string
+          restaurant_id?: string
+          secret_key?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "print_agents_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       print_jobs: {
         Row: {
           agent_id: string | null
@@ -516,14 +557,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      claim_print_job: {
-        Args: { p_agent_id: string; p_job_id: string }
-        Returns: boolean
-      }
-      complete_print_job: {
-        Args: { p_agent_id: string; p_job_id: string }
-        Returns: boolean
-      }
+      claim_print_job:
+        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
+        | {
+            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+            Returns: boolean
+          }
+      complete_print_job:
+        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
+        | {
+            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+            Returns: boolean
+          }
       create_print_job_for_order: {
         Args: { p_order_id: string; p_reason?: string; p_source: string }
         Returns: string
@@ -542,10 +587,20 @@ export type Database = {
         }
         Returns: Json
       }
-      fail_print_job: {
-        Args: { p_agent_id: string; p_error: string; p_job_id: string }
-        Returns: boolean
-      }
+      fail_print_job:
+        | {
+            Args: { p_agent_id: string; p_error: string; p_job_id: string }
+            Returns: boolean
+          }
+        | {
+            Args: {
+              p_agent_id: string
+              p_error: string
+              p_job_id: string
+              p_secret_key: string
+            }
+            Returns: boolean
+          }
       get_public_categories: {
         Args: { _slug: string }
         Returns: {
