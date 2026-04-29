@@ -178,7 +178,7 @@ export default function Index() {
               ) : (
                 <div className="divide-y divide-border">
                   {members.map((m) => (
-                    <div key={m.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
+                    <div key={m.id} className="p-4 flex items-center justify-between hover:bg-muted transition-colors">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-white font-bold text-xs">
                           {m.user_id.slice(0, 1).toUpperCase()}

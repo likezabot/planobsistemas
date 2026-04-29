@@ -99,7 +99,7 @@ export default function CatalogCategories() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input 
             placeholder="Buscar categoria..." 
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

@@ -158,7 +158,7 @@ export default function PublicMenu() {
       </div>
 
       {/* Categorias - Solid, Sticky */}
-      <nav className="sticky top-0 z-30 bg-white border-b border-border shadow-sm">
+      <nav className="sticky top-0 z-30 bg-white border-b border-border py-3 shadow-sm">
         <div 
           ref={scrollContainerRef}
           className="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar scroll-smooth max-w-[1400px] mx-auto"
@@ -171,7 +171,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === cat.id
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  : "bg-muted text-muted-foreground hover:bg-secondary hover:text-white"
               )}
             >
               {cat.name}
@@ -184,7 +184,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === 'others'
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  : "bg-muted text-muted-foreground hover:bg-secondary hover:text-white"
               )}
             >
               Outros
@@ -253,7 +253,7 @@ export default function PublicMenu() {
         <div className="fixed bottom-6 left-0 right-0 px-4 z-40 animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="mx-auto max-w-lg">
             <Button 
-              className="w-full h-14 rounded-xl text-base font-bold flex justify-between px-6 bg-primary hover:bg-primary shadow-xl border-t border-white/10 group"
+              className="w-full h-14 rounded-xl text-base font-bold flex justify-between px-6 bg-primary hover:bg-primary shadow-xl border-t border-secondary group"
               onClick={() => navigate(`/menu/${restaurantSlug}/checkout`)}
             >
               <div className="flex items-center gap-3">
@@ -266,7 +266,7 @@ export default function PublicMenu() {
                 <span>Ver Carrinho</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="bg-white/20 px-3 py-1 rounded text-xs font-bold">
+                <span className="bg-secondary px-3 py-1 rounded text-xs font-bold text-white">
                   {centsToBRL(getTotal())}
                 </span>
                 <ChevronRight className="w-4 h-4 opacity-50" />
@@ -300,7 +300,7 @@ function ProductCard({
             className="w-full h-full object-cover transition-transform group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted/30 text-muted-foreground">
+          <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
             <Plus className="w-5 h-5 opacity-20" />
           </div>
         )}
@@ -376,7 +376,7 @@ function CenteredMessage({ title, description }: { title: string; description?: 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC] px-4">
       <div className="bg-white shadow-xl border border-border max-w-sm p-8 text-center rounded-2xl">
-        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+        <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center mx-auto mb-4">
           <Info className="w-6 h-6 text-primary" />
         </div>
         <h1 className="text-xl font-bold text-secondary">{title}</h1>

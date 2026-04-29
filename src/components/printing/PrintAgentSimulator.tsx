@@ -207,7 +207,7 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
   const avgTime = metrics.processed > 0 ? (metrics.totalTime / metrics.processed / 1000).toFixed(1) : "0";
 
   return (
-    <Card className="border-orange-200 bg-orange-50/30 mt-6">
+    <Card className="border-orange-200 bg-orange-50 mt-6 shadow-sm">
       <CardHeader className="p-4 pb-2 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

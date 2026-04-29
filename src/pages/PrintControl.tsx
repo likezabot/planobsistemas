@@ -149,7 +149,7 @@ export default function PrintControlPage() {
                 <div className="bg-white rounded-xl border border-border p-4 shadow-sm">
                   <PrintAgentManager restaurantId={currentRestaurantId} />
                 </div>
-                <div className="bg-muted/30 rounded-xl border border-border p-4">
+                <div className="bg-muted rounded-xl border border-border p-4">
                   <PrintAgentSimulator restaurantId={currentRestaurantId} />
                 </div>
               </>
@@ -234,7 +234,7 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
         </div>
         
         {job.last_error && (
-          <div className="p-2 bg-destructive/5 text-destructive rounded-lg text-[10px] flex gap-1.5 border border-destructive/10 font-medium leading-tight">
+          <div className="p-2 bg-accent text-destructive rounded-lg text-[10px] flex gap-1.5 border border-destructive font-medium leading-tight">
             <AlertCircle className="w-3 h-3 shrink-0 mt-0.5" />
             <p className="line-clamp-2"><strong>Erro:</strong> {job.last_error}</p>
           </div>
@@ -249,7 +249,7 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-7 w-7 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+              className="h-7 w-7 rounded-lg hover:bg-accent hover:text-primary transition-colors"
               onClick={() => onReprint(job)}
             >
               <RefreshCw className="w-3 h-3" />
