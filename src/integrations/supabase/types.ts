@@ -65,34 +65,131 @@ export type Database = {
           },
         ]
       }
+      option_groups: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          is_required: boolean
+          max_options: number
+          min_options: number
+          name: string
+          restaurant_id: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          max_options?: number
+          min_options?: number
+          name: string
+          restaurant_id: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          is_required?: boolean
+          max_options?: number
+          min_options?: number
+          name?: string
+          restaurant_id?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "option_groups_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      option_items: {
+        Row: {
+          active: boolean
+          cost_cents: number | null
+          created_at: string
+          group_id: string
+          id: string
+          name: string
+          price_cents: number
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          cost_cents?: number | null
+          created_at?: string
+          group_id: string
+          id?: string
+          name: string
+          price_cents?: number
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          cost_cents?: number | null
+          created_at?: string
+          group_id?: string
+          id?: string
+          name?: string
+          price_cents?: number
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "option_items_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "option_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           created_at: string
+          customization: Json | null
           id: string
           note: string | null
           order_id: string
           product_id: string
           quantity: number
+          subtotal_cents: number | null
           total_price_cents: number
           unit_price_cents: number
         }
         Insert: {
           created_at?: string
+          customization?: Json | null
           id?: string
           note?: string | null
           order_id: string
           product_id: string
           quantity: number
+          subtotal_cents?: number | null
           total_price_cents: number
           unit_price_cents: number
         }
         Update: {
           created_at?: string
+          customization?: Json | null
           id?: string
           note?: string | null
           order_id?: string
           product_id?: string
           quantity?: number
+          subtotal_cents?: number | null
           total_price_cents?: number
           unit_price_cents?: number
         }
@@ -188,6 +285,35 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pizza_configs: {
+        Row: {
+          allow_edge_customization: boolean
+          max_flavors: number
+          price_rule: Database["public"]["Enums"]["pizza_price_rule"]
+          product_id: string
+        }
+        Insert: {
+          allow_edge_customization?: boolean
+          max_flavors?: number
+          price_rule?: Database["public"]["Enums"]["pizza_price_rule"]
+          product_id: string
+        }
+        Update: {
+          allow_edge_customization?: boolean
+          max_flavors?: number
+          price_rule?: Database["public"]["Enums"]["pizza_price_rule"]
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pizza_configs_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: true
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -354,6 +480,83 @@ export type Database = {
           },
         ]
       }
+      product_option_groups: {
+        Row: {
+          group_id: string
+          product_id: string
+          sort_order: number | null
+        }
+        Insert: {
+          group_id: string
+          product_id: string
+          sort_order?: number | null
+        }
+        Update: {
+          group_id?: string
+          product_id?: string
+          sort_order?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_option_groups_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "option_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_option_groups_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_variants: {
+        Row: {
+          active: boolean
+          cost_cents: number | null
+          created_at: string
+          id: string
+          name: string
+          price_cents: number
+          product_id: string
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          cost_cents?: number | null
+          created_at?: string
+          id?: string
+          name: string
+          price_cents?: number
+          product_id: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          cost_cents?: number | null
+          created_at?: string
+          id?: string
+          name?: string
+          price_cents?: number
+          product_id?: string
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           active: boolean
@@ -362,11 +565,13 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
           name: string
           price_cents: number
           restaurant_id: string
           sort_order: number
           tenant_id: string
+          type: Database["public"]["Enums"]["product_type"] | null
           updated_at: string
         }
         Insert: {
@@ -376,11 +581,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name: string
           price_cents?: number
           restaurant_id: string
           sort_order?: number
           tenant_id: string
+          type?: Database["public"]["Enums"]["product_type"] | null
           updated_at?: string
         }
         Update: {
@@ -390,11 +597,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           price_cents?: number
           restaurant_id?: string
           sort_order?: number
           tenant_id?: string
+          type?: Database["public"]["Enums"]["product_type"] | null
           updated_at?: string
         }
         Relationships: [
@@ -725,6 +934,8 @@ export type Database = {
         | "cancelled"
       order_type: "pickup" | "delivery"
       payment_method: "money" | "card" | "pix" | "online"
+      pizza_price_rule: "max" | "average" | "sum"
+      product_type: "simple" | "variable" | "pizza" | "combo"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -866,6 +1077,8 @@ export const Constants = {
       ],
       order_type: ["pickup", "delivery"],
       payment_method: ["money", "card", "pix", "online"],
+      pizza_price_rule: ["max", "average", "sum"],
+      product_type: ["simple", "variable", "pizza", "combo"],
     },
   },
 } as const
