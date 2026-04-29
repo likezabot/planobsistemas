@@ -64,7 +64,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Pizza Cliente",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("4flav"),
@@ -90,7 +90,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Excede",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("5flav"),
@@ -111,7 +111,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Solto",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("solto"),
@@ -134,7 +134,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Sem tamanho",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("notamanho"),
@@ -147,7 +147,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Sem sabor",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("nosabor"),
@@ -164,7 +164,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Borda Grande",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("borda-g"),
@@ -189,7 +189,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const res = await rpcWithRetry(anon!, "create_public_order", {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Recalc",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup",
       _payment_method: "money",
       _idempotency_key: uniqKey("recalc"),
@@ -214,7 +214,7 @@ d("Bloco A — Pizza profissional E2E", () => {
     const params = {
       _restaurant_slug: "e2e-public-on",
       _customer_name: "Idem",
-      _customer_phone: "11988887777",
+      _customer_phone: `1198${Math.floor(Math.random()*9000+1000)}${Math.floor(Math.random()*9000+1000)}`,
       _order_type: "pickup" as const,
       _payment_method: "money" as const,
       _idempotency_key: key,
