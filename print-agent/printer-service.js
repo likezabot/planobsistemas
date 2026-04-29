@@ -79,25 +79,20 @@ async function printPowerShell(job, printerName, isBase64) {
     const tempFile = path.join(os.tmpdir(), `print_job_${job.id}.bin`);
 
     try {
+      const winTempFile = tempFile.replace(/\//g, '\\');
       if (isBase64) {
         // Raw ESC/POS bytes
         const buffer = Buffer.from(payload, 'base64');
         fs.writeFileSync(tempFile, buffer);
         
-        // Use PowerShell to send raw bytes to the spooler
-        // Note: This requires the printer to be shared or accessible via UNC, 
-        // OR we use a method like Out-Printer but Out-Printer doesn't handle raw ESC/POS well.
-        // The most reliable way for raw ESC/POS via PowerShell is:
-        psCommand = `powershell.exe -Command "$data = [System.IO.File]::ReadAllBytes('${tempFile}'); [System.IO.File]::WriteAllBytes('\\\\\\\\localhost\\\\${printerName}', $data)"`;
-        
-        // Alternative if not shared: 
-        // psCommand = `powershell.exe -Command "Get-Content '${tempFile}' -Encoding Byte | Out-Printer -Name '${printerName}'"`;
-        // Note: encoding Byte is only for PS 5.1. For PS 6+ it's -AsByteStream.
+        // Use PowerShell to send raw bytes to the spooler via UNC path
+        // Important: Printer must be shared locally for this to work
+        psCommand = `powershell.exe -Command "$data = [System.IO.File]::ReadAllBytes('${winTempFile}'); [System.IO.File]::WriteAllBytes('\\\\\\\\localhost\\\\${printerName}', $data)"`;
       } else {
         // Text/JSON fallback
         const text = typeof payload === 'object' ? JSON.stringify(payload, null, 2) : String(payload);
         fs.writeFileSync(tempFile, text);
-        psCommand = `powershell.exe -Command "Get-Content '${tempFile}' | Out-Printer -Name '${printerName}'"`;
+        psCommand = `powershell.exe -Command "Get-Content '${winTempFile}' | Out-Printer -Name '${printerName}'"`;
       }
 
       const startTime = Date.now();
