@@ -26,7 +26,7 @@ export const createPublicOrder = async (params: CheckoutParams) => {
     _order_type: params.order_type,
     _payment_method: params.payment_method,
     _idempotency_key: params.idempotency_key,
-    _items: params.items,
+    _items: params.items as any, // Cast to any because of Supabase Json type definition conflicts with strict interfaces
     _address: params.address,
     _notes: params.notes
   });
