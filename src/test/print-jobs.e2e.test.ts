@@ -3,13 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 import { rpcWithRetry, queryWithRetry } from './helpers/retry';
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL!;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const anonKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY!;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const anonKey =
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.VITE_SUPABASE_ANON_KEY ||
+  '';
 
-const adminClient = createClient(supabaseUrl, serviceRoleKey);
+const hasServiceRole = Boolean(supabaseUrl && serviceRoleKey);
+// Skip the whole suite when SERVICE_ROLE_KEY is not configured (local dev / CI without secret).
+// This avoids confusing failures like "restaurant.id null" caused by a broken admin client.
+const describeIfAdmin = hasServiceRole ? describe : describe.skip;
+
+const adminClient = hasServiceRole ? createClient(supabaseUrl, serviceRoleKey) : (null as any);
 const anonClient = createClient(supabaseUrl, anonKey);
 
-describe('Print Jobs Security & Logic E2E', () => {
+describeIfAdmin('Print Jobs Security & Logic E2E', () => {
   let testRestaurantId: string;
   let testOrderId: string;
   let testTenantId: string;
