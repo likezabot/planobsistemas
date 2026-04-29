@@ -46,6 +46,7 @@ import {
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { CatalogImportExport } from "@/components/catalog/CatalogImportExport";
 
 export default function CatalogProducts() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
@@ -107,13 +108,18 @@ export default function CatalogProducts() {
             <h1 className="text-2xl font-bold text-secondary">Catálogo de Produtos</h1>
             <p className="text-muted-foreground text-sm mt-1">Gerencie seu cardápio, preços e disponibilidade.</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button asChild variant="outline" className="rounded-lg border-border h-10">
               <Link to="/catalogo/categorias">
                 <Tag className="w-4 h-4 mr-2" />
                 Categorias
               </Link>
             </Button>
+            <CatalogImportExport
+              restaurantId={currentRestaurantId ?? ""}
+              canEdit={canEdit}
+              onImported={refresh}
+            />
             {canEdit && (
               <Button className="rounded-lg h-10 shadow-sm" onClick={() => { setEditing(null); setOpen(true); }}>
                 <Plus className="w-4 h-4 mr-2" /> 

@@ -68,6 +68,7 @@ export type Database = {
       option_groups: {
         Row: {
           active: boolean
+          code: string | null
           created_at: string
           id: string
           is_required: boolean
@@ -80,6 +81,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           is_required?: boolean
@@ -92,6 +94,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           is_required?: boolean
@@ -115,6 +118,7 @@ export type Database = {
       option_items: {
         Row: {
           active: boolean
+          code: string | null
           cost_cents: number | null
           created_at: string
           group_id: string
@@ -126,6 +130,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           group_id: string
@@ -137,6 +142,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           group_id?: string
@@ -435,6 +441,7 @@ export type Database = {
       product_categories: {
         Row: {
           active: boolean
+          code: string | null
           created_at: string
           id: string
           name: string
@@ -445,6 +452,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           name: string
@@ -455,6 +463,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           created_at?: string
           id?: string
           name?: string
@@ -516,6 +525,7 @@ export type Database = {
       product_variants: {
         Row: {
           active: boolean
+          code: string | null
           cost_cents: number | null
           created_at: string
           id: string
@@ -527,6 +537,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           id?: string
@@ -538,6 +549,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          code?: string | null
           cost_cents?: number | null
           created_at?: string
           id?: string
@@ -561,6 +573,7 @@ export type Database = {
         Row: {
           active: boolean
           category_id: string | null
+          code: string | null
           cost_cents: number
           created_at: string
           description: string | null
@@ -577,6 +590,7 @@ export type Database = {
         Insert: {
           active?: boolean
           category_id?: string | null
+          code?: string | null
           cost_cents?: number
           created_at?: string
           description?: string | null
@@ -593,6 +607,7 @@ export type Database = {
         Update: {
           active?: boolean
           category_id?: string | null
+          code?: string | null
           cost_cents?: number
           created_at?: string
           description?: string | null
@@ -796,6 +811,7 @@ export type Database = {
         }
         Returns: Json
       }
+      export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
       fail_print_job:
         | {
             Args: { p_agent_id: string; p_error: string; p_job_id: string }
@@ -899,6 +915,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      import_catalog: {
+        Args: {
+          _deactivate_missing?: boolean
+          _payload: Json
+          _restaurant_id: string
+        }
+        Returns: Json
       }
       is_member_of_restaurant: {
         Args: { _restaurant_id: string; _user_id: string }
