@@ -130,3 +130,14 @@ bunx vitest run src/test/catalog.test.ts
 A suíte E2E usa o cliente **anônimo** real do Supabase (apenas `anon key`,
 sem login) e exige `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY`
 no ambiente.
+
+---
+
+## 8. Pendências de Segurança (Registradas 29/04/2026)
+
+| Item | Status | Descrição |
+|---|---|---|
+| Bloquear categoria inativa no checkout | ❌ | RPC `create_public_order` deve recusar itens de categoria `active=false` |
+| Restringir `secret_key` de agentes | ❌ | Apenas `owner` deve conseguir visualizar a chave secreta |
+| Restringir `cost_cents` de produtos | ❌ | `waiter` e `cashier` não devem ver o custo dos produtos |
+| Justificativa de `SECURITY DEFINER` | ❌ | Documentar riscos residuais e proteções em todas as funções SD |

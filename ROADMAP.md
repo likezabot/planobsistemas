@@ -85,3 +85,11 @@ Auditados em 29/04/2026 e classificados como **falsos positivos aceitáveis**:
 - Considerar mover RPCs públicas para schema dedicado `public_api`
 
 Status: **monitorar** — não bloqueia piloto comercial.
+
+---
+
+## 5. Melhorias de Defesa em Profundidade (Futuro - 29/04/2026)
+- **Bloqueio de Categoria Inativa no Checkout**: Atualmente, `get_public_products` filtra categorias inativas, mas a RPC `create_public_order` não faz essa validação final. Adicionar essa trava como redundância.
+- **Isolamento de Segredos**: Mover a visualização de `print_agents.secret_key` para uma permissão exclusiva de `owner`.
+- **Restrição de Custos**: Garantir que `products.cost_cents` não seja visível para roles de nível inferior (waiter/cashier) via RLS ou filtragem na UI.
+- **Documentação SECURITY DEFINER**: Justificar formalmente o uso em todas as funções para auditoria de segurança.
