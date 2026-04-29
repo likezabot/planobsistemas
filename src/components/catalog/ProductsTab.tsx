@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+import { useAuth } from "@/lib/auth/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { 
   listProducts, 
@@ -11,15 +12,24 @@ import {
   type Category
 } from "@/lib/catalog/queries";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
-import { 
-  Search, 
-  Plus, 
-  Power, 
-  Edit2, 
-  Package, 
+import {
+  isSuspectFlavorProduct,
+  isDismissed,
+  dismiss,
+  buildScope,
+} from "@/lib/catalog/suspectDetection";
+import SuspectFlavorDialog from "./SuspectFlavorDialog";
+import {
+  Search,
+  Plus,
+  Power,
+  Edit2,
+  Package,
   Loader2,
   Check,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,7 +72,7 @@ export default function ProductsTab() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  
+
   // Inline editing state
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [tempPrice, setTempPrice] = useState("");
@@ -71,7 +81,15 @@ export default function ProductsTab() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
+  // Suspect dialog state
+  const [suspectProduct, setSuspectProduct] = useState<Product | null>(null);
+  const [suspectOpen, setSuspectOpen] = useState(false);
+  const [dismissedTick, setDismissedTick] = useState(0); // força re-render ao dispensar
+
   const canEdit = isAdminRole(currentMembership?.role);
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  const scope = buildScope(currentRestaurantId, userId);
 
   const refresh = useCallback(async () => {
     if (!currentRestaurantId) return;
@@ -101,6 +119,44 @@ export default function ProductsTab() {
       return matchesSearch && matchesCategory && matchesType && matchesStatus;
     });
   }, [products, searchTerm, selectedCategory, selectedType, statusFilter]);
+
+  // Separa suspeitos (sabor cadastrado como produto) dos normais.
+  // Itens dispensados via "Ignorar aviso" voltam para a lista normal.
+  const { normalProducts, suspectProducts } = useMemo(() => {
+    const normal: Product[] = [];
+    const suspect: Product[] = [];
+    for (const p of filteredProducts) {
+      const isSuspect = isSuspectFlavorProduct(
+        { id: p.id, type: p.type, category_id: p.category_id },
+        categories.map((c) => ({ id: c.id, name: c.name })),
+      );
+      if (isSuspect && !isDismissed(scope, p.id)) suspect.push(p);
+      else normal.push(p);
+    }
+    return { normalProducts: normal, suspectProducts: suspect };
+    // dismissedTick força reavaliação após dismiss
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredProducts, categories, scope, dismissedTick]);
+
+  function handleProductClick(p: Product, forceEdit = false) {
+    const isSuspect = isSuspectFlavorProduct(
+      { id: p.id, type: p.type, category_id: p.category_id },
+      categories.map((c) => ({ id: c.id, name: c.name })),
+    );
+    if (isSuspect && !isDismissed(scope, p.id) && !forceEdit) {
+      setSuspectProduct(p);
+      setSuspectOpen(true);
+    } else {
+      setSelectedProduct(p);
+      setSheetOpen(true);
+    }
+  }
+
+  function handleDismissSuspect(p: Product) {
+    dismiss(scope, p.id);
+    setDismissedTick((t) => t + 1);
+    toast({ title: "Aviso dispensado para este item" });
+  }
 
   async function handleToggleActive(p: Product) {
     if (!canEdit) return;
@@ -180,6 +236,64 @@ export default function ProductsTab() {
         )}
       </div>
 
+      {/* Suspeitos: itens possivelmente cadastrados no lugar errado */}
+      {suspectProducts.length > 0 && (
+        <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 shadow-sm">
+          <div className="flex items-start gap-3 mb-3">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-amber-900">
+                Itens possivelmente cadastrados no lugar errado ({suspectProducts.length})
+              </h3>
+              <p className="text-xs text-amber-800/80 mt-0.5">
+                Estes itens parecem ser sabores de pizza cadastrados como produto.
+                Sabores devem ser gerenciados em Pizzas › Sabores Globais.
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            {suspectProducts.map((p) => {
+              const cat = categories.find((c) => c.id === p.category_id);
+              return (
+                <div
+                  key={p.id}
+                  className="flex items-center justify-between gap-2 bg-white rounded-lg border border-amber-100 px-3 py-2"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-bold text-secondary truncate">{p.name}</div>
+                    <div className="text-[10px] text-muted-foreground">
+                      {cat?.name ?? "—"} · {centsToBRL(p.price_cents)} · {p.active ? "ativo" : "inativo"}
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-7 text-xs"
+                      onClick={() => {
+                        setSuspectProduct(p);
+                        setSuspectOpen(true);
+                      }}
+                    >
+                      Resolver
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 text-muted-foreground"
+                      title="Ignorar aviso"
+                      onClick={() => handleDismissSuspect(p)}
+                    >
+                      <EyeOff className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
         <Table>
@@ -200,14 +314,14 @@ export default function ProductsTab() {
                   <TableCell colSpan={6} className="h-12 animate-pulse bg-muted/20" />
                 </TableRow>
               ))
-            ) : filteredProducts.length === 0 ? (
+            ) : normalProducts.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-32 text-center text-muted-foreground text-sm">
                   Nenhum produto encontrado.
                 </TableCell>
               </TableRow>
             ) : (
-              filteredProducts.map(p => {
+              normalProducts.map(p => {
                 const cat = categories.find(c => c.id === p.category_id);
                 const isEditingPrice = editingPriceId === p.id;
                 
@@ -281,10 +395,7 @@ export default function ProductsTab() {
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 rounded-lg"
-                        onClick={() => {
-                          setSelectedProduct(p);
-                          setSheetOpen(true);
-                        }}
+                        onClick={() => handleProductClick(p)}
                       >
                         <ChevronRight className="w-4 h-4 text-muted-foreground" />
                       </Button>
@@ -296,6 +407,23 @@ export default function ProductsTab() {
           </TableBody>
         </Table>
       </div>
+
+      <SuspectFlavorDialog
+        open={suspectOpen}
+        onOpenChange={setSuspectOpen}
+        product={suspectProduct ? {
+          id: suspectProduct.id,
+          name: suspectProduct.name,
+          description: suspectProduct.description,
+          image_url: suspectProduct.image_url,
+          active: suspectProduct.active,
+          type: suspectProduct.type,
+        } : null}
+        onChanged={refresh}
+        onForceEdit={() => {
+          if (suspectProduct) handleProductClick(suspectProduct, true);
+        }}
+      />
 
       <ProductSheet 
         open={sheetOpen}
