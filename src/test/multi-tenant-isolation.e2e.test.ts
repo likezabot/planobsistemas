@@ -16,6 +16,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { queryWithRetry, rpcWithRetry } from './helpers/retry';
+import { adminCreateUserRetry, signInRetry } from './helpers/auth-retry';
 
 const url = process.env.VITE_SUPABASE_URL!;
 const anonKey =
@@ -77,19 +78,14 @@ async function makeFixture(label: string): Promise<Ctx> {
   // Create real auth user
   const email = `mt-${label}-${stamp}@e2e.local`;
   const password = `Pwd!${stamp}xyz`;
-  const { data: u, error: uErr } = await admin.auth.admin.createUser({
-    email, password, email_confirm: true,
-  });
-  if (uErr) throw uErr;
+  const u: any = await adminCreateUserRetry(admin, email, password);
 
   await admin.from('restaurant_members').insert({
     tenant_id: tenant.id, restaurant_id: restaurant.id, user_id: u.user!.id, role: 'owner',
   });
 
-  // Sign in as that user with anon client
   const client = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
-  const { error: sErr } = await client.auth.signInWithPassword({ email, password });
-  if (sErr) throw sErr;
+  await signInRetry(client, email, password);
 
   return {
     tenantId: tenant.id, restaurantId: restaurant.id,

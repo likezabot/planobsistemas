@@ -11,6 +11,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { rpcWithRetry } from './helpers/retry';
+import { adminCreateUserRetry, signInRetry } from './helpers/auth-retry';
 
 const url = process.env.VITE_SUPABASE_URL!;
 const anonKey =
@@ -37,14 +38,13 @@ async function makeUser(role: string): Promise<SupabaseClient> {
   const stamp = Date.now() + Math.floor(Math.random() * 1000);
   const email = `pr-${role}-${stamp}@e2e.local`;
   const password = `Pwd!${stamp}xyz`;
-  const { data: u, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
-  if (error) throw error;
+  const u: any = await adminCreateUserRetry(admin, email, password);
   cleanupUsers.push(u.user!.id);
   await admin.from('restaurant_members').insert({
     tenant_id: tenantId, restaurant_id: restaurantId, user_id: u.user!.id, role,
   });
   const c = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
-  await c.auth.signInWithPassword({ email, password });
+  await signInRetry(c, email, password);
   return c;
 }
 
