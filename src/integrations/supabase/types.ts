@@ -115,6 +115,45 @@ export type Database = {
           },
         ]
       }
+      option_item_price_overrides: {
+        Row: {
+          created_at: string
+          id: string
+          option_item_id: string
+          price_cents: number
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_item_id: string
+          price_cents?: number
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_item_id?: string
+          price_cents?: number
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "option_item_price_overrides_option_item_id_fkey"
+            columns: ["option_item_id"]
+            isOneToOne: false
+            referencedRelation: "option_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "option_item_price_overrides_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       option_items: {
         Row: {
           active: boolean
@@ -324,6 +363,90 @@ export type Database = {
           },
         ]
       }
+      pizza_flavor_prices: {
+        Row: {
+          created_at: string
+          flavor_id: string
+          id: string
+          price_cents: number
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          flavor_id: string
+          id?: string
+          price_cents?: number
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          flavor_id?: string
+          id?: string
+          price_cents?: number
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pizza_flavor_prices_flavor_id_fkey"
+            columns: ["flavor_id"]
+            isOneToOne: false
+            referencedRelation: "pizza_flavors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pizza_flavor_prices_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pizza_flavors: {
+        Row: {
+          active: boolean
+          category: string | null
+          code: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          restaurant_id: string
+          sort_order: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string | null
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          restaurant_id: string
+          sort_order?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          category?: string | null
+          code?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          restaurant_id?: string
+          sort_order?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       print_agents: {
         Row: {
           created_at: string
@@ -515,6 +638,39 @@ export type Database = {
           },
           {
             foreignKeyName: "product_option_groups_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_pizza_flavors: {
+        Row: {
+          flavor_id: string
+          product_id: string
+          sort_order: number
+        }
+        Insert: {
+          flavor_id: string
+          product_id: string
+          sort_order?: number
+        }
+        Update: {
+          flavor_id?: string
+          product_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_pizza_flavors_flavor_id_fkey"
+            columns: ["flavor_id"]
+            isOneToOne: false
+            referencedRelation: "pizza_flavors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_pizza_flavors_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
