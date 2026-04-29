@@ -89,7 +89,7 @@ export default function PizzasTab() {
 // =====================================================================
 // ABA: Sabores (CRUD global do restaurante)
 // =====================================================================
-function FlavorsTab({
+function FlavorsTabContent({
   restaurantId,
   tenantId,
   canEdit,
@@ -343,7 +343,7 @@ function FlavorDialog({
 // =====================================================================
 // ABA: Pizzas (lista de produtos type=pizza + editor)
 // =====================================================================
-function PizzasTab({ restaurantId, canEdit }: { restaurantId: string; canEdit: boolean }) {
+function PizzasTabContent({ restaurantId, canEdit }: { restaurantId: string; canEdit: boolean }) {
   const { toast } = useToast();
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [loading, setLoading] = useState(false);
