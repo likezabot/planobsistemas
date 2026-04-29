@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   getPublicRestaurant,
   getPublicCategories,
@@ -9,6 +9,10 @@ import {
   type PublicProduct,
 } from "@/lib/menu/publicQueries";
 import { centsToBRL } from "@/lib/catalog/money";
+import { useCart } from "@/lib/cart/cartStore";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Plus, Minus } from "lucide-react";
+import { toast } from "sonner";
 
 type State =
   | { status: "loading" }
