@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const { log } = require('./utils');
-const { printJob } = require('./printer-service');
+const { printJob, checkPrinterExists } = require('./printer-service');
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
@@ -20,17 +20,33 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !RESTAURANT_ID || !AGENT_ID || !AGENT
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const startedAt = new Date().toISOString();
 let isProcessing = false;
+let printerReady = false;
 
 log(`Agent ${AGENT_ID} started at ${startedAt} for Restaurant ${RESTAURANT_ID}`);
 log(`Mode: ${MODE}, Printer: ${PRINTER_NAME}, Polling: ${POLLING_INTERVAL}ms`);
 
+async function initialize() {
+  if (MODE === 'spooler_powershell') {
+    log(`Checking if printer "${PRINTER_NAME}" is available...`);
+    const exists = await checkPrinterExists(PRINTER_NAME);
+    if (!exists) {
+      log(`CRITICAL: Printer "${PRINTER_NAME}" not found in Windows spooler. Agent will not start polling.`, 'error');
+      process.exit(1);
+    }
+    log(`Printer "${PRINTER_NAME}" validated.`);
+  }
+  printerReady = true;
+  
+  // Start polling
+  setInterval(poll, POLLING_INTERVAL);
+}
+
 async function poll() {
-  if (isProcessing) return;
+  if (isProcessing || !printerReady) return;
   isProcessing = true;
 
   try {
-    // 1. Fetch pending jobs for this restaurant created AFTER agent started
-    // Using secure RPC instead of direct select to avoid RLS issues with anon key
+    // 1. Fetch pending jobs
     const { data: jobs, error } = await supabase.rpc('get_pending_print_jobs', {
       p_restaurant_id: RESTAURANT_ID,
       p_agent_id: AGENT_ID,
@@ -42,7 +58,7 @@ async function poll() {
 
     if (jobs && jobs.length > 0) {
       const job = jobs[0];
-      log(`Found pending job: ${job.id}`);
+      log(`Found pending job: ${job.id} for Order #${job.order_id}`);
 
       // 2. Claim the job
       const { data: claimed, error: claimError } = await supabase
@@ -55,10 +71,13 @@ async function poll() {
       if (claimError) {
         log(`Failed to claim job ${job.id}: ${claimError.message}`, 'error');
       } else if (claimed) {
-        log(`Successfully claimed job ${job.id}`);
+        log(`Successfully claimed job ${job.id}. Starting print...`);
 
         try {
           // 3. Print
+          const payloadSize = job.payload ? (typeof job.payload === 'string' ? job.payload.length : JSON.stringify(job.payload).length) : 0;
+          log(`Job ${job.id} payload size: ${payloadSize} bytes`);
+          
           await printJob(job, { mode: MODE, printerName: PRINTER_NAME });
 
           // 4. Complete
@@ -72,7 +91,7 @@ async function poll() {
           if (completeError) {
             log(`Failed to complete job ${job.id}: ${completeError.message}`, 'error');
           } else {
-            log(`Job ${job.id} marked as printed`);
+            log(`Job ${job.id} marked as printed successfully`);
           }
         } catch (printError) {
           log(`Error printing job ${job.id}: ${printError.message}`, 'error');
@@ -96,12 +115,10 @@ async function poll() {
   }
 }
 
-// Start polling
-const intervalId = setInterval(poll, POLLING_INTERVAL);
+initialize();
 
 // Handle graceful shutdown
 process.on('SIGINT', () => {
   log('Shutting down agent...');
-  clearInterval(intervalId);
   process.exit(0);
 });
