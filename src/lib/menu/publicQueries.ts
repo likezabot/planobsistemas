@@ -97,6 +97,7 @@ export async function getPublicProducts(slug: string): Promise<PublicProduct[]> 
     sort_order: p.sort_order,
     image_url: p.image_url,
     type: p.type,
+    has_options: p.has_options,
   }));
 }
 
