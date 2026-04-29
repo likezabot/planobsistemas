@@ -379,7 +379,7 @@ function PaymentMethodItem({ value, id, label, icon }: { value: string, id: stri
       <RadioGroupItem value={value} id={id} className="peer sr-only" />
       <Label
         htmlFor={id}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-white cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-muted hover:bg-muted/50"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-white cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-muted hover:bg-muted"
       >
         <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-secondary">
           {icon}

@@ -338,10 +338,10 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
             </div>
             <h2 className="text-xl font-bold">{order.customer_name}</h2>
             <div className="flex items-center gap-3 mt-3">
-              <div className="flex items-center gap-1.5 text-xs bg-white/10 px-2 py-1 rounded-lg border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs bg-white px-2 py-1 rounded-lg border border-white/10">
                 <Phone className="w-3 h-3 text-primary" /> {order.customer_phone}
               </div>
-              <div className="flex items-center gap-1.5 text-xs bg-white/10 px-2 py-1 rounded-lg border border-white/10">
+              <div className="flex items-center gap-1.5 text-xs bg-white px-2 py-1 rounded-lg border border-white/10">
                 {order.order_type === 'delivery' ? <Truck className="w-3 h-3 text-warning" /> : <ShoppingBag className="w-3 h-3 text-success" />}
                 {order.order_type === 'delivery' ? 'Entrega' : 'Retirada'}
               </div>
@@ -372,7 +372,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
               {order.order_items.map((item: any) => (
                 <div key={item.id} className="flex justify-between items-start p-3 bg-white border border-border rounded-lg shadow-sm">
                   <div className="flex gap-2.5">
-                    <span className="font-bold text-primary bg-primary/10 w-6 h-6 flex items-center justify-center rounded text-[10px]">{item.quantity}x</span>
+                    <span className="font-bold text-primary bg-accent w-6 h-6 flex items-center justify-center rounded text-[10px]">{item.quantity}x</span>
                     <div className="min-w-0">
                       <p className="font-bold text-secondary text-xs">{item.product?.name}</p>
                       {item.customization && (
@@ -418,7 +418,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
             <Button variant="outline" className="h-10 rounded-lg font-bold border-border" onClick={onReprint}><Printer className="w-3.5 h-3.5 mr-2" />Reimprimir</Button>
             
             {['new', 'accepted', 'preparing', 'ready'].includes(order.status) && (
-              <Button variant="ghost" className="h-10 rounded-lg font-bold text-destructive hover:bg-destructive/10 col-span-2 mt-1" onClick={onCancel}><XCircle className="w-3.5 h-3.5 mr-2" />Cancelar Pedido</Button>
+              <Button variant="ghost" className="h-10 rounded-lg font-bold text-destructive hover:bg-destructive col-span-2 mt-1" onClick={onCancel}><XCircle className="w-3.5 h-3.5 mr-2" />Cancelar Pedido</Button>
             )}
           </div>
         </div>

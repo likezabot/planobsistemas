@@ -129,7 +129,7 @@ export default function CatalogProducts() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input 
               placeholder="Buscar produtos..." 
-              className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+              className="w-full h-10 pl-10 pr-4 rounded-lg border border-border bg-[#F8FAFC] text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -206,7 +206,7 @@ export default function CatalogProducts() {
                       <div className="mt-auto pt-3 border-t border-border flex justify-between items-center">
                         <div className="flex gap-1">
                           {p.type && p.type !== 'simple' && (
-                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted/50 border-none">
+                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted border-none">
                               {p.type}
                             </Badge>
                           )}
