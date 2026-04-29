@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -30,8 +31,23 @@ import {
   type Category,
 } from "@/lib/catalog/queries";
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
-import { Plus, Power } from "lucide-react";
+import { 
+  Plus, 
+  Power, 
+  Search, 
+  Filter, 
+  MoreVertical, 
+  Edit2, 
+  Image as ImageIcon,
+  Tag,
+  DollarSign,
+  TrendingDown,
+  ChevronRight,
+  Package
+} from "lucide-react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 export default function CatalogProducts() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
@@ -41,6 +57,8 @@ export default function CatalogProducts() {
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const canEdit = isAdminRole(currentMembership?.role);
 
@@ -77,82 +95,171 @@ export default function CatalogProducts() {
     }
   }
 
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "all" || p.category_id === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
     <AppShell>
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="text-mono-tag">catálogo</p>
-          <h1 className="text-2xl font-semibold tracking-tight">Produtos</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link to="/catalogo/categorias">Categorias</Link>
-          </Button>
-          {canEdit && (
-            <Button size="sm" onClick={() => { setEditing(null); setOpen(true); }}>
-              <Plus className="mr-2 h-4 w-4" /> Novo produto
+      <div className="flex flex-col gap-8">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-display font-bold text-secondary">Catálogo de Produtos</h1>
+            <p className="text-muted-foreground font-medium mt-1">Gerencie seu cardápio, preços e disponibilidade.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button asChild variant="outline" className="rounded-xl border-border h-12">
+              <Link to="/catalogo/categorias">
+                <Tag className="w-4 h-4 mr-2" />
+                Categorias
+              </Link>
             </Button>
+            {canEdit && (
+              <Button className="rounded-xl h-12 shadow-button" onClick={() => { setEditing(null); setOpen(true); }}>
+                <Plus className="w-4 h-4 mr-2" /> 
+                Novo Produto
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {!canEdit && (
+          <div className="bg-muted/50 border border-border p-4 rounded-2xl flex items-center gap-3 text-sm text-muted-foreground">
+            <Package className="w-5 h-5 opacity-40" />
+            <p>Seu perfil tem acesso somente leitura. Para alterações, contate um administrador.</p>
+          </div>
+        )}
+
+        {/* Search and Filters */}
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input 
+              placeholder="Buscar por nome do produto..." 
+              className="h-12 pl-11 rounded-2xl border-border bg-card shadow-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Filter className="w-4 h-4 text-muted-foreground hidden md:block" />
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="h-12 w-full md:w-48 rounded-2xl border-border bg-card shadow-sm">
+                <SelectValue placeholder="Todas categorias" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas categorias</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Product List/Table */}
+        <div className="bg-card rounded-[2.5rem] border border-border shadow-card overflow-hidden">
+          {loading ? (
+            <div className="p-12 space-y-4">
+              {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />)}
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-32">
+              <Package className="w-16 h-16 mx-auto mb-4 opacity-10 text-secondary" />
+              <p className="text-muted-foreground font-medium">Nenhum produto encontrado.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-muted/30 border-b border-border">
+                    <th className="px-8 py-5 text-left text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Produto</th>
+                    <th className="px-6 py-5 text-left text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Categoria</th>
+                    <th className="px-6 py-5 text-right text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Preço</th>
+                    <th className="px-6 py-5 text-right text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Custo</th>
+                    <th className="px-6 py-5 text-center text-[10px] uppercase tracking-widest font-bold text-muted-foreground">Status</th>
+                    <th className="px-8 py-5"></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {filteredProducts.map((p) => {
+                    const cat = categories.find((c) => c.id === p.category_id);
+                    return (
+                      <tr key={p.id} className="hover:bg-muted/20 transition-colors group">
+                        <td className="px-8 py-5">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center overflow-hidden border border-border/50">
+                              {p.image_url ? (
+                                <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <ImageIcon className="w-5 h-5 text-muted-foreground opacity-30" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-bold text-secondary">{p.name}</p>
+                              {p.type && <Badge variant="outline" className="text-[9px] h-4 mt-1 font-bold uppercase tracking-tighter">{p.type}</Badge>}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          {cat ? (
+                            <Badge className="bg-secondary/10 text-secondary border-none font-bold text-[10px] rounded-lg">
+                              {cat.name}
+                            </Badge>
+                          ) : (
+                            <span className="text-muted-foreground text-xs italic">Sem categoria</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-5 text-right">
+                          <span className="font-bold text-secondary tabular-nums">{centsToBRL(p.price_cents)}</span>
+                        </td>
+                        <td className="px-6 py-5 text-right">
+                          <span className="text-xs font-medium text-muted-foreground tabular-nums">{centsToBRL(p.cost_cents)}</span>
+                        </td>
+                        <td className="px-6 py-5 text-center">
+                          <Badge variant={p.active ? "success" : "outline"} className={cn(
+                            "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest",
+                            p.active ? "bg-success/10 text-success border-success/20" : "bg-muted text-muted-foreground opacity-50"
+                          )}>
+                            {p.active ? "Ativo" : "Inativo"}
+                          </Badge>
+                        </td>
+                        <td className="px-8 py-5 text-right">
+                          {canEdit && (
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="rounded-xl hover:bg-white hover:shadow-sm"
+                                onClick={() => { setEditing(p); setOpen(true); }}
+                              >
+                                <Edit2 className="h-4 w-4 text-secondary" />
+                              </Button>
+                              <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className={cn(
+                                  "rounded-xl hover:bg-white hover:shadow-sm",
+                                  p.active ? "text-success hover:text-destructive" : "text-muted-foreground hover:text-success"
+                                )}
+                                onClick={() => handleToggleActive(p)}
+                              >
+                                <Power className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
-      </div>
-
-      {!canEdit && (
-        <div className="surface-panel mb-4 p-3 text-sm text-muted-foreground">
-          Seu papel ({currentMembership?.role}) tem acesso somente leitura ao catálogo.
-        </div>
-      )}
-
-      <div className="surface-panel overflow-hidden">
-        {loading ? (
-          <p className="p-4 text-sm text-muted-foreground">Carregando...</p>
-        ) : products.length === 0 ? (
-          <p className="p-4 text-sm text-muted-foreground">Nenhum produto cadastrado.</p>
-        ) : (
-          <table className="w-full text-sm">
-            <thead className="text-mono-tag">
-              <tr className="border-b border-border">
-                <th className="px-4 py-2 text-left font-normal">Nome</th>
-                <th className="px-4 py-2 text-left font-normal">Categoria</th>
-                <th className="px-4 py-2 text-right font-normal">Preço</th>
-                <th className="px-4 py-2 text-right font-normal">Custo</th>
-                <th className="px-4 py-2 text-left font-normal">Status</th>
-                <th className="px-4 py-2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p) => {
-                const cat = categories.find((c) => c.id === p.category_id);
-                return (
-                  <tr key={p.id} className="border-b border-border last:border-0">
-                    <td className="px-4 py-2 font-medium">{p.name}</td>
-                    <td className="px-4 py-2 text-muted-foreground">{cat?.name ?? "—"}</td>
-                    <td className="px-4 py-2 text-right font-mono">{centsToBRL(p.price_cents)}</td>
-                    <td className="px-4 py-2 text-right font-mono text-muted-foreground">
-                      {centsToBRL(p.cost_cents)}
-                    </td>
-                    <td className="px-4 py-2">
-                      <span className={p.active ? "text-mono-tag text-foreground" : "text-mono-tag text-muted-foreground"}>
-                        {p.active ? "ativo" : "inativo"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-right">
-                      {canEdit && (
-                        <div className="flex justify-end gap-2">
-                          <Button size="sm" variant="ghost" onClick={() => { setEditing(p); setOpen(true); }}>
-                            Editar
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => handleToggleActive(p)}>
-                            <Power className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
       </div>
 
       <ProductDialog
@@ -186,6 +293,7 @@ function ProductDialog({
   const [price, setPrice] = useState("");
   const [cost, setCost] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [type, setType] = useState<string>("simple");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -195,8 +303,9 @@ function ProductDialog({
       setPrice((product.price_cents / 100).toFixed(2).replace(".", ","));
       setCost((product.cost_cents / 100).toFixed(2).replace(".", ","));
       setCategoryId(product.category_id);
+      setType(product.type || "simple");
     } else {
-      setName(""); setDescription(""); setPrice(""); setCost(""); setCategoryId(null);
+      setName(""); setDescription(""); setPrice(""); setCost(""); setCategoryId(null); setType("simple");
     }
   }, [product, open]);
 
@@ -221,6 +330,7 @@ function ProductDialog({
       price_cents: priceCents,
       cost_cents: costCents,
       category_id: categoryId,
+      type: type as any,
     };
     const res = product
       ? await updateProduct(product.id, payload)
@@ -241,46 +351,110 @@ function ProductDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{product ? "Editar produto" : "Novo produto"}</DialogTitle>
+      <DialogContent className="max-w-2xl rounded-[2.5rem] p-0 overflow-hidden border-none shadow-premium">
+        <DialogHeader className="p-8 bg-secondary text-white">
+          <DialogTitle className="text-2xl font-display font-bold">
+            {product ? "Editar Produto" : "Novo Produto"}
+          </DialogTitle>
+          <DialogDescription className="text-white/60">
+            {product ? `Editando ${product.name}` : "Preencha as informações para adicionar um novo item ao cardápio."}
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-3">
-          <div className="grid gap-1.5">
-            <Label htmlFor="p-name">Nome</Label>
-            <Input id="p-name" value={name} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="grid gap-1.5">
-            <Label htmlFor="p-desc">Descrição</Label>
-            <Textarea id="p-desc" value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-1.5">
-              <Label htmlFor="p-price">Preço (R$)</Label>
-              <Input id="p-price" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="0,00" />
+
+        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="p-name" className="font-bold text-secondary">Nome do Produto</Label>
+              <Input 
+                id="p-name" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                className="h-12 rounded-xl border-border focus:ring-primary"
+                placeholder="Ex: Hambúrguer de Costela"
+              />
             </div>
-            <div className="grid gap-1.5">
-              <Label htmlFor="p-cost">Custo (R$)</Label>
-              <Input id="p-cost" inputMode="decimal" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="0,00" />
+            <div className="space-y-2">
+              <Label htmlFor="p-desc" className="font-bold text-secondary">Descrição / Ingredientes</Label>
+              <Textarea 
+                id="p-desc" 
+                value={description} 
+                onChange={(e) => setDescription(e.target.value)} 
+                rows={4} 
+                className="rounded-xl border-border focus:ring-primary"
+                placeholder="Detalhes que ajudam o cliente a escolher..."
+              />
             </div>
           </div>
-          <div className="grid gap-1.5">
-            <Label>Categoria</Label>
-            <Select value={categoryId ?? "__none"} onValueChange={(v) => setCategoryId(v === "__none" ? null : v)}>
-              <SelectTrigger><SelectValue placeholder="Sem categoria" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none">Sem categoria</SelectItem>
-                {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="p-price" className="font-bold text-secondary">Preço Venda (R$)</Label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input 
+                    id="p-price" 
+                    inputMode="decimal" 
+                    value={price} 
+                    onChange={(e) => setPrice(e.target.value)} 
+                    placeholder="0,00" 
+                    className="h-12 pl-10 rounded-xl border-border focus:ring-primary font-bold"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="p-cost" className="font-bold text-secondary">Custo Médio (R$)</Label>
+                <div className="relative">
+                  <TrendingDown className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input 
+                    id="p-cost" 
+                    inputMode="decimal" 
+                    value={cost} 
+                    onChange={(e) => setCost(e.target.value)} 
+                    placeholder="0,00" 
+                    className="h-12 pl-10 rounded-xl border-border focus:ring-primary text-muted-foreground"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-bold text-secondary">Categoria</Label>
+              <Select value={categoryId ?? "__none"} onValueChange={(v) => setCategoryId(v === "__none" ? null : v)}>
+                <SelectTrigger className="h-12 rounded-xl border-border"><SelectValue placeholder="Sem categoria" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none">Sem categoria</SelectItem>
+                  {categories.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-bold text-secondary">Tipo de Produto</Label>
+              <Select value={type} onValueChange={setType}>
+                <SelectTrigger className="h-12 rounded-xl border-border"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="simple">Simples</SelectItem>
+                  <SelectItem value="variation">Com Variações</SelectItem>
+                  <SelectItem value="combo">Combo</SelectItem>
+                  <SelectItem value="pizza">Pizza</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? "Salvando..." : "Salvar"}
+
+        <DialogFooter className="p-8 bg-muted/50 gap-2 border-t border-border">
+          <Button variant="ghost" className="rounded-xl font-bold" onClick={() => onOpenChange(false)}>Cancelar</Button>
+          <Button 
+            onClick={handleSave} 
+            disabled={saving}
+            className="rounded-xl h-12 px-8 font-bold shadow-premium"
+          >
+            {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+            {product ? "Salvar Alterações" : "Criar Produto"}
           </Button>
         </DialogFooter>
       </DialogContent>
