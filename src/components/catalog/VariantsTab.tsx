@@ -179,7 +179,7 @@ export default function VariantsTab() {
       const costCents = parseBRLToCents(cost);
       setSaving(true);
       
-      const payload = {
+      const payload: Record<string, unknown> = {
         name: name.trim(),
         code: code.trim(),
         price_cents: priceCents,
@@ -190,6 +190,10 @@ export default function VariantsTab() {
         low_stock_alert: lowStockAlert ? Number(lowStockAlert.replace(',', '.')) : null,
         allow_out_of_stock_sale: allowOutOfStockSale,
       };
+      if (isPizzaProduct) {
+        payload.diameter_cm = diameterCm ? Number(diameterCm.replace(',', '.')) : null;
+        payload.slices = slices ? parseInt(slices, 10) : null;
+      }
 
       const res = editing
         ? await updateVariant(editing.id, payload)
