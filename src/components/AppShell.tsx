@@ -16,6 +16,7 @@ import {
   ClipboardList, 
   BookOpen, 
   Printer, 
+  Pizza,
   Menu,
   User,
   ChevronRight
@@ -61,6 +62,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/catalogo/categorias", icon: Store, label: "Categorias" },
+    { to: "/catalogo/pizzas", icon: Pizza, label: "Pizzas" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
   ];
 

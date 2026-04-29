@@ -10,6 +10,7 @@ import Index from "./pages/Index.tsx";
 import AuthPage from "./pages/Auth.tsx";
 import CatalogProducts from "./pages/CatalogProducts.tsx";
 import CatalogCategories from "./pages/CatalogCategories.tsx";
+import CatalogPizzas from "./pages/CatalogPizzas.tsx";
 import PublicMenu from "./pages/PublicMenu.tsx";
 import PublicCheckout from "./pages/PublicCheckout.tsx";
 import Orders from "./pages/Orders.tsx";
@@ -60,6 +61,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <CatalogCategories />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/catalogo/pizzas"
+                element={
+                  <ProtectedRoute>
+                    <CatalogPizzas />
                   </ProtectedRoute>
                 }
               />
