@@ -24,6 +24,8 @@ interface PizzaModalProps {
   product: PublicProduct | null;
   restaurantSlug: string | null;
   onClose: () => void;
+  inventoryEnabled?: boolean;
+  inventoryMode?: "simple" | "advanced";
 }
 
 /**
@@ -34,7 +36,13 @@ interface PizzaModalProps {
  *  - Observação
  *  - Mostra total estimado, mas backend recalcula tudo
  */
-export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps) {
+export function PizzaModal({ 
+  product, 
+  restaurantSlug, 
+  onClose,
+  inventoryEnabled,
+  inventoryMode 
+}: PizzaModalProps) {
   const [details, setDetails] = useState<PublicProductDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -263,28 +271,34 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                     }}
                     className="space-y-2"
                   >
-                    {details.variants.map((v) => (
-                      <div
-                        key={v.id}
-                        className={cn(
-                          "flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all",
-                          selectedVariantId === v.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-muted-foreground/30",
-                        )}
-                        onClick={() => setSelectedVariantId(v.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <RadioGroupItem value={v.id} id={`var-${v.id}`} />
-                          <Label htmlFor={`var-${v.id}`} className="font-medium cursor-pointer">
-                            {v.name}
-                          </Label>
+                    {details.variants.map((v) => {
+                      const isVariantOutOfStock = inventoryEnabled && inventoryMode === 'advanced' && v.track_stock && v.stock_quantity <= 0 && !v.allow_out_of_stock_sale;
+                      
+                      return (
+                        <div
+                          key={v.id}
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-xl border transition-all",
+                            selectedVariantId === v.id
+                              ? "border-primary bg-primary/5"
+                              : "border-border hover:border-muted-foreground/30",
+                            isVariantOutOfStock ? "opacity-50 cursor-not-allowed grayscale-[0.5]" : "cursor-pointer",
+                          )}
+                          onClick={() => !isVariantOutOfStock && setSelectedVariantId(v.id)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <RadioGroupItem value={v.id} id={`var-${v.id}`} disabled={isVariantOutOfStock} />
+                            <Label htmlFor={`var-${v.id}`} className={cn("font-medium", isVariantOutOfStock ? "cursor-not-allowed" : "cursor-pointer")}>
+                              {v.name}
+                              {isVariantOutOfStock && <span className="ml-2 text-[10px] uppercase font-bold text-destructive">Esgotado</span>}
+                            </Label>
+                          </div>
+                          <span className="text-sm font-bold text-secondary tabular-nums">
+                            {centsToBRL(v.price_cents)}
+                          </span>
                         </div>
-                        <span className="text-sm font-bold text-secondary tabular-nums">
-                          {centsToBRL(v.price_cents)}
-                        </span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </RadioGroup>
                 </section>
               )}
@@ -341,9 +355,10 @@ export function PizzaModal({ product, restaurantSlug, onClose }: PizzaModalProps
                                     : reachedMax
                                       ? "border-border opacity-50 cursor-not-allowed"
                                       : "border-border hover:border-muted-foreground/30 cursor-pointer",
+                                  isFlavorOutOfStock && "opacity-50 cursor-not-allowed grayscale-[0.5]"
                                 )}
                                 onClick={() => {
-                                  if (reachedMax) return;
+                                  if (reachedMax || isFlavorOutOfStock) return;
                                   toggleFlavor(f.id);
                                 }}
                                 data-testid={`flavor-${f.id}`}
