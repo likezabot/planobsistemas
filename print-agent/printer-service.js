@@ -7,8 +7,9 @@ async function printJob(job, config) {
 
   log(`Processing job ${job.id} for printer: ${printerName} (Mode: ${mode})`);
 
-  if (!payload || !payload.order_id) {
-    throw new Error('Invalid payload: missing order_id');
+  const orderId = payload?.order?.id || payload?.order_id;
+  if (!payload || !orderId) {
+    throw new Error('Invalid payload: missing order id');
   }
 
   if (mode === 'dry_run') {
@@ -28,15 +29,17 @@ async function printDryRun(job) {
 }
 
 async function printPowerShell(job, printerName) {
-  log(`[POWERSHELL] Preparing print for Order #${job.order_id} to ${printerName}`);
+  const orderId = job.payload?.order?.id || job.order_id;
+  const items = job.payload?.items || [];
+  
+  log(`[POWERSHELL] Preparing print for Order #${orderId} to ${printerName}`);
   
   // Create a temporary file with the payload content
-  // In a real scenario, this would format the ticket to ESC/POS or PDF
   const ticketContent = `
-    ORDER: #${job.order_id}
+    ORDER: #${orderId}
     DATE: ${new Date().toLocaleString()}
     ---------------------------
-    ${job.payload.items.map(i => `${i.quantity}x ${i.name}`).join('\n')}
+    ${items.map(i => `${i.quantity}x ${i.product_name || i.name}`).join('\n')}
     ---------------------------
   `;
 
