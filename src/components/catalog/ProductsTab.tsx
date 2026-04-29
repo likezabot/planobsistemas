@@ -620,6 +620,11 @@ function ProductSheet({
                 </Select>
               </div>
             </div>
+            <div className="col-start-2 col-span-3 ml-[25%] -mt-2 px-1 space-y-1 text-[10px] text-muted-foreground leading-relaxed">
+              <p>• <strong>Variações</strong>: use para tamanhos, quantidades ou versões.</p>
+              <p>• <strong>Adicionais</strong>: use para molhos, acompanhamentos e extras.</p>
+              <p>• <strong>Pizza</strong>: use apenas quando o restaurante trabalha com tamanhos e sabores.</p>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block text-center">Preço Venda (R$)</Label>
