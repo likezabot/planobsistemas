@@ -124,8 +124,8 @@ describe('Customers CRM Logic & UI', () => {
       </BrowserRouter>
     );
 
-    const searchInput = screen.getByPlaceholderText(/Buscar por nome ou telefone/i);
-    fireEvent.change(searchInput, { target: { value: 'Maria' } });
+    const searchInputs = screen.getAllByPlaceholderText(/Buscar por nome ou telefone/i);
+    fireEvent.change(searchInputs[0], { target: { value: 'Maria' } });
 
     expect(screen.queryByText('João CRM')).not.toBeInTheDocument();
     expect(screen.getByText('Maria CRM')).toBeInTheDocument();
