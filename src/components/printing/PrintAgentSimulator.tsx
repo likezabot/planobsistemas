@@ -24,7 +24,7 @@ import {
   Zap,
   ShieldCheck
 } from "lucide-react";
-import { claimPrintJob, completePrintJob, failPrintJob, PrintJob, getPrintAgents, PrintAgent } from "@/lib/printing/queries";
+import { claimPrintJob, completePrintJob, failPrintJob, PrintJob, getPrintAgents, PrintAgent, getPendingPrintJobs } from "@/lib/printing/queries";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
