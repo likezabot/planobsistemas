@@ -91,3 +91,42 @@ export async function setCategoryActive(id: string, active: boolean) {
     .select()
     .single();
 }
+
+export async function updateRestaurantInventory(id: string, enabled: boolean, mode: "simple" | "advanced") {
+  return supabase
+    .from("restaurants")
+    .update({ 
+      inventory_enabled: enabled,
+      inventory_mode: mode
+    })
+    .eq("id", id)
+    .select()
+    .single();
+}
+
+export async function listInventoryLogs(restaurantId: string) {
+  const id = requireScope(restaurantId);
+  return supabase
+    .from("inventory_logs")
+    .select("*")
+    .eq("restaurant_id", id)
+    .order("created_at", { ascending: false })
+    .limit(100);
+}
+
+export async function updateStockManual(
+  restaurantId: string,
+  itemType: "product" | "variant" | "option_item" | "pizza_flavor",
+  itemId: string,
+  newQuantity: number,
+  reason: string = "manual"
+) {
+  return supabase.rpc("update_stock", {
+    p_restaurant_id: restaurantId,
+    p_item_type: itemType,
+    p_item_id: itemId,
+    p_new_quantity: newQuantity,
+    p_reason: reason,
+    p_created_by: (await supabase.auth.getUser()).data.user?.id
+  });
+}
