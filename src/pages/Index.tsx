@@ -97,6 +97,9 @@ export default function Index() {
             <h2 className="text-sm font-semibold">Módulos</h2>
             <ul className="mt-3 grid gap-2 text-sm">
               <li>
+                <a className="text-accent hover:underline" href="/pedidos">→ Gestão de Pedidos (PDV)</a>
+              </li>
+              <li>
                 <a className="text-accent hover:underline" href="/catalogo">→ Catálogo de produtos</a>
               </li>
               <li>
