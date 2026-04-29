@@ -127,7 +127,7 @@ export default function PublicCheckout() {
           <p className="text-gray-400 mb-6 text-sm">
             Seu pedido foi recebido e já está em processamento pelo restaurante.
           </p>
-          <div className="bg-muted p-4 rounded-xl mb-6 text-center border border-gray-700">
+          <div className="bg-gray-800 p-4 rounded-xl mb-6 text-center border border-gray-700">
             <p className="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1">Código do Pedido</p>
             <p className="font-mono text-base font-bold text-white">{orderSuccess}</p>
           </div>
@@ -162,7 +162,7 @@ export default function PublicCheckout() {
                 key={i} 
                 className={cn(
                   "h-1 rounded-full transition-all duration-300",
-                  step >= i ? "w-6 bg-primary" : "w-2 bg-muted"
+                  step >= i ? "w-6 bg-primary" : "w-2 bg-gray-800"
                 )} 
               />
             ))}
@@ -235,8 +235,8 @@ export default function PublicCheckout() {
                     className={cn(
                       "flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-5 transition-all cursor-pointer",
                       orderType === "pickup" 
-                        ? "border-primary bg-muted shadow-sm" 
-                        : "border-gray-700 bg-gray-800 hover:bg-muted"
+                        ? "border-primary bg-gray-800 shadow-sm" 
+                        : "border-gray-700 bg-gray-800 hover:bg-gray-800"
                     )}
                   >
                     <RadioGroupItem value="pickup" id="pickup" className="sr-only" />
@@ -248,8 +248,8 @@ export default function PublicCheckout() {
                     className={cn(
                       "flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-5 transition-all cursor-pointer",
                       orderType === "delivery" 
-                        ? "border-primary bg-muted shadow-sm" 
-                        : "border-gray-700 bg-gray-800 hover:bg-muted"
+                        ? "border-primary bg-gray-800 shadow-sm" 
+                        : "border-gray-700 bg-gray-800 hover:bg-gray-800"
                     )}
                   >
                     <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
@@ -309,7 +309,7 @@ export default function PublicCheckout() {
               </div>
 
               <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-sm overflow-hidden">
-                <div className="p-4 bg-muted border-b border-gray-700">
+                <div className="p-4 bg-gray-800 border-b border-gray-700">
                   <h3 className="font-bold text-white text-sm">Resumo do Pedido</h3>
                 </div>
                 <div className="p-4 space-y-3">
@@ -379,9 +379,9 @@ function PaymentMethodItem({ value, id, label, icon }: { value: string, id: stri
       <RadioGroupItem value={value} id={id} className="peer sr-only" />
       <Label
         htmlFor={id}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-700 bg-gray-800 cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-muted hover:bg-muted"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-700 bg-gray-800 cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-gray-800 hover:bg-gray-800"
       >
-        <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-white">
+        <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-white">
           {icon}
         </div>
         <span className="font-bold text-sm text-white">{label}</span>

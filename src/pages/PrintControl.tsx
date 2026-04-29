@@ -119,9 +119,9 @@ export default function PrintControlPage() {
           <div className="lg:col-span-2 space-y-4">
             <Tabs defaultValue="active" className="w-full">
               <TabsList className="grid grid-cols-3 w-full bg-gray-800 border border-gray-700 p-1 rounded-xl h-12 mb-6">
-                <TabsTrigger value="active" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Ativos / Falhas</TabsTrigger>
-                <TabsTrigger value="printed" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Concluídos</TabsTrigger>
-                <TabsTrigger value="all" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Histórico</TabsTrigger>
+                <TabsTrigger value="active" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Ativos / Falhas</TabsTrigger>
+                <TabsTrigger value="printed" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Concluídos</TabsTrigger>
+                <TabsTrigger value="all" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Histórico</TabsTrigger>
               </TabsList>
 
               {["active", "printed", "all"].map((tab) => (
@@ -149,7 +149,7 @@ export default function PrintControlPage() {
                 <div className="bg-gray-800 rounded-xl border border-gray-700 p-4 shadow-sm">
                   <PrintAgentManager restaurantId={currentRestaurantId} />
                 </div>
-                <div className="bg-muted rounded-xl border border-gray-700 p-4">
+                <div className="bg-gray-800 rounded-xl border border-gray-700 p-4">
                   <PrintAgentSimulator restaurantId={currentRestaurantId} />
                 </div>
               </>
@@ -210,7 +210,7 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
                   <Hash className="w-2.5 h-2.5" />
                   {job.order_id.slice(0, 5)}
                 </span>
-                <Badge variant="outline" className="text-[8px] uppercase tracking-tighter h-3.5 bg-muted border-none px-1.5">
+                <Badge variant="outline" className="text-[8px] uppercase tracking-tighter h-3.5 bg-gray-800 border-none px-1.5">
                   {job.source}
                 </Badge>
               </div>
@@ -263,12 +263,12 @@ function JobCard({ job, canReprint, onReprint }: { job: PrintJob, canReprint: bo
 
 function StatusBadge({ status }: { status: string }) {
   const configs: Record<string, { label: string; className: string; icon: any }> = {
-    pending: { label: "Pendente", className: "bg-muted text-gray-400", icon: Clock },
+    pending: { label: "Pendente", className: "bg-gray-800 text-gray-400", icon: Clock },
     printing: { label: "Imprimindo", className: "bg-primary text-white", icon: Loader2 },
     printed: { label: "Impresso", className: "bg-success text-white", icon: CheckCircle2 },
     failed: { label: "Falhou", className: "bg-destructive text-white", icon: AlertCircle },
   };
-  const config = configs[status] || { label: status, className: "bg-muted text-gray-400", icon: Clock };
+  const config = configs[status] || { label: status, className: "bg-gray-800 text-gray-400", icon: Clock };
   const Icon = config.icon;
   
   return (

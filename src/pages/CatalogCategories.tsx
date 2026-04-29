@@ -107,7 +107,7 @@ export default function CatalogCategories() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {loading ? (
-            [1, 2, 3].map(i => <div key={i} className="h-24 bg-muted rounded-xl animate-pulse" />)
+            [1, 2, 3].map(i => <div key={i} className="h-24 bg-gray-800 rounded-xl animate-pulse" />)
           ) : filteredCategories.length === 0 ? (
             <div className="col-span-full text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
               <Tag className="w-12 h-12 mx-auto mb-4 opacity-10 text-white" />
@@ -124,7 +124,7 @@ export default function CatalogCategories() {
                     <h3 className="font-bold text-white text-sm truncate">{c.name}</h3>
                     <Badge variant={c.active ? "secondary" : "outline"} className={cn(
                       "rounded-md px-1.5 py-0 uppercase text-[8px] font-bold tracking-widest border-none mt-0.5",
-                      c.active ? "bg-success text-white" : "bg-muted text-gray-400"
+                      c.active ? "bg-success text-white" : "bg-gray-800 text-gray-400"
                     )}>
                       {c.active ? "Ativa" : "Inativa"}
                     </Badge>
@@ -151,7 +151,7 @@ export default function CatalogCategories() {
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md rounded-xl p-0 overflow-hidden border-none shadow-2xl">
-          <DialogHeader className="p-6 bg-secondary text-white">
+          <DialogHeader className="p-6 bg-gray-900 text-white">
             <DialogTitle className="text-xl font-bold">Nova Categoria</DialogTitle>
             <DialogDescription className="text-white/60 text-sm">Organize seus produtos.</DialogDescription>
           </DialogHeader>

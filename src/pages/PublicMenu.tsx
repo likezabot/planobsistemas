@@ -143,7 +143,7 @@ export default function PublicMenu() {
   return (
     <main className="min-h-screen bg-gray-800 pb-32 font-sans">
       {/* Header Solid */}
-      <div className="relative h-48 bg-secondary overflow-hidden">
+      <div className="relative h-48 bg-gray-900 overflow-hidden">
         <div className="absolute inset-0 bg-black z-10 opacity-60" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-70 scale-105" />
         <div className="absolute bottom-6 left-6 right-6 z-20">
@@ -171,7 +171,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === cat.id
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-gray-400 hover:bg-secondary hover:text-white"
+                  : "bg-gray-800 text-gray-400 hover:bg-gray-900 hover:text-white"
               )}
             >
               {cat.name}
@@ -184,7 +184,7 @@ export default function PublicMenu() {
                 "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold transition-all",
                 activeCategory === 'others'
                   ? "bg-primary text-white shadow-sm scale-105"
-                  : "bg-muted text-gray-400 hover:bg-secondary hover:text-white"
+                  : "bg-gray-800 text-gray-400 hover:bg-gray-900 hover:text-white"
               )}
             >
               Outros
@@ -259,14 +259,14 @@ export default function PublicMenu() {
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span className="absolute -top-1.5 -right-1.5 bg-secondary text-white w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-bold border border-white">
+                  <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white w-4 h-4 rounded-full text-[9px] flex items-center justify-center font-bold border border-white">
                     {items.reduce((acc, i) => acc + i.quantity, 0)}
                   </span>
                 </div>
                 <span>Ver Carrinho</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="bg-secondary px-3 py-1 rounded text-xs font-bold text-white">
+                <span className="bg-gray-900 px-3 py-1 rounded text-xs font-bold text-white">
                   {centsToBRL(getTotal())}
                 </span>
                 <ChevronRight className="w-4 h-4 opacity-50" />
@@ -292,7 +292,7 @@ function ProductCard({
 }) {
   return (
     <div className="group bg-gray-800 rounded-xl border border-gray-700 p-3 shadow-sm hover:shadow-md transition-shadow flex gap-3">
-      <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-muted">
+      <div className="relative w-20 h-20 shrink-0 overflow-hidden rounded-lg bg-gray-800">
         {product.image_url ? (
           <img 
             src={product.image_url} 
@@ -300,7 +300,7 @@ function ProductCard({
             className="w-full h-full object-cover transition-transform group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-muted text-gray-400">
+          <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-400">
             <Plus className="w-5 h-5 opacity-20" />
           </div>
         )}
@@ -327,7 +327,7 @@ function ProductCard({
             {!cartItem ? (
               <Button 
                 size="sm"
-                className="h-8 rounded-lg px-3 font-bold bg-muted text-primary hover:bg-primary hover:text-white transition-all text-[11px]"
+                className="h-8 rounded-lg px-3 font-bold bg-gray-800 text-primary hover:bg-primary hover:text-white transition-all text-[11px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   onAdd(product);
@@ -337,7 +337,7 @@ function ProductCard({
                 Adicionar
               </Button>
             ) : (
-              <div className="flex items-center gap-1 bg-muted p-0.5 rounded-lg">
+              <div className="flex items-center gap-1 bg-gray-800 p-0.5 rounded-lg">
                 <Button 
                   variant="ghost" 
                   size="icon" 

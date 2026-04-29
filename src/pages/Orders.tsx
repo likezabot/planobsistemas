@@ -158,12 +158,12 @@ export default function OrdersPage() {
 
         <Tabs defaultValue="new" className="w-full">
           <TabsList className="grid grid-cols-4 w-full bg-gray-800 border border-gray-700 p-1 rounded-xl h-12 mb-6">
-            <TabsTrigger value="new" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">
+            <TabsTrigger value="new" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">
               Novos {stats.new > 0 && <Badge className="ml-2 bg-primary text-[9px] h-4 px-1.5">{stats.new}</Badge>}
             </TabsTrigger>
-            <TabsTrigger value="preparing" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Preparo</TabsTrigger>
-            <TabsTrigger value="ready" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Prontos</TabsTrigger>
-            <TabsTrigger value="finished" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Histórico</TabsTrigger>
+            <TabsTrigger value="preparing" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Preparo</TabsTrigger>
+            <TabsTrigger value="ready" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Prontos</TabsTrigger>
+            <TabsTrigger value="finished" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Histórico</TabsTrigger>
           </TabsList>
 
           {["new", "preparing", "ready", "finished"].map((group) => (
@@ -331,17 +331,17 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
   return (
     <Dialog open={!!order} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg rounded-xl p-0 overflow-hidden border-none shadow-2xl">
-        <div className="bg-secondary p-6 text-white flex justify-between items-start">
+        <div className="bg-gray-900 p-6 text-white flex justify-between items-start">
           <div>
             <div className="text-[10px] uppercase font-bold opacity-60 mb-1 flex items-center gap-1">
               <Hash className="w-2.5 h-2.5" /> {order.id.slice(0, 8)}
             </div>
             <h2 className="text-xl font-bold">{order.customer_name}</h2>
             <div className="flex items-center gap-3 mt-3">
-              <div className="flex items-center gap-1.5 text-xs bg-secondary px-2 py-1 rounded-lg border border-gray-700 text-white">
+              <div className="flex items-center gap-1.5 text-xs bg-gray-900 px-2 py-1 rounded-lg border border-gray-700 text-white">
                 <Phone className="w-3 h-3 text-primary" /> {order.customer_phone}
               </div>
-              <div className="flex items-center gap-1.5 text-xs bg-secondary px-2 py-1 rounded-lg border border-gray-700 text-white">
+              <div className="flex items-center gap-1.5 text-xs bg-gray-900 px-2 py-1 rounded-lg border border-gray-700 text-white">
                 {order.order_type === 'delivery' ? <Truck className="w-3 h-3 text-warning" /> : <ShoppingBag className="w-3 h-3 text-success" />}
                 {order.order_type === 'delivery' ? 'Entrega' : 'Retirada'}
               </div>
@@ -359,7 +359,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
           {order.order_type === 'delivery' && (
             <div className="space-y-1.5">
               <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Endereço</p>
-              <div className="flex gap-2 p-3 bg-muted rounded-lg text-xs font-medium border border-gray-700">
+              <div className="flex gap-2 p-3 bg-gray-800 rounded-lg text-xs font-medium border border-gray-700">
                 <MapPin className="w-4 h-4 text-primary shrink-0" />
                 <span>{order.address}</span>
               </div>
@@ -394,7 +394,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
             </div>
           )}
 
-          <div className="flex justify-between items-center p-4 bg-secondary text-white rounded-xl shadow-lg">
+          <div className="flex justify-between items-center p-4 bg-gray-900 text-white rounded-xl shadow-lg">
             <span className="text-xs font-bold uppercase tracking-widest opacity-60">Total</span>
             <span className="text-2xl font-bold tabular-nums">{centsToBRL(order.total_cents)}</span>
           </div>
@@ -432,11 +432,11 @@ const StatusBadge = ({ status }: { status: string }) => {
     new: { label: "Novo", className: "bg-primary text-white" },
     accepted: { label: "Aceito", className: "bg-success text-white" },
     preparing: { label: "Preparo", className: "bg-warning text-white" },
-    ready: { label: "Pronto", className: "bg-secondary text-white" },
-    completed: { label: "Concluído", className: "bg-muted text-gray-400" },
+    ready: { label: "Pronto", className: "bg-gray-900 text-white" },
+    completed: { label: "Concluído", className: "bg-gray-800 text-gray-400" },
     cancelled: { label: "Cancelado", className: "bg-destructive text-white" },
   };
-  const config = configs[status] || { label: status, className: "bg-muted text-gray-400" };
+  const config = configs[status] || { label: status, className: "bg-gray-800 text-gray-400" };
   return (
     <Badge variant="outline" className={cn("rounded-md px-1.5 py-0.5 font-bold uppercase text-[8px] tracking-widest border-none shadow-sm", config.className)}>
       {config.label}
@@ -446,12 +446,12 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 const PrintStatusBadge = ({ status }: { status: string }) => {
   const configs: Record<string, { label: string; className: string }> = {
-    none: { label: "Pendente", className: "bg-muted text-gray-400" },
+    none: { label: "Pendente", className: "bg-gray-800 text-gray-400" },
     pending: { label: "Imprimindo...", className: "bg-warning text-white" },
     printed: { label: "Impresso", className: "bg-success text-white" },
     failed: { label: "Falhou", className: "bg-destructive text-white" },
   };
-  const config = configs[status] || { label: status, className: "bg-muted text-gray-400" };
+  const config = configs[status] || { label: status, className: "bg-gray-800 text-gray-400" };
   return (
     <span className={cn("text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm", config.className)}>
       {config.label}

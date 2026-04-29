@@ -154,7 +154,7 @@ export default function CatalogProducts() {
         <div className="min-h-[400px]">
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="h-48 bg-muted rounded-xl animate-pulse" />)}
+              {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="h-48 bg-gray-800 rounded-xl animate-pulse" />)}
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
@@ -167,7 +167,7 @@ export default function CatalogProducts() {
                 const cat = categories.find((c) => c.id === p.category_id);
                 return (
                   <div key={p.id} className="bg-gray-800 rounded-xl border border-gray-700 shadow-sm hover:shadow-md transition-shadow group flex flex-col overflow-hidden">
-                    <div className="aspect-video w-full bg-muted relative overflow-hidden shrink-0">
+                    <div className="aspect-video w-full bg-gray-800 relative overflow-hidden shrink-0">
                       {p.image_url ? (
                         <img src={p.image_url} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                       ) : (
@@ -178,7 +178,7 @@ export default function CatalogProducts() {
                       <div className="absolute top-2 right-2">
                         <Badge variant={p.active ? "secondary" : "outline"} className={cn(
                           "rounded-full px-2 py-0.5 uppercase text-[9px] font-bold tracking-widest border-none shadow-sm",
-                          p.active ? "bg-success text-white" : "bg-muted text-gray-400"
+                          p.active ? "bg-success text-white" : "bg-gray-800 text-gray-400"
                         )}>
                           {p.active ? "Ativo" : "Inativo"}
                         </Badge>
@@ -206,7 +206,7 @@ export default function CatalogProducts() {
                       <div className="mt-auto pt-3 border-t border-gray-700 flex justify-between items-center">
                         <div className="flex gap-1">
                           {p.type && p.type !== 'simple' && (
-                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-muted border-none">
+                            <Badge variant="outline" className="text-[9px] h-4 font-bold uppercase tracking-tighter bg-gray-800 border-none">
                               {p.type}
                             </Badge>
                           )}
@@ -218,7 +218,7 @@ export default function CatalogProducts() {
                               <Button 
                                 size="icon" 
                                 variant="ghost" 
-                                className="h-8 w-8 rounded-lg hover:bg-muted"
+                                className="h-8 w-8 rounded-lg hover:bg-gray-800"
                                 onClick={() => { setEditing(p); setOpen(true); }}
                               >
                                 <Edit2 className="h-3.5 w-3.5 text-white" />
@@ -227,7 +227,7 @@ export default function CatalogProducts() {
                                 size="icon" 
                                 variant="ghost" 
                                 className={cn(
-                                  "h-8 w-8 rounded-lg hover:bg-muted transition-colors",
+                                  "h-8 w-8 rounded-lg hover:bg-gray-800 transition-colors",
                                   p.active ? "text-success hover:text-destructive" : "text-gray-400 hover:text-success"
                                 )}
                                 onClick={() => handleToggleActive(p)}
@@ -337,7 +337,7 @@ function ProductDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl rounded-2xl p-0 overflow-hidden border-none shadow-xl">
-        <DialogHeader className="p-6 bg-secondary text-white">
+        <DialogHeader className="p-6 bg-gray-900 text-white">
           <DialogTitle className="text-xl font-bold">
             {product ? "Editar Produto" : "Novo Produto"}
           </DialogTitle>
