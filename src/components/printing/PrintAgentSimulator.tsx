@@ -168,16 +168,12 @@ export function PrintAgentSimulator({ restaurantId }: { restaurantId: string }) 
       if (processingRef.current) return;
 
       try {
-        const { data: jobs, error } = await supabase
-          .from("print_jobs")
-          .select("*")
-          .eq("restaurant_id", restaurantId)
-          .eq("status", "pending")
-          .gt("created_at", startTime?.toISOString())
-          .order("created_at", { ascending: true })
-          .limit(1);
-
-        if (error) throw error;
+        const jobs = await getPendingPrintJobs(
+          restaurantId, 
+          selectedAgentId, 
+          selectedAgent.secret_key, 
+          startTime?.toISOString()
+        );
 
         if (jobs && jobs.length > 0) {
           await processJob(jobs[0] as PrintJob);
