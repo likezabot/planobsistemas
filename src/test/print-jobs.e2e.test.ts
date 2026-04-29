@@ -115,11 +115,11 @@ describe('Print Jobs Security & Logic E2E', () => {
     });
     expect(claimed).toBe(true);
 
-    let { data: job } = await queryWithRetry(() =>
+    const { data: job1 } = await queryWithRetry(() =>
       adminClient.from('print_jobs').select('status, agent_id').eq('id', jobId).single()
     );
-    expect(job.status).toBe('printing');
-    expect(job.agent_id).toBe('agent-1');
+    expect(job1.status).toBe('printing');
+    expect(job1.agent_id).toBe('agent-1');
 
     const { data: completed } = await rpcWithRetry(adminClient, 'complete_print_job', {
       p_job_id: jobId,
@@ -127,10 +127,10 @@ describe('Print Jobs Security & Logic E2E', () => {
     });
     expect(completed).toBe(true);
 
-    ({ data: job } = await queryWithRetry(() =>
+    const { data: job2 } = await queryWithRetry(() =>
       adminClient.from('print_jobs').select('status').eq('id', jobId).single()
-    ));
-    expect(job.status).toBe('printed');
+    );
+    expect(job2.status).toBe('printed');
   });
 
   it('cannot complete with WRONG agent_id', async () => {
