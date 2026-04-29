@@ -7,8 +7,9 @@ async function printJob(job, config) {
 
   log(`Processing job ${job.id} for printer: ${printerName} (Mode: ${mode})`);
 
-  if (!payload || !payload.order_id) {
-    throw new Error('Invalid payload: missing order_id');
+  const orderId = payload?.order?.id || payload?.order_id;
+  if (!payload || !orderId) {
+    throw new Error('Invalid payload: missing order id');
   }
 
   if (mode === 'dry_run') {
