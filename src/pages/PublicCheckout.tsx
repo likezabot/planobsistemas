@@ -405,10 +405,17 @@ export default function PublicCheckout() {
                       )}
                     </div>
                   ))}
+                  {orderType === 'delivery' && selectedZone && (
+                    <div className="flex justify-between items-center text-sm mb-3">
+                      <span className="text-muted-foreground font-bold uppercase text-[10px]">Taxa de Entrega ({selectedZone.name})</span>
+                      <span className="tabular-nums font-bold text-secondary">{centsToBRL(selectedZone.fee_cents)}</span>
+                    </div>
+                  )}
+
                   <div className="border-t border-dashed border-border pt-4 flex justify-between items-center">
-                    <span className="text-base font-bold text-secondary">Total</span>
-                    <span className="text-xl font-bold text-primary tabular-nums">
-                      {centsToBRL(getTotal())}
+                    <span className="text-base font-bold text-secondary uppercase tracking-widest">Total</span>
+                    <span className="text-xl font-black text-primary tabular-nums">
+                      {centsToBRL(finalTotal)}
                     </span>
                   </div>
                 </div>
