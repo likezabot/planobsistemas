@@ -20,6 +20,7 @@ export interface CheckoutParams {
   address?: string;
   notes?: string;
   delivery_zone_id?: string;
+  coupon_code?: string;
 }
 
 export const createPublicOrder = async (params: CheckoutParams) => {
