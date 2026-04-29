@@ -290,6 +290,13 @@ export default function OrdersPage() {
                     </Button>
                   )}
                   
+                  {['new', 'accepted', 'preparing', 'ready', 'completed', 'delivered'].includes(selectedOrder.status) && (
+                    <Button variant="outline" onClick={() => setIsReprintDialogOpen(true)}>
+                      <Printer className="w-4 h-4 mr-2" />
+                      Reimprimir
+                    </Button>
+                  )}
+                  
                   {['new', 'accepted', 'preparing', 'ready'].includes(selectedOrder.status) && (
                     <Button variant="outline" className="text-destructive" onClick={() => setIsCancelDialogOpen(true)}>
                       Cancelar
