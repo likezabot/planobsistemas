@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Sidebar - Fixed Width, Solid */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-50 w-[260px] bg-sidebar-background border-r border-sidebar-border transform transition-transform duration-200 lg:relative lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-50 w-[260px] bg-sidebar-background opacity-100 border-r border-sidebar-border transform transition-transform duration-200 lg:relative lg:translate-x-0",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
