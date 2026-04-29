@@ -95,6 +95,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/cupons"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager']}>
+                    <Coupons />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/configuracoes/entrega"
                 element={
                   <ProtectedRoute allowedRoles={['owner', 'manager']}>
