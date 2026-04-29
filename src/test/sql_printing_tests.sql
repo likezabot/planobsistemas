@@ -24,6 +24,11 @@ BEGIN
     v_user_waiter := gen_random_uuid();
     v_user_other := gen_random_uuid();
     
+    INSERT INTO auth.users (id, email) VALUES 
+    (v_user_manager, 'manager@test.com'),
+    (v_user_waiter, 'waiter@test.com'),
+    (v_user_other, 'other@test.com');
+    
     INSERT INTO restaurant_members (tenant_id, restaurant_id, user_id, role) VALUES 
     (v_tenant_id, v_restaurant_id, v_user_manager, 'manager'),
     (v_tenant_id, v_restaurant_id, v_user_waiter, 'waiter'),
