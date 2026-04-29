@@ -96,6 +96,13 @@ export async function createVariant(input: {
   price_cents: number;
   sort_order?: number;
   active?: boolean;
+  diameter_cm?: number | null;
+  slices?: number | null;
+  cost_cents?: number | null;
+  track_stock?: boolean;
+  stock_quantity?: number;
+  low_stock_alert?: number | null;
+  allow_out_of_stock_sale?: boolean;
 }) {
   if (input.price_cents < 0) throw new Error("price_cents não pode ser negativo");
   return supabase.from("product_variants").insert(input).select().single();
