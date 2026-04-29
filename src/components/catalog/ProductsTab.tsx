@@ -5,6 +5,7 @@ import {
   listProducts, 
   listCategories, 
   updateProduct, 
+  createProduct,
   setProductActive,
   type Product,
   type Category
@@ -12,14 +13,12 @@ import {
 import { centsToBRL, parseBRLToCents, isAdminRole } from "@/lib/catalog/money";
 import { 
   Search, 
-  Filter, 
   Plus, 
   Power, 
   Edit2, 
   Package, 
   Loader2,
   Check,
-  X,
   ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { 
   Table, 
   TableBody, 
@@ -50,6 +48,7 @@ import {
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 export default function ProductsTab() {
   const { currentRestaurantId, currentMembership } = useRestaurant();
@@ -62,9 +61,11 @@ export default function ProductsTab() {
   const [selectedType, setSelectedType] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   
+  // Inline editing state
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [tempPrice, setTempPrice] = useState("");
 
+  // Drawer state
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -117,12 +118,13 @@ export default function ProductsTab() {
       setProducts(prev => prev.map(item => item.id === p.id ? { ...item, price_cents: cents } : item));
       setEditingPriceId(null);
     } catch (e) {
-      toast({ title: "Valor inválido", description: (e as Error).message, variant: "destructive" });
+      toast({ title: "Valor inválidado", description: (e as Error).message, variant: "destructive" });
     }
   }
 
   return (
     <div className="space-y-4">
+      {/* Filters Bar */}
       <div className="flex flex-col md:flex-row gap-3 bg-white p-3 rounded-xl border border-border shadow-sm items-end md:items-center">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -176,6 +178,7 @@ export default function ProductsTab() {
         )}
       </div>
 
+      {/* Table */}
       <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
         <Table>
           <TableHeader className="bg-muted/30">
@@ -368,8 +371,6 @@ function ProductSheet({
       category_id: categoryId,
       type: type as any,
     };
-    
-    const { createProduct, updateProduct } = await import("@/lib/catalog/queries");
     
     const res = product
       ? await updateProduct(product.id, payload)
