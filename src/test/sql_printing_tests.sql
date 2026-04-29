@@ -17,9 +17,10 @@ BEGIN
     INSERT INTO restaurants (tenant_id, name, slug) VALUES (v_tenant_id, 'Rest B', 'rest-b-' || gen_random_uuid()) RETURNING id INTO v_restaurant_b_id;
     
     -- Ensure user is a member of Rest A as manager
-    DELETE FROM restaurant_members WHERE user_id = v_user;
-    INSERT INTO restaurant_members (tenant_id, restaurant_id, user_id, role) VALUES 
-    (v_tenant_id, v_restaurant_id, v_user, 'manager');
+    -- If already member, just update role. If not, insert.
+    INSERT INTO restaurant_members (tenant_id, restaurant_id, user_id, role)
+    VALUES (v_tenant_id, v_restaurant_id, v_user, 'manager')
+    ON CONFLICT (restaurant_id, user_id, role) DO UPDATE SET role = 'manager';
 
     -- Create an order
     INSERT INTO orders (tenant_id, restaurant_id, customer_name, customer_phone, order_type, idempotency_key, total_cents)
