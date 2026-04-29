@@ -112,6 +112,6 @@ describe('Coupons Logic & Admin UI', () => {
      });
      
      const result = await supabase.rpc('validate_coupon', { _slug: 'test', _code: 'P10', _subtotal_cents: 5000 });
-     expect(result.data.discount_cents).toBe(500);
+     expect((result.data as any).discount_cents).toBe(500);
   });
 });
