@@ -100,7 +100,7 @@ export default function AuthPage() {
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">
             Acesso ao painel
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-gray-400">
             Entre com sua conta ou crie uma nova empresa.
           </p>
         </div>
@@ -154,7 +154,7 @@ export default function AuthPage() {
               <Button type="submit" disabled={busy} className="w-full">
                 {busy ? "Criando..." : "Criar conta"}
               </Button>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-gray-400">
                 Membros adicionais entram apenas por convite (owner/manager).
               </p>
             </form>

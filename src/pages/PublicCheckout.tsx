@@ -118,18 +118,18 @@ export default function PublicCheckout() {
 
   if (orderSuccess) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-white px-4">
-        <div className="bg-white shadow-xl border border-border max-w-md w-full p-10 text-center rounded-2xl animate-in fade-in zoom-in duration-500">
+      <main className="min-h-screen flex items-center justify-center bg-gray-800 px-4">
+        <div className="bg-gray-800 shadow-xl border border-gray-700 max-w-md w-full p-10 text-center rounded-2xl animate-in fade-in zoom-in duration-500">
           <div className="mx-auto w-16 h-16 bg-success rounded-xl flex items-center justify-center mb-6">
             <CheckCircle2 className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-secondary mb-2">Pedido Enviado!</h1>
-          <p className="text-muted-foreground mb-6 text-sm">
+          <h1 className="text-2xl font-bold text-white mb-2">Pedido Enviado!</h1>
+          <p className="text-gray-400 mb-6 text-sm">
             Seu pedido foi recebido e já está em processamento pelo restaurante.
           </p>
-          <div className="bg-muted p-4 rounded-xl mb-6 text-center border border-border">
-            <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground mb-1">Código do Pedido</p>
-            <p className="font-mono text-base font-bold text-secondary">{orderSuccess}</p>
+          <div className="bg-gray-800 p-4 rounded-xl mb-6 text-center border border-gray-700">
+            <p className="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1">Código do Pedido</p>
+            <p className="font-mono text-base font-bold text-white">{orderSuccess}</p>
           </div>
           <Button 
             className="w-full h-12 rounded-xl font-bold" 
@@ -144,16 +144,16 @@ export default function PublicCheckout() {
   }
 
   return (
-    <main className="min-h-screen bg-white pb-12 font-sans">
-      <header className="border-b border-border bg-white sticky top-0 z-30 shadow-sm">
+    <main className="min-h-screen bg-gray-800 pb-12 font-sans">
+      <header className="border-b border-gray-700 bg-gray-800 sticky top-0 z-30 shadow-sm">
         <div className="mx-auto max-w-2xl px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" className="rounded-lg h-9 w-9" onClick={() => step > 1 ? setStep(s => s - 1) : navigate(-1)}>
               <ChevronLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-base font-bold text-secondary leading-none">Checkout</h1>
-              <p className="text-[10px] text-muted-foreground mt-1 uppercase font-bold tracking-wider">Passo {step} de 3</p>
+              <h1 className="text-base font-bold text-white leading-none">Checkout</h1>
+              <p className="text-[10px] text-gray-400 mt-1 uppercase font-bold tracking-wider">Passo {step} de 3</p>
             </div>
           </div>
           <div className="flex gap-1">
@@ -162,7 +162,7 @@ export default function PublicCheckout() {
                 key={i} 
                 className={cn(
                   "h-1 rounded-full transition-all duration-300",
-                  step >= i ? "w-6 bg-primary" : "w-2 bg-muted"
+                  step >= i ? "w-6 bg-primary" : "w-2 bg-gray-800"
                 )} 
               />
             ))}
@@ -178,16 +178,16 @@ export default function PublicCheckout() {
                 <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
                   <User className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-secondary">Identificação</h2>
+                <h2 className="text-xl font-bold text-white">Identificação</h2>
               </div>
               
               <div className="grid gap-5">
                 <div className="space-y-1.5">
-                  <Label htmlFor="customer_phone" className="text-xs font-bold text-secondary uppercase tracking-wider">WhatsApp</Label>
+                  <Label htmlFor="customer_phone" className="text-xs font-bold text-white uppercase tracking-wider">WhatsApp</Label>
                   <Input 
                     id="customer_phone" 
                     placeholder="(11) 99999-9999" 
-                    className="h-12 px-4 rounded-xl border-border bg-white shadow-sm"
+                    className="h-12 px-4 rounded-xl border-gray-700 bg-gray-800 shadow-sm"
                     {...form.register("customer_phone")}
                   />
                   {form.formState.errors.customer_phone && (
@@ -196,11 +196,11 @@ export default function PublicCheckout() {
                 </div>
                 
                 <div className="space-y-1.5">
-                  <Label htmlFor="customer_name" className="text-xs font-bold text-secondary uppercase tracking-wider">Seu Nome</Label>
+                  <Label htmlFor="customer_name" className="text-xs font-bold text-white uppercase tracking-wider">Seu Nome</Label>
                   <Input 
                     id="customer_name" 
                     placeholder="Seu nome" 
-                    className="h-12 px-4 rounded-xl border-border bg-white shadow-sm"
+                    className="h-12 px-4 rounded-xl border-gray-700 bg-gray-800 shadow-sm"
                     {...form.register("customer_name")}
                   />
                   {form.formState.errors.customer_name && (
@@ -222,7 +222,7 @@ export default function PublicCheckout() {
                   <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
                     <MapPin className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-secondary">Entrega ou Retirada?</h2>
+                  <h2 className="text-xl font-bold text-white">Entrega ou Retirada?</h2>
                 </div>
                 
                 <RadioGroup 
@@ -235,37 +235,37 @@ export default function PublicCheckout() {
                     className={cn(
                       "flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-5 transition-all cursor-pointer",
                       orderType === "pickup" 
-                        ? "border-primary bg-muted shadow-sm" 
-                        : "border-border bg-white hover:bg-muted"
+                        ? "border-primary bg-gray-800 shadow-sm" 
+                        : "border-gray-700 bg-gray-800 hover:bg-gray-800"
                     )}
                   >
                     <RadioGroupItem value="pickup" id="pickup" className="sr-only" />
-                    <ShoppingBag className={cn("w-6 h-6", orderType === "pickup" ? "text-primary" : "text-muted-foreground")} />
-                    <span className={cn("font-bold", orderType === "pickup" ? "text-primary" : "text-secondary")}>Retirada</span>
+                    <ShoppingBag className={cn("w-6 h-6", orderType === "pickup" ? "text-primary" : "text-gray-400")} />
+                    <span className={cn("font-bold", orderType === "pickup" ? "text-primary" : "text-white")}>Retirada</span>
                   </Label>
                   <Label
                     htmlFor="delivery"
                     className={cn(
                       "flex flex-col items-center justify-center gap-2 rounded-xl border-2 p-5 transition-all cursor-pointer",
                       orderType === "delivery" 
-                        ? "border-primary bg-muted shadow-sm" 
-                        : "border-border bg-white hover:bg-muted"
+                        ? "border-primary bg-gray-800 shadow-sm" 
+                        : "border-gray-700 bg-gray-800 hover:bg-gray-800"
                     )}
                   >
                     <RadioGroupItem value="delivery" id="delivery" className="sr-only" />
-                    <Loader2 className={cn("w-6 h-6", orderType === "delivery" ? "text-primary animate-spin" : "text-muted-foreground")} />
-                    <span className={cn("font-bold", orderType === "delivery" ? "text-primary" : "text-secondary")}>Entrega</span>
+                    <Loader2 className={cn("w-6 h-6", orderType === "delivery" ? "text-primary animate-spin" : "text-gray-400")} />
+                    <span className={cn("font-bold", orderType === "delivery" ? "text-primary" : "text-white")}>Entrega</span>
                   </Label>
                 </RadioGroup>
               </div>
 
               {orderType === "delivery" && (
                 <div className="space-y-1.5 animate-in slide-in-from-top-2 duration-200">
-                  <Label htmlFor="address" className="text-xs font-bold text-secondary uppercase tracking-wider">Endereço Completo</Label>
+                  <Label htmlFor="address" className="text-xs font-bold text-white uppercase tracking-wider">Endereço Completo</Label>
                   <Textarea 
                     id="address" 
                     placeholder="Rua, número, bairro..." 
-                    className="min-h-[80px] rounded-xl border-border bg-white shadow-sm p-3 text-sm"
+                    className="min-h-[80px] rounded-xl border-gray-700 bg-gray-800 shadow-sm p-3 text-sm"
                     {...form.register("address")}
                   />
                   {form.formState.errors.address && (
@@ -279,7 +279,7 @@ export default function PublicCheckout() {
                   <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
                     <CreditCard className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-secondary">Forma de Pagamento</h2>
+                  <h2 className="text-xl font-bold text-white">Forma de Pagamento</h2>
                 </div>
                 
                 <RadioGroup 
@@ -305,12 +305,12 @@ export default function PublicCheckout() {
                 <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
                   <ClipboardList className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-secondary">Revisão Final</h2>
+                <h2 className="text-xl font-bold text-white">Revisão Final</h2>
               </div>
 
-              <div className="bg-white rounded-xl border border-border shadow-sm overflow-hidden">
-                <div className="p-4 bg-muted border-b border-border">
-                  <h3 className="font-bold text-secondary text-sm">Resumo do Pedido</h3>
+              <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-sm overflow-hidden">
+                <div className="p-4 bg-gray-800 border-b border-gray-700">
+                  <h3 className="font-bold text-white text-sm">Resumo do Pedido</h3>
                 </div>
                 <div className="p-4 space-y-3">
                   {items.map((item) => (
@@ -318,19 +318,19 @@ export default function PublicCheckout() {
                       <div className="flex justify-between items-start text-sm">
                         <div className="flex gap-2 min-w-0">
                           <span className="font-bold text-primary">{item.quantity}x</span>
-                          <span className="font-semibold text-secondary truncate">{item.name}</span>
+                          <span className="font-semibold text-white truncate">{item.name}</span>
                         </div>
-                        <span className="tabular-nums font-bold text-secondary shrink-0">{centsToBRL(item.price_cents * item.quantity)}</span>
+                        <span className="tabular-nums font-bold text-white shrink-0">{centsToBRL(item.price_cents * item.quantity)}</span>
                       </div>
                       {item.customization?.description && (
-                        <p className="text-[10px] text-muted-foreground ml-7 italic leading-tight">
+                        <p className="text-[10px] text-gray-400 ml-7 italic leading-tight">
                           {item.customization.description}
                         </p>
                       )}
                     </div>
                   ))}
-                  <div className="border-t border-dashed border-border pt-4 flex justify-between items-center">
-                    <span className="text-base font-bold text-secondary">Total</span>
+                  <div className="border-t border-dashed border-gray-700 pt-4 flex justify-between items-center">
+                    <span className="text-base font-bold text-white">Total</span>
                     <span className="text-xl font-bold text-primary tabular-nums">
                       {centsToBRL(getTotal())}
                     </span>
@@ -339,11 +339,11 @@ export default function PublicCheckout() {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="notes" className="text-xs font-bold text-secondary uppercase tracking-wider">Observações?</Label>
+                <Label htmlFor="notes" className="text-xs font-bold text-white uppercase tracking-wider">Observações?</Label>
                 <Textarea 
                   id="notes" 
                   placeholder="Ex: Sem cebola..." 
-                  className="rounded-xl border-border bg-white shadow-sm p-3 text-sm"
+                  className="rounded-xl border-gray-700 bg-gray-800 shadow-sm p-3 text-sm"
                   {...form.register("notes")}
                 />
               </div>
@@ -361,7 +361,7 @@ export default function PublicCheckout() {
                     </>
                   ) : "Finalizar Pedido"}
                 </Button>
-                <p className="text-center text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
+                <p className="text-center text-[10px] text-gray-400 uppercase font-bold tracking-widest">
                   Seu pedido será enviado agora
                 </p>
               </div>
@@ -379,12 +379,12 @@ function PaymentMethodItem({ value, id, label, icon }: { value: string, id: stri
       <RadioGroupItem value={value} id={id} className="peer sr-only" />
       <Label
         htmlFor={id}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-white cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-muted hover:bg-muted"
+        className="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-700 bg-gray-800 cursor-pointer transition-all peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-gray-800 hover:bg-gray-800"
       >
-        <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-secondary">
+        <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-white">
           {icon}
         </div>
-        <span className="font-bold text-sm text-secondary">{label}</span>
+        <span className="font-bold text-sm text-white">{label}</span>
       </Label>
     </div>
   );

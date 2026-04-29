@@ -105,7 +105,7 @@ export default function OrdersPage() {
       <AppShell>
         <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <p className="text-muted-foreground font-medium animate-pulse">Carregando seus pedidos...</p>
+          <p className="text-gray-400 font-medium animate-pulse">Carregando seus pedidos...</p>
         </div>
       </AppShell>
     );
@@ -144,11 +144,11 @@ export default function OrdersPage() {
         </div>
 
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-secondary">Monitor de Pedidos</h1>
+          <h1 className="text-2xl font-bold text-white">Monitor de Pedidos</h1>
           <Button 
             variant="outline" 
             size="sm"
-            className="rounded-lg h-9 border-border"
+            className="rounded-lg h-9 border-gray-700"
             onClick={() => queryClient.invalidateQueries({ queryKey: ["orders"] })}
           >
             <Loader2 className={cn("w-3.5 h-3.5 mr-2", isLoading && "animate-spin")} />
@@ -157,21 +157,21 @@ export default function OrdersPage() {
         </div>
 
         <Tabs defaultValue="new" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full bg-white border border-border p-1 rounded-xl h-12 mb-6">
-            <TabsTrigger value="new" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">
+          <TabsList className="grid grid-cols-4 w-full bg-gray-800 border border-gray-700 p-1 rounded-xl h-12 mb-6">
+            <TabsTrigger value="new" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">
               Novos {stats.new > 0 && <Badge className="ml-2 bg-primary text-[9px] h-4 px-1.5">{stats.new}</Badge>}
             </TabsTrigger>
-            <TabsTrigger value="preparing" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Preparo</TabsTrigger>
-            <TabsTrigger value="ready" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Prontos</TabsTrigger>
-            <TabsTrigger value="finished" className="rounded-lg font-bold text-xs data-[state=active]:bg-muted">Histórico</TabsTrigger>
+            <TabsTrigger value="preparing" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Preparo</TabsTrigger>
+            <TabsTrigger value="ready" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Prontos</TabsTrigger>
+            <TabsTrigger value="finished" className="rounded-lg font-bold text-xs data-[state=active]:bg-gray-800">Histórico</TabsTrigger>
           </TabsList>
 
           {["new", "preparing", "ready", "finished"].map((group) => (
             <TabsContent key={group} value={group} className="animate-in fade-in duration-300">
               {filteredOrders(group).length === 0 ? (
-                <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
-                  <ClipboardList className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
-                  <p className="text-muted-foreground text-sm">Nenhum pedido encontrado.</p>
+                <div className="text-center py-20 bg-gray-800 rounded-xl border border-dashed border-gray-700">
+                  <ClipboardList className="w-12 h-12 mx-auto mb-4 opacity-10 text-white" />
+                  <p className="text-gray-400 text-sm">Nenhum pedido encontrado.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -203,10 +203,10 @@ export default function OrdersPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-4">
-            <Label className="text-xs font-bold uppercase tracking-wider text-secondary">Motivo</Label>
+            <Label className="text-xs font-bold uppercase tracking-wider text-white">Motivo</Label>
             <Textarea 
               placeholder="Ex: Falha na impressora..." 
-              className="rounded-lg border-border focus:ring-primary min-h-[80px]"
+              className="rounded-lg border-gray-700 focus:ring-primary min-h-[80px]"
               value={reprintReason}
               onChange={(e) => setReprintReason(e.target.value)}
             />
@@ -237,10 +237,10 @@ export default function OrdersPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 py-4">
-            <Label className="text-xs font-bold uppercase tracking-wider text-secondary">Motivo do Cancelamento</Label>
+            <Label className="text-xs font-bold uppercase tracking-wider text-white">Motivo do Cancelamento</Label>
             <Textarea 
               placeholder="Ex: Item sem estoque..." 
-              className="rounded-lg border-border focus:ring-destructive min-h-[80px]"
+              className="rounded-lg border-gray-700 focus:ring-destructive min-h-[80px]"
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
             />
@@ -264,11 +264,11 @@ export default function OrdersPage() {
 
 function StatCard({ label, value, icon, color, pulse }: { label: string, value: number, icon: React.ReactNode, color: string, pulse?: boolean }) {
   return (
-    <Card className="border-border shadow-sm bg-white overflow-hidden">
+    <Card className="border-gray-700 shadow-sm bg-gray-800 overflow-hidden">
       <CardContent className="p-4 flex items-center justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground mb-0.5">{label}</p>
-          <p className="text-2xl font-bold text-secondary tabular-nums">{value}</p>
+          <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">{label}</p>
+          <p className="text-2xl font-bold text-white tabular-nums">{value}</p>
         </div>
         <div className={cn(
           "w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm",
@@ -287,29 +287,29 @@ function OrderCard({ order, onClick }: { order: OrderWithItems, onClick: () => v
   
   return (
     <div 
-      className="bg-white rounded-xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer group flex flex-col gap-4"
+      className="bg-gray-800 rounded-xl border border-gray-700 p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer group flex flex-col gap-4"
       onClick={onClick}
     >
       <div className="flex justify-between items-start">
         <div className="min-w-0">
-          <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
+          <div className="flex items-center gap-1.5 text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
             <Hash className="w-2.5 h-2.5" />
             {order.id.slice(0, 5)}
           </div>
-          <h3 className="font-bold text-secondary text-sm truncate">{order.customer_name}</h3>
+          <h3 className="font-bold text-white text-sm truncate">{order.customer_name}</h3>
         </div>
         <StatusBadge status={order.status} />
       </div>
 
       <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1.5 text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-gray-400">
           <Clock className="w-3.5 h-3.5" />
           <span>{timeSince}</span>
         </div>
-        <span className="font-bold text-secondary">{centsToBRL(order.total_cents)}</span>
+        <span className="font-bold text-white">{centsToBRL(order.total_cents)}</span>
       </div>
 
-      <div className="pt-3 border-t border-dashed border-border flex justify-between items-center">
+      <div className="pt-3 border-t border-dashed border-gray-700 flex justify-between items-center">
         <div className={cn(
           "flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider",
           order.order_type === 'delivery' ? 'text-warning' : 'text-success'
@@ -331,17 +331,17 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
   return (
     <Dialog open={!!order} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-lg rounded-xl p-0 overflow-hidden border-none shadow-2xl">
-        <div className="bg-secondary p-6 text-white flex justify-between items-start">
+        <div className="bg-gray-900 p-6 text-white flex justify-between items-start">
           <div>
             <div className="text-[10px] uppercase font-bold opacity-60 mb-1 flex items-center gap-1">
               <Hash className="w-2.5 h-2.5" /> {order.id.slice(0, 8)}
             </div>
             <h2 className="text-xl font-bold">{order.customer_name}</h2>
             <div className="flex items-center gap-3 mt-3">
-              <div className="flex items-center gap-1.5 text-xs bg-secondary px-2 py-1 rounded-lg border border-border text-white">
+              <div className="flex items-center gap-1.5 text-xs bg-gray-900 px-2 py-1 rounded-lg border border-gray-700 text-white">
                 <Phone className="w-3 h-3 text-primary" /> {order.customer_phone}
               </div>
-              <div className="flex items-center gap-1.5 text-xs bg-secondary px-2 py-1 rounded-lg border border-border text-white">
+              <div className="flex items-center gap-1.5 text-xs bg-gray-900 px-2 py-1 rounded-lg border border-gray-700 text-white">
                 {order.order_type === 'delivery' ? <Truck className="w-3 h-3 text-warning" /> : <ShoppingBag className="w-3 h-3 text-success" />}
                 {order.order_type === 'delivery' ? 'Entrega' : 'Retirada'}
               </div>
@@ -358,8 +358,8 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
         <div className="p-6 max-h-[60vh] overflow-y-auto space-y-6">
           {order.order_type === 'delivery' && (
             <div className="space-y-1.5">
-              <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Endereço</p>
-              <div className="flex gap-2 p-3 bg-muted rounded-lg text-xs font-medium border border-border">
+              <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Endereço</p>
+              <div className="flex gap-2 p-3 bg-gray-800 rounded-lg text-xs font-medium border border-gray-700">
                 <MapPin className="w-4 h-4 text-primary shrink-0" />
                 <span>{order.address}</span>
               </div>
@@ -367,40 +367,40 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
           )}
 
           <div className="space-y-2">
-            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Itens</p>
+            <p className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">Itens</p>
             <div className="space-y-2">
               {order.order_items.map((item: any) => (
-                <div key={item.id} className="flex justify-between items-start p-3 bg-white border border-border rounded-lg shadow-sm">
+                <div key={item.id} className="flex justify-between items-start p-3 bg-gray-800 border border-gray-700 rounded-lg shadow-sm">
                   <div className="flex gap-2.5">
                     <span className="font-bold text-primary bg-accent w-6 h-6 flex items-center justify-center rounded text-[10px]">{item.quantity}x</span>
                     <div className="min-w-0">
-                      <p className="font-bold text-secondary text-xs">{item.product?.name}</p>
+                      <p className="font-bold text-white text-xs">{item.product?.name}</p>
                       {item.customization && (
-                        <p className="text-[10px] text-muted-foreground italic leading-tight mt-0.5">{(item.customization as any).description}</p>
+                        <p className="text-[10px] text-gray-400 italic leading-tight mt-0.5">{(item.customization as any).description}</p>
                       )}
                       {item.note && <p className="text-[10px] text-warning font-bold mt-1 uppercase">Obs: {item.note}</p>}
                     </div>
                   </div>
-                  <span className="font-bold text-secondary text-xs tabular-nums">{centsToBRL(item.total_price_cents)}</span>
+                  <span className="font-bold text-white text-xs tabular-nums">{centsToBRL(item.total_price_cents)}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {order.notes && (
-            <div className="p-3 bg-accent border border-border rounded-lg">
+            <div className="p-3 bg-accent border border-gray-700 rounded-lg">
               <p className="text-[9px] uppercase font-bold text-warning tracking-widest mb-1">Observação Geral</p>
-              <p className="text-xs italic text-secondary font-medium">"{order.notes}"</p>
+              <p className="text-xs italic text-white font-medium">"{order.notes}"</p>
             </div>
           )}
 
-          <div className="flex justify-between items-center p-4 bg-secondary text-white rounded-xl shadow-lg">
+          <div className="flex justify-between items-center p-4 bg-gray-900 text-white rounded-xl shadow-lg">
             <span className="text-xs font-bold uppercase tracking-widest opacity-60">Total</span>
             <span className="text-2xl font-bold tabular-nums">{centsToBRL(order.total_cents)}</span>
           </div>
         </div>
 
-        <div className="p-6 bg-white border-t border-border">
+        <div className="p-6 bg-gray-800 border-t border-gray-700">
           <div className="grid grid-cols-2 gap-3">
             {order.status === 'new' && (
               <Button className="h-10 rounded-lg font-bold bg-success text-white shadow-sm" onClick={() => onStatusChange(order.id, 'accepted')}>Aceitar Pedido</Button>
@@ -415,7 +415,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
               <Button className="h-10 rounded-lg font-bold bg-success text-white shadow-sm" onClick={() => onStatusChange(order.id, 'completed')}>Concluir</Button>
             )}
             
-            <Button variant="outline" className="h-10 rounded-lg font-bold border-border" onClick={onReprint}><Printer className="w-3.5 h-3.5 mr-2" />Reimprimir</Button>
+            <Button variant="outline" className="h-10 rounded-lg font-bold border-gray-700" onClick={onReprint}><Printer className="w-3.5 h-3.5 mr-2" />Reimprimir</Button>
             
             {['new', 'accepted', 'preparing', 'ready'].includes(order.status) && (
               <Button variant="ghost" className="h-10 rounded-lg font-bold text-destructive hover:bg-destructive col-span-2 mt-1" onClick={onCancel}><XCircle className="w-3.5 h-3.5 mr-2" />Cancelar Pedido</Button>
@@ -432,11 +432,11 @@ const StatusBadge = ({ status }: { status: string }) => {
     new: { label: "Novo", className: "bg-primary text-white" },
     accepted: { label: "Aceito", className: "bg-success text-white" },
     preparing: { label: "Preparo", className: "bg-warning text-white" },
-    ready: { label: "Pronto", className: "bg-secondary text-white" },
-    completed: { label: "Concluído", className: "bg-muted text-muted-foreground" },
+    ready: { label: "Pronto", className: "bg-gray-900 text-white" },
+    completed: { label: "Concluído", className: "bg-gray-800 text-gray-400" },
     cancelled: { label: "Cancelado", className: "bg-destructive text-white" },
   };
-  const config = configs[status] || { label: status, className: "bg-muted text-muted-foreground" };
+  const config = configs[status] || { label: status, className: "bg-gray-800 text-gray-400" };
   return (
     <Badge variant="outline" className={cn("rounded-md px-1.5 py-0.5 font-bold uppercase text-[8px] tracking-widest border-none shadow-sm", config.className)}>
       {config.label}
@@ -446,12 +446,12 @@ const StatusBadge = ({ status }: { status: string }) => {
 
 const PrintStatusBadge = ({ status }: { status: string }) => {
   const configs: Record<string, { label: string; className: string }> = {
-    none: { label: "Pendente", className: "bg-muted text-muted-foreground" },
+    none: { label: "Pendente", className: "bg-gray-800 text-gray-400" },
     pending: { label: "Imprimindo...", className: "bg-warning text-white" },
     printed: { label: "Impresso", className: "bg-success text-white" },
     failed: { label: "Falhou", className: "bg-destructive text-white" },
   };
-  const config = configs[status] || { label: status, className: "bg-muted text-muted-foreground" };
+  const config = configs[status] || { label: status, className: "bg-gray-800 text-gray-400" };
   return (
     <span className={cn("text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-sm", config.className)}>
       {config.label}
