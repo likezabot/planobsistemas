@@ -71,7 +71,7 @@ export default function Reports() {
         _days_back: parseInt(days)
       });
       if (error) throw error;
-      return data as DashboardStats;
+      return data as unknown as DashboardStats;
     },
     enabled: !!currentRestaurantId,
     staleTime: 1000 * 60 * 5, // 5 minutes
