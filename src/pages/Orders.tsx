@@ -366,7 +366,7 @@ function OrderCard({ order, onClick }: { order: OrderWithItems, onClick: () => v
           order.order_type === 'delivery' ? 'text-warning' : 'text-success'
         )}>
           {order.order_type === 'delivery' ? <Truck className="w-3.5 h-3.5" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-          {order.order_type === 'delivery' ? 'Entrega' : 'Retirada'}
+          {order.order_type === 'delivery' ? (order.delivery_zone?.name || 'Entrega') : 'Retirada'}
         </div>
         {(order as any).print_status && (
           <PrintStatusBadge status={(order as any).print_status} />
