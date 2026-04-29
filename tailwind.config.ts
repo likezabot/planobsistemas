@@ -33,6 +33,7 @@ export default {
           foreground: "#1D3557",
         },
         sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
           background: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
           primary: "hsl(var(--sidebar-primary))",
