@@ -388,7 +388,7 @@ function OrderDetailsDialog({ order, onClose, onStatusChange, onReprint, onCance
           </div>
 
           {order.notes && (
-            <div className="p-3 bg-warning/5 border border-warning/10 rounded-lg">
+            <div className="p-3 bg-accent border border-border rounded-lg">
               <p className="text-[9px] uppercase font-bold text-warning tracking-widest mb-1">Observação Geral</p>
               <p className="text-xs italic text-secondary font-medium">"{order.notes}"</p>
             </div>
