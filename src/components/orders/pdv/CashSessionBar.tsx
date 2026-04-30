@@ -9,12 +9,17 @@ import { OpenCashDialog } from "./OpenCashDialog";
 import { CashMovementDialog } from "./CashMovementDialog";
 import { CloseCashDialog } from "./CloseCashDialog";
 
+import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+
 interface CashSessionBarProps {
   restaurantId: string;
 }
 
 export function CashSessionBar({ restaurantId }: CashSessionBarProps) {
   const { toast } = useToast();
+  const { currentMembership } = useRestaurant();
+  const cashRequired =
+    currentMembership?.restaurants.cash_session_required ?? true;
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<CashSession | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -61,13 +66,22 @@ export function CashSessionBar({ restaurantId }: CashSessionBarProps) {
                 Troco: <strong>{formatCurrency(session.opening_amount_cents / 100)}</strong>
               </span>
             </>
-          ) : (
+          ) : cashRequired ? (
             <>
               <Badge variant="outline" className="bg-muted text-muted-foreground">
                 <Lock className="w-3 h-3 mr-1" /> Caixa fechado
               </Badge>
               <span className="text-xs text-muted-foreground">
                 Vendas em dinheiro não serão vinculadas a uma sessão até abrir o caixa.
+              </span>
+            </>
+          ) : (
+            <>
+              <Badge variant="outline" className="bg-sky-50 text-sky-700 border-sky-200">
+                Operando sem caixa
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                Abertura de caixa é opcional neste restaurante.
               </span>
             </>
           )}

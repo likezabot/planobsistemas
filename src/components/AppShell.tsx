@@ -27,7 +27,8 @@ import {
   MapPin,
   Ticket,
   Smartphone,
-  Wallet
+  Wallet,
+  Settings2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -88,7 +89,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       { to: "/relatorios/caixa", icon: Wallet, label: "Caixa" },
       { to: "/clientes", icon: Users, label: "Clientes" },
       { to: "/cupons", icon: Ticket, label: "Cupons" },
-      { to: "/configuracoes/entrega", icon: MapPin, label: "Entrega" }
+      { to: "/configuracoes/entrega", icon: MapPin, label: "Entrega" },
+      { to: "/configuracoes/restaurante", icon: Settings2, label: "Restaurante" }
     ] : []),
     ...(canSeeAccounting ? [{ to: "/contador", icon: Calculator, label: "Contador" }] : []),
   ];

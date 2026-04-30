@@ -29,7 +29,9 @@ import {
   type OrderPayment,
   type PaymentMethod,
 } from "@/lib/orders/paymentsQueries";
-import { CreditCard, DollarSign, Loader2, Smartphone, Globe } from "lucide-react";
+import { getOpenCashSession } from "@/lib/cash/queries";
+import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+import { CreditCard, DollarSign, Loader2, Smartphone, Globe, AlertCircle } from "lucide-react";
 
 interface PaymentDialogProps {
   open: boolean;
@@ -69,12 +71,14 @@ export function PaymentDialog({
   onPaid,
 }: PaymentDialogProps) {
   const { toast } = useToast();
+  const { currentRestaurantId } = useRestaurant();
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [totalCents, setTotalCents] = useState(0);
   const [paidCents, setPaidCents] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState<string>("open");
   const [payments, setPayments] = useState<OrderPayment[]>([]);
+  const [hasOpenSession, setHasOpenSession] = useState(true);
 
   const [method, setMethod] = useState<PaymentMethod>("money");
   const [amountInput, setAmountInput] = useState("0,00");
@@ -102,6 +106,15 @@ export function PaymentDialog({
       setPaymentStatus(order.payment_status ?? "open");
       setPayments(list);
 
+      if (currentRestaurantId) {
+        try {
+          const s = await getOpenCashSession(currentRestaurantId);
+          setHasOpenSession(!!s);
+        } catch {
+          setHasOpenSession(false);
+        }
+      }
+
       const newRemaining = Math.max(total - paid, 0);
       setAmountInput(formatInput(newRemaining));
       setTenderedInput(formatInput(newRemaining));
@@ -110,7 +123,7 @@ export function PaymentDialog({
     } finally {
       setLoading(false);
     }
-  }, [orderId, toast]);
+  }, [orderId, toast, currentRestaurantId]);
 
   useEffect(() => {
     if (open) {
@@ -363,6 +376,16 @@ export function PaymentDialog({
                       }
                       return null;
                     })()}
+                  </div>
+                )}
+
+                {method === "money" && !hasOpenSession && (
+                  <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-[11px] text-amber-800">
+                    <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                    <span>
+                      Sem sessão de caixa aberta — este pagamento em dinheiro
+                      não aparecerá no relatório de fechamento de caixa.
+                    </span>
                   </div>
                 )}
               </div>
