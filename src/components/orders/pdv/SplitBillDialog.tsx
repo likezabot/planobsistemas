@@ -256,10 +256,11 @@ export function SplitBillDialog({
         setItemsPreview(null);
         await refresh();
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {
