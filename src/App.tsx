@@ -20,6 +20,7 @@ import Customers from "./pages/Customers.tsx";
 import DeliverySettings from "./pages/DeliverySettings.tsx";
 import Coupons from "./pages/Coupons.tsx";
 import Palm from "./pages/Palm.tsx";
+import PDV from "./pages/PDV.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 
@@ -124,6 +125,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Accounting />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/pdv/*"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager', 'cashier']}>
+                    <PDV />
                   </ProtectedRoute>
                 }
               />

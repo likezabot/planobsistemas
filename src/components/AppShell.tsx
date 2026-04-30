@@ -71,11 +71,13 @@ export function AppShell({ children }: { children: ReactNode }) {
   const canSeeAccounting = isAdmin || (accountingEnabled && role === "cashier");
   const canSeeKDS = role === "owner" || role === "manager" || role === "kitchen";
   const canSeeReports = role === "owner" || role === "manager";
-  const canSeePalm = role === "owner" || role === "manager" || role === "waiter";
+  const canSeePalm = role === "owner" || role === "manager" || role === "waiter" || role === "cashier";
+  const canSeePDV = role === "owner" || role === "manager" || role === "cashier";
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     ...(canSeePalm ? [{ to: "/palm", icon: Smartphone, label: "Atendimento" }] : []),
+    ...(canSeePDV ? [{ to: "/pdv", icon: Ticket, label: "PDV" }] : []),
     { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/impressao", icon: Printer, label: "Impressão" },

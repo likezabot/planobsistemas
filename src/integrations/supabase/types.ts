@@ -1421,6 +1421,10 @@ export type Database = {
             }
             Returns: boolean
           }
+      get_active_orders_summary: {
+        Args: { _restaurant_id: string }
+        Returns: Json
+      }
       get_customer_summary: { Args: { _restaurant_id: string }; Returns: Json }
       get_dashboard_stats: {
         Args: { _days_back: number; _restaurant_id: string }
@@ -1547,6 +1551,7 @@ export type Database = {
         Args: { p_order_id: string; p_reason: string }
         Returns: string
       }
+      request_account_print: { Args: { _order_id: string }; Returns: string }
       reset_stuck_print_jobs: {
         Args: { p_restaurant_id: string; p_stuck_minutes?: number }
         Returns: number
