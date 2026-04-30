@@ -21,6 +21,8 @@ export type OrderWithItems = Order & {
   table?: { name: string } | null;
 };
 
+export type Product = Database['public']['Tables']['products']['Row'];
+
 export type DiningTable = Database['public']['Tables']['dining_tables']['Row'];
 
 export const getRestaurantOrders = async (restaurantId: string) => {
