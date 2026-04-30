@@ -22,7 +22,7 @@ interface PDVOrderDetailsProps {
 export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: PDVOrderDetailsProps) {
   const { toast } = useToast();
   const { currentMembership } = useRestaurant();
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [loading, setLoading] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [splitOpen, setSplitOpen] = useState(false);
