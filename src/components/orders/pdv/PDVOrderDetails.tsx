@@ -107,7 +107,8 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
     );
   }
 
-  if (loading && !order) return <div className="p-4">Carregando...</div>;
+  if (loading && !order) return <div className="p-4 flex items-center justify-center h-full"><p className="text-muted-foreground">Carregando...</p></div>;
+  if (!order) return null;
 
   const hasDraftItems = order?.order_items?.some((i: OrderItem) => i.status === 'draft');
   const role = currentMembership?.role;
