@@ -51,7 +51,7 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     const { data, error } = await supabase
       .from("restaurant_members")
-      .select("restaurant_id, tenant_id, role, restaurants!inner(id, name, slug, tenant_id, inventory_enabled, inventory_mode, accounting_reports_enabled, pizza_module_enabled)")
+      .select("restaurant_id, tenant_id, role, restaurants!inner(id, name, slug, tenant_id, inventory_enabled, inventory_mode, accounting_reports_enabled, pizza_module_enabled, cash_session_required)")
       .eq("user_id", user.id);
 
     if (error) {
