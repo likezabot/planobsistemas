@@ -84,6 +84,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     ...(canSeeKDS ? [{ to: "/kds", icon: ChefHat, label: "Cozinha" }] : []),
     ...(canSeeReports ? [
       { to: "/relatorios", icon: BarChart2, label: "Relatórios" }, 
+      { to: "/relatorios/caixa", icon: Wallet, label: "Caixa" },
       { to: "/clientes", icon: Users, label: "Clientes" },
       { to: "/cupons", icon: Ticket, label: "Cupons" },
       { to: "/configuracoes/entrega", icon: MapPin, label: "Entrega" }
