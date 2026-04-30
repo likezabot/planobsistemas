@@ -127,7 +127,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
 
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {order.order_items?.map((item: any) => (
+          {order.order_items?.map((item: OrderItem) => (
             <div key={item.id} className={cn("flex justify-between items-start", item.status === 'cancelled' && "opacity-40 grayscale")}>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
