@@ -26,7 +26,7 @@ export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderL
         <ScrollArea className="flex-1 pr-4">
           <TabsContent value="tables" className="m-0">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {data?.tables?.map((table: any) => (
+              {data?.tables?.map((table: PDVTableSummary) => (
                 <Card 
                   key={table.id}
                   className={cn(
