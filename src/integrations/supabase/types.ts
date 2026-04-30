@@ -65,6 +65,99 @@ export type Database = {
           },
         ]
       }
+      cash_movements: {
+        Row: {
+          amount_cents: number
+          cash_session_id: string
+          created_at: string
+          id: string
+          movement_type: string
+          order_id: string | null
+          payment_method: string | null
+          reason: string | null
+          restaurant_id: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          cash_session_id: string
+          created_at?: string
+          id?: string
+          movement_type: string
+          order_id?: string | null
+          payment_method?: string | null
+          reason?: string | null
+          restaurant_id: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          cash_session_id?: string
+          created_at?: string
+          id?: string
+          movement_type?: string
+          order_id?: string | null
+          payment_method?: string | null
+          reason?: string | null
+          restaurant_id?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cash_sessions: {
+        Row: {
+          closed_at: string | null
+          counted_amount_cents: number | null
+          created_at: string
+          difference_cents: number | null
+          expected_amount_cents: number | null
+          id: string
+          notes: string | null
+          opened_at: string
+          opening_amount_cents: number
+          restaurant_id: string
+          status: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          closed_at?: string | null
+          counted_amount_cents?: number | null
+          created_at?: string
+          difference_cents?: number | null
+          expected_amount_cents?: number | null
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opening_amount_cents?: number
+          restaurant_id: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          closed_at?: string | null
+          counted_amount_cents?: number | null
+          created_at?: string
+          difference_cents?: number | null
+          expected_amount_cents?: number | null
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opening_amount_cents?: number
+          restaurant_id?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           active: boolean
@@ -433,6 +526,51 @@ export type Database = {
           },
         ]
       }
+      order_discounts: {
+        Row: {
+          amount_cents: number
+          applied_by: string
+          created_at: string
+          discount_type: string
+          id: string
+          order_id: string
+          order_item_id: string | null
+          reason: string | null
+          restaurant_id: string
+          scope: string
+          tenant_id: string
+          value: number
+        }
+        Insert: {
+          amount_cents: number
+          applied_by: string
+          created_at?: string
+          discount_type: string
+          id?: string
+          order_id: string
+          order_item_id?: string | null
+          reason?: string | null
+          restaurant_id: string
+          scope: string
+          tenant_id: string
+          value: number
+        }
+        Update: {
+          amount_cents?: number
+          applied_by?: string
+          created_at?: string
+          discount_type?: string
+          id?: string
+          order_id?: string
+          order_item_id?: string | null
+          reason?: string | null
+          restaurant_id?: string
+          scope?: string
+          tenant_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           cancel_reason: string | null
@@ -502,6 +640,48 @@ export type Database = {
           },
         ]
       }
+      order_payments: {
+        Row: {
+          amount_cents: number
+          cash_session_id: string | null
+          change_cents: number
+          created_at: string
+          id: string
+          notes: string | null
+          order_id: string
+          payment_method: string
+          restaurant_id: string
+          tenant_id: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          cash_session_id?: string | null
+          change_cents?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          order_id: string
+          payment_method: string
+          restaurant_id: string
+          tenant_id: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          cash_session_id?: string | null
+          change_cents?: number
+          created_at?: string
+          id?: string
+          notes?: string | null
+          order_id?: string
+          payment_method?: string
+          restaurant_id?: string
+          tenant_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string | null
@@ -518,11 +698,13 @@ export type Database = {
           notes: string | null
           opened_by: string | null
           order_type: Database["public"]["Enums"]["order_type"]
+          paid_amount_cents: number
           paid_at: string | null
           payment_method: Database["public"]["Enums"]["payment_method"]
           payment_status: string | null
           print_status: Database["public"]["Enums"]["order_print_status"] | null
           restaurant_id: string
+          service_fee_cents: number
           service_mode: string | null
           status: Database["public"]["Enums"]["order_status"]
           subtotal_cents: number
@@ -546,6 +728,7 @@ export type Database = {
           notes?: string | null
           opened_by?: string | null
           order_type: Database["public"]["Enums"]["order_type"]
+          paid_amount_cents?: number
           paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_status?: string | null
@@ -553,6 +736,7 @@ export type Database = {
             | Database["public"]["Enums"]["order_print_status"]
             | null
           restaurant_id: string
+          service_fee_cents?: number
           service_mode?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_cents?: number
@@ -576,6 +760,7 @@ export type Database = {
           notes?: string | null
           opened_by?: string | null
           order_type?: Database["public"]["Enums"]["order_type"]
+          paid_amount_cents?: number
           paid_at?: string | null
           payment_method?: Database["public"]["Enums"]["payment_method"]
           payment_status?: string | null
@@ -583,6 +768,7 @@ export type Database = {
             | Database["public"]["Enums"]["order_print_status"]
             | null
           restaurant_id?: string
+          service_fee_cents?: number
           service_mode?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal_cents?: number
@@ -1261,6 +1447,7 @@ export type Database = {
           name: string
           pizza_module_enabled: boolean
           public_menu_enabled: boolean
+          service_fee_percent: number
           slug: string
           tenant_id: string
           timezone: string
@@ -1275,6 +1462,7 @@ export type Database = {
           name: string
           pizza_module_enabled?: boolean
           public_menu_enabled?: boolean
+          service_fee_percent?: number
           slug: string
           tenant_id: string
           timezone?: string
@@ -1289,6 +1477,7 @@ export type Database = {
           name?: string
           pizza_module_enabled?: boolean
           public_menu_enabled?: boolean
+          service_fee_percent?: number
           slug?: string
           tenant_id?: string
           timezone?: string
@@ -1337,6 +1526,17 @@ export type Database = {
         Args: { _items: Json; _order_id: string }
         Returns: Json
       }
+      apply_order_discount: {
+        Args: {
+          _discount_type: string
+          _order_id: string
+          _order_item_id?: string
+          _reason?: string
+          _scope: string
+          _value: number
+        }
+        Returns: Json
+      }
       calculate_order_item_details: {
         Args: { _item: Json; _restaurant_id: string }
         Returns: Json
@@ -1355,6 +1555,14 @@ export type Database = {
             Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
             Returns: boolean
           }
+      close_cash_session: {
+        Args: {
+          _cash_session_id: string
+          _counted_amount_cents: number
+          _notes?: string
+        }
+        Returns: Json
+      }
       close_order: {
         Args: {
           _order_id: string
@@ -1543,9 +1751,36 @@ export type Database = {
         Args: { _tenant_id: string; _user_id: string }
         Returns: boolean
       }
+      open_cash_session: {
+        Args: {
+          _notes?: string
+          _opening_amount_cents: number
+          _restaurant_id: string
+        }
+        Returns: string
+      }
       open_table_order: {
         Args: { _restaurant_id: string; _table_id: string }
         Returns: string
+      }
+      register_cash_movement: {
+        Args: {
+          _amount_cents: number
+          _cash_session_id: string
+          _movement_type: string
+          _reason?: string
+        }
+        Returns: string
+      }
+      register_order_payment: {
+        Args: {
+          _amount_cents: number
+          _change_cents?: number
+          _notes?: string
+          _order_id: string
+          _payment_method: string
+        }
+        Returns: Json
       }
       reprint_order: {
         Args: { p_order_id: string; p_reason: string }
@@ -1557,6 +1792,14 @@ export type Database = {
         Returns: number
       }
       send_order_to_kitchen: { Args: { _order_id: string }; Returns: number }
+      set_service_fee: {
+        Args: { _order_id: string; _percent: number }
+        Returns: Json
+      }
+      split_order_equal: {
+        Args: { _order_id: string; _parts: number }
+        Returns: Json
+      }
       update_order_status: {
         Args: {
           _new_status: Database["public"]["Enums"]["order_status"]
