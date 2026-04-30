@@ -81,10 +81,11 @@ export function CloseCashDialog({
           session.opening_amount_cents + supplies - bleeds + salesMoney;
         setPreview({ supplies, bleeds, salesMoney, expected });
         setCounted((expected / 100).toFixed(2).replace(".", ","));
-      } catch (e: any) {
+      } catch (e: unknown) {
+        const error = e as Error;
         toast({
           title: "Erro",
-          description: e.message,
+          description: error.message,
           variant: "destructive",
         });
       }
