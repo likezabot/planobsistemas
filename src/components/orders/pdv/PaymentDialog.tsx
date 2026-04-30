@@ -378,6 +378,16 @@ export function PaymentDialog({
                     })()}
                   </div>
                 )}
+
+                {method === "money" && !hasOpenSession && (
+                  <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-[11px] text-amber-800">
+                    <AlertCircle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                    <span>
+                      Sem sessão de caixa aberta — este pagamento em dinheiro
+                      não aparecerá no relatório de fechamento de caixa.
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </div>
