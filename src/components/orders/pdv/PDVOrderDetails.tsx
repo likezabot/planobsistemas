@@ -177,18 +177,43 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
           </Button>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
-          <Button variant="secondary" size="sm" className="bg-green-100 hover:bg-green-200 text-green-700 border-green-200" onClick={() => handleCloseOrder('money')}>
-            <DollarSign className="w-4 h-4 mr-1" /> Dinheiro
-          </Button>
-          <Button variant="secondary" size="sm" className="bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200" onClick={() => handleCloseOrder('card')}>
-            <CreditCard className="w-4 h-4 mr-1" /> Cartão
-          </Button>
-          <Button variant="secondary" size="sm" className="bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-200" onClick={() => handleCloseOrder('pix')}>
-            <Badge className="bg-transparent text-purple-700 p-0 mr-1">Pix</Badge> Pagamento
-          </Button>
-        </div>
+        {(() => {
+          const total = order.total_cents ?? 0;
+          const paid = order.paid_amount_cents ?? 0;
+          const remaining = Math.max(total - paid, 0);
+          const isPaid = order.payment_status === 'paid' || remaining === 0;
+          return (
+            <div className="space-y-2">
+              {paid > 0 && !isPaid && (
+                <div className="flex justify-between items-center text-xs px-1">
+                  <span className="text-muted-foreground">Pago parcial</span>
+                  <span className="text-emerald-600 font-medium">
+                    {formatCurrency(paid / 100)} / restam {formatCurrency(remaining / 100)}
+                  </span>
+                </div>
+              )}
+              <Button
+                className="w-full"
+                variant={isPaid ? "secondary" : "default"}
+                disabled={isPaid}
+                onClick={() => setPaymentOpen(true)}
+              >
+                <Wallet className="w-4 h-4 mr-2" />
+                {isPaid ? "Pedido quitado" : paid > 0 ? "Continuar pagamento" : "Pagamento"}
+              </Button>
+            </div>
+          );
+        })()}
       </div>
+
+      {orderId && (
+        <PaymentDialog
+          open={paymentOpen}
+          onOpenChange={setPaymentOpen}
+          orderId={orderId}
+          onPaid={handlePaid}
+        />
+      )}
     </div>
   );
 }
