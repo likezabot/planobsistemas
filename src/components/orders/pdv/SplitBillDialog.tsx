@@ -219,8 +219,9 @@ export function SplitBillDialog({
     try {
       const r = await splitOrderByItems(orderId, list);
       setItemsPreview(r);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     }
   };
 
