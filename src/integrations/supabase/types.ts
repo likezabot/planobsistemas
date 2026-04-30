@@ -1440,6 +1440,7 @@ export type Database = {
       restaurants: {
         Row: {
           accounting_reports_enabled: boolean
+          cash_session_required: boolean
           created_at: string
           id: string
           inventory_enabled: boolean | null
@@ -1455,6 +1456,7 @@ export type Database = {
         }
         Insert: {
           accounting_reports_enabled?: boolean
+          cash_session_required?: boolean
           created_at?: string
           id?: string
           inventory_enabled?: boolean | null
@@ -1470,6 +1472,7 @@ export type Database = {
         }
         Update: {
           accounting_reports_enabled?: boolean
+          cash_session_required?: boolean
           created_at?: string
           id?: string
           inventory_enabled?: boolean | null
