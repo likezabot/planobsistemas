@@ -5,12 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Printer, ChefHat, Wallet, Trash2, Plus, ClipboardList } from "lucide-react";
+import { Printer, ChefHat, Wallet, Trash2, Plus, ClipboardList, Split } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendOrderToKitchen, requestAccountPrint, cancelOrderItem } from "@/lib/orders/queries";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { PaymentDialog } from "./PaymentDialog";
+import { SplitBillDialog } from "./SplitBillDialog";
 
 interface PDVOrderDetailsProps {
   orderId: string | null;
@@ -24,6 +25,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [splitOpen, setSplitOpen] = useState(false);
 
   const fetchOrderDetails = async () => {
     if (!orderId) return;
@@ -192,27 +194,44 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
                   </span>
                 </div>
               )}
-              <Button
-                className="w-full"
-                variant={isPaid ? "secondary" : "default"}
-                disabled={isPaid}
-                onClick={() => setPaymentOpen(true)}
-              >
-                <Wallet className="w-4 h-4 mr-2" />
-                {isPaid ? "Pedido quitado" : paid > 0 ? "Continuar pagamento" : "Pagamento"}
-              </Button>
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  className="col-span-2"
+                  variant={isPaid ? "secondary" : "default"}
+                  disabled={isPaid}
+                  onClick={() => setPaymentOpen(true)}
+                >
+                  <Wallet className="w-4 h-4 mr-2" />
+                  {isPaid ? "Pedido quitado" : paid > 0 ? "Continuar pagamento" : "Pagamento"}
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={isPaid}
+                  onClick={() => setSplitOpen(true)}
+                >
+                  <Split className="w-4 h-4 mr-1" /> Dividir
+                </Button>
+              </div>
             </div>
           );
         })()}
       </div>
 
       {orderId && (
-        <PaymentDialog
-          open={paymentOpen}
-          onOpenChange={setPaymentOpen}
-          orderId={orderId}
-          onPaid={handlePaid}
-        />
+        <>
+          <PaymentDialog
+            open={paymentOpen}
+            onOpenChange={setPaymentOpen}
+            orderId={orderId}
+            onPaid={handlePaid}
+          />
+          <SplitBillDialog
+            open={splitOpen}
+            onOpenChange={setSplitOpen}
+            orderId={orderId}
+            onPaymentRegistered={handlePaid}
+          />
+        </>
       )}
     </div>
   );
