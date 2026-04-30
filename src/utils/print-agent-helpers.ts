@@ -1,8 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Script utilitário para criar um agente de teste no banco de dados.
- * Use via console do navegador ou em uma página de admin.
+ * Cria um agente de impressão e retorna os dados (incluindo a secret_key)
+ * para a UI exibir com botão de copiar.
+ *
+ * IMPORTANTE: a secret_key NUNCA é gravada em console.log — ela só existe
+ * em memória no momento da criação. Após exibida/copiada, recupere via
+ * a tabela `print_agents` apenas com permissão adequada.
  */
 export async function createTestAgent(restaurantId: string, name: string = "Agente Local Teste") {
   const { data, error } = await supabase
@@ -11,20 +15,21 @@ export async function createTestAgent(restaurantId: string, name: string = "Agen
       restaurant_id: restaurantId,
       name: name
     })
-    .select('*')
+    .select('id, restaurant_id, name, secret_key')
     .single();
 
   if (error) {
-    console.error("Erro ao criar agente:", error);
-    return null;
+    return { ok: false as const, error: error.message };
   }
 
-  console.log("=== AGENTE CRIADO COM SUCESSO ===");
-  console.log("Copie estas informações para o seu arquivo .env na pasta print-agent:");
-  console.log(`RESTAURANT_ID=${data.restaurant_id}`);
-  console.log(`AGENT_ID=${data.id}`);
-  console.log(`AGENT_SECRET=${data.secret_key}`);
-  console.log("=================================");
-  
-  return data;
+  return {
+    ok: true as const,
+    agent: {
+      id: data.id,
+      restaurant_id: data.restaurant_id,
+      name: data.name,
+      secret_key: data.secret_key,
+    },
+    envSnippet: `RESTAURANT_ID=${data.restaurant_id}\nAGENT_ID=${data.id}\nAGENT_SECRET=${data.secret_key}`,
+  };
 }
