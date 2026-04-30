@@ -127,6 +127,28 @@ export const updateOrderStatus = async (orderId: string, newStatus: Order['statu
   if (error) throw error;
 };
 
+export const getActiveOrdersSummary = async (restaurantId: string) => {
+  const { data, error } = await supabase.rpc('get_active_orders_summary', {
+    _restaurant_id: restaurantId
+  });
+
+  if (error) throw error;
+  return data as {
+    tables: any[];
+    counter_orders: any[];
+    delivery_orders: any[];
+  };
+};
+
+export const requestAccountPrint = async (orderId: string) => {
+  const { data, error } = await supabase.rpc('request_account_print', {
+    _order_id: orderId
+  });
+
+  if (error) throw error;
+  return data as string;
+};
+
 export const reprintOrder = async (orderId: string, reason: string) => {
   const { data, error } = await supabase.rpc('reprint_order', {
     p_order_id: orderId,
