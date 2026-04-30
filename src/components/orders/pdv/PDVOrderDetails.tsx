@@ -23,6 +23,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
   const { currentMembership } = useRestaurant();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
 
   const fetchOrderDetails = async () => {
     if (!orderId) return;
