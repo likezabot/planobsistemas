@@ -80,7 +80,7 @@ export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderL
 
           <TabsContent value="delivery" className="m-0">
             <div className="space-y-2">
-              {data?.delivery_orders?.map((order: any) => (
+              {data?.delivery_orders?.map((order: PDVOrderSummary) => (
                 <Card 
                   key={order.id}
                   className={cn(
