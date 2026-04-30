@@ -30,6 +30,8 @@ interface MemberRow {
   user_id: string;
   role: AppRole;
   created_at: string;
+  full_name: string | null;
+  email: string | null;
 }
 
 export default function Index() {
