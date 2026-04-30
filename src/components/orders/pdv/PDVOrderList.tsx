@@ -4,11 +4,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
+import { PDVActiveOrdersSummary, PDVTableSummary, PDVOrderSummary } from "@/lib/orders/queries";
+import { SelectedOrder } from "@/pages/PDV";
 
 interface PDVOrderListProps {
-  data: any;
+  data: PDVActiveOrdersSummary | null;
   selectedOrderId: string | null;
-  onSelectOrder: (order: any) => void;
+  onSelectOrder: (order: SelectedOrder) => void;
 }
 
 export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderListProps) {
