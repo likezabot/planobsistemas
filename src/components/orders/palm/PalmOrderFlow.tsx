@@ -120,44 +120,46 @@ export const PalmOrderFlow = () => {
                 <span className="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse" />
                 Novos itens (não enviados)
               </h3>
-              {draftItems.map((item) => (
-                <div key={item.id} className="bg-orange-50/50 border border-orange-100 p-3 rounded-lg flex justify-between items-start gap-3">
-                  <div className="flex-1">
-                    <p className="font-bold text-sm">{item.name}</p>
-                    {item.notes && <p className="text-xs text-muted-foreground italic">{item.notes}</p>}
-                    <div className="flex items-center gap-4 mt-2">
-                      <div className="flex items-center gap-2 bg-white border rounded-md px-1">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-7 w-7" 
-                          onClick={() => cart.updateItemQuantity(orderId!, item.id, Math.max(1, item.quantity - 1))}
-                        >
-                          <Minus className="w-3 h-3" />
-                        </Button>
-                        <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-7 w-7" 
-                          onClick={() => cart.updateItemQuantity(orderId!, item.id, item.quantity + 1)}
-                        >
-                          <Plus className="w-3 h-3" />
-                        </Button>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {draftItems.map((item) => (
+                  <div key={item.id} className="bg-orange-50/50 border border-orange-100 p-3 rounded-lg flex justify-between items-start gap-3">
+                    <div className="flex-1">
+                      <p className="font-bold text-sm">{item.name}</p>
+                      {item.notes && <p className="text-xs text-muted-foreground italic">{item.notes}</p>}
+                      <div className="flex items-center gap-4 mt-2">
+                        <div className="flex items-center gap-2 bg-white border rounded-md px-1">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-7 w-7" 
+                            onClick={() => cart.updateItemQuantity(orderId!, item.id, Math.max(1, item.quantity - 1))}
+                          >
+                            <Minus className="w-3 h-3" />
+                          </Button>
+                          <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-7 w-7" 
+                            onClick={() => cart.updateItemQuantity(orderId!, item.id, item.quantity + 1)}
+                          >
+                            <Plus className="w-3 h-3" />
+                          </Button>
+                        </div>
+                        <span className="text-sm font-medium">{centsToBRL(item.unit_price_cents * item.quantity)}</span>
                       </div>
-                      <span className="text-sm font-medium">{centsToBRL(item.unit_price_cents * item.quantity)}</span>
                     </div>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-destructive"
+                      onClick={() => cart.removeItem(orderId!, item.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-8 w-8 text-destructive"
-                    onClick={() => cart.removeItem(orderId!, item.id)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
@@ -165,15 +167,17 @@ export const PalmOrderFlow = () => {
           {orders.order_items.length > 0 && (
             <div className="space-y-2">
               <h3 className="text-xs font-bold uppercase text-muted-foreground">Itens enviados</h3>
-              {orders.order_items.map((item) => (
-                <div key={item.id} className="bg-white border p-3 rounded-lg flex justify-between items-start opacity-75">
-                  <div>
-                    <p className="font-bold text-sm">{item.quantity}x {item.product?.name}</p>
-                    <p className="text-[10px] text-muted-foreground uppercase">{item.status}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {orders.order_items.map((item) => (
+                  <div key={item.id} className="bg-white border p-3 rounded-lg flex justify-between items-start opacity-75">
+                    <div>
+                      <p className="font-bold text-sm">{item.quantity}x {item.product?.name}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase">{item.status}</p>
+                    </div>
+                    <span className="text-sm font-medium">{centsToBRL(item.unit_price_cents * item.quantity)}</span>
                   </div>
-                  <span className="text-sm font-medium">{centsToBRL(item.unit_price_cents * item.quantity)}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
