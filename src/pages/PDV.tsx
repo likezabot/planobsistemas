@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { getActiveOrdersSummary, createCounterOrder, PDVActiveOrdersSummary } from "@/lib/orders/queries";
-// ... keep existing code
+import { useToast } from "@/hooks/use-toast";
+import { Loader2, Plus, LayoutDashboard, History, Search } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { PDVOrderList } from "@/components/orders/pdv/PDVOrderList";
+import { PDVOrderDetails } from "@/components/orders/pdv/PDVOrderDetails";
+import { PDVProductSelector } from "@/components/orders/pdv/PDVProductSelector";
+import { CashSessionBar } from "@/components/orders/pdv/CashSessionBar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 export interface SelectedOrder {
   id: string;
   order_id?: string;
@@ -106,7 +115,7 @@ export default function PDV() {
           </div>
           <PDVOrderList 
             data={data} 
-            selectedOrderId={selectedOrder?.order_id || selectedOrder?.id} 
+            selectedOrderId={selectedOrder?.order_id || selectedOrder?.id || null} 
             onSelectOrder={setSelectedOrder} 
           />
         </div>
