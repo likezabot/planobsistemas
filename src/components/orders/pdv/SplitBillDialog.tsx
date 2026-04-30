@@ -139,8 +139,9 @@ export function SplitBillDialog({
       const r = await splitOrderEqual(orderId, parts);
       setEqualPreview(r);
       setPartsPaid(0);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     }
   };
 
