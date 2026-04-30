@@ -4,7 +4,7 @@ import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { listCategories, listPublicMenu } from "@/lib/catalog/queries";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Search, X } from "lucide-react";
+import { Loader2, Search, X, Plus } from "lucide-react";
 import { centsToBRL } from "@/lib/catalog/money";
 import { cn } from "@/lib/utils";
 import { usePalmCartStore } from "@/lib/orders/palmCartStore";
@@ -41,7 +41,7 @@ export const PalmProductList = ({ orderId, onAdded }: PalmProductListProps) => {
   });
 
   const handleAddSimple = (product: any) => {
-    if (product.type === "variable" || product.type === "pizza" || product.has_options) {
+    if (product.type === "variable" || product.type === "pizza") {
       setSelectedProduct(product);
       return;
     }
@@ -122,11 +122,7 @@ export const PalmProductList = ({ orderId, onAdded }: PalmProductListProps) => {
               <p className="text-xs text-primary font-semibold">{centsToBRL(p.price_cents)}</p>
             </div>
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-              {p.type === "variable" || p.type === "pizza" || p.has_options ? (
-                <Plus className="w-4 h-4" />
-              ) : (
-                <Plus className="w-4 h-4" />
-              )}
+              <Plus className="w-4 h-4" />
             </div>
           </Button>
         ))}
