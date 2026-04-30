@@ -9,12 +9,17 @@ import { OpenCashDialog } from "./OpenCashDialog";
 import { CashMovementDialog } from "./CashMovementDialog";
 import { CloseCashDialog } from "./CloseCashDialog";
 
+import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+
 interface CashSessionBarProps {
   restaurantId: string;
 }
 
 export function CashSessionBar({ restaurantId }: CashSessionBarProps) {
   const { toast } = useToast();
+  const { currentMembership } = useRestaurant();
+  const cashRequired =
+    currentMembership?.restaurants.cash_session_required ?? true;
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<CashSession | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
