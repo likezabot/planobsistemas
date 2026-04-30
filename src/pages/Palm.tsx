@@ -9,24 +9,26 @@ const Palm = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col w-full">
-      <header className="bg-white border-b px-4 py-3 sticky top-0 z-10 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Routes>
-            <Route path="/" element={<h1 className="text-lg font-bold">Atendimento</h1>} />
-            <Route path="*" element={
-              <>
-                <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-                  <ChevronLeft className="w-5 h-5" />
-                </Button>
-                <h1 className="text-lg font-bold">Atendimento</h1>
-              </>
-            } />
-          </Routes>
+    <div className="min-h-screen bg-gray-50 flex flex-col w-full overflow-x-hidden">
+      <header className="bg-white border-b sticky top-0 z-20 w-full">
+        <div className="w-full md:max-w-2xl lg:max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Routes>
+              <Route path="/" element={<h1 className="text-lg font-bold">Atendimento</h1>} />
+              <Route path="*" element={
+                <>
+                  <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+                    <ChevronLeft className="w-5 h-5" />
+                  </Button>
+                  <h1 className="text-lg font-bold">Atendimento</h1>
+                </>
+              } />
+            </Routes>
+          </div>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto pb-20">
+      <main className="flex-1 w-full md:max-w-2xl lg:max-w-4xl mx-auto bg-white md:shadow-sm md:border-x overflow-y-auto pb-20">
         <Routes>
           <Route path="/" element={<PalmHome />} />
           <Route path="/tables" element={<PalmTableMap />} />
