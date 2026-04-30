@@ -194,27 +194,44 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
                   </span>
                 </div>
               )}
-              <Button
-                className="w-full"
-                variant={isPaid ? "secondary" : "default"}
-                disabled={isPaid}
-                onClick={() => setPaymentOpen(true)}
-              >
-                <Wallet className="w-4 h-4 mr-2" />
-                {isPaid ? "Pedido quitado" : paid > 0 ? "Continuar pagamento" : "Pagamento"}
-              </Button>
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  className="col-span-2"
+                  variant={isPaid ? "secondary" : "default"}
+                  disabled={isPaid}
+                  onClick={() => setPaymentOpen(true)}
+                >
+                  <Wallet className="w-4 h-4 mr-2" />
+                  {isPaid ? "Pedido quitado" : paid > 0 ? "Continuar pagamento" : "Pagamento"}
+                </Button>
+                <Button
+                  variant="outline"
+                  disabled={isPaid}
+                  onClick={() => setSplitOpen(true)}
+                >
+                  <Split className="w-4 h-4 mr-1" /> Dividir
+                </Button>
+              </div>
             </div>
           );
         })()}
       </div>
 
       {orderId && (
-        <PaymentDialog
-          open={paymentOpen}
-          onOpenChange={setPaymentOpen}
-          orderId={orderId}
-          onPaid={handlePaid}
-        />
+        <>
+          <PaymentDialog
+            open={paymentOpen}
+            onOpenChange={setPaymentOpen}
+            orderId={orderId}
+            onPaid={handlePaid}
+          />
+          <SplitBillDialog
+            open={splitOpen}
+            onOpenChange={setSplitOpen}
+            orderId={orderId}
+            onPaymentRegistered={handlePaid}
+          />
+        </>
       )}
     </div>
   );
