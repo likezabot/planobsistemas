@@ -18,6 +18,7 @@ export interface RestaurantMembership {
     inventory_mode: "simple" | "advanced";
     accounting_reports_enabled: boolean;
     pizza_module_enabled: boolean;
+    cash_session_required: boolean;
   };
 }
 
