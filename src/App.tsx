@@ -19,6 +19,7 @@ import Reports from "./pages/Reports.tsx";
 import CashReport from "./pages/CashReport.tsx";
 import Customers from "./pages/Customers.tsx";
 import DeliverySettings from "./pages/DeliverySettings.tsx";
+import RestaurantSettings from "./pages/RestaurantSettings.tsx";
 import Coupons from "./pages/Coupons.tsx";
 import Palm from "./pages/Palm.tsx";
 import PDV from "./pages/PDV.tsx";
