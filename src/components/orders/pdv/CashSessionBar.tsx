@@ -30,8 +30,9 @@ export function CashSessionBar({ restaurantId }: CashSessionBarProps) {
     try {
       const s = await getOpenCashSession(restaurantId);
       setSession(s);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
