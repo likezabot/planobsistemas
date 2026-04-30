@@ -25,7 +25,8 @@ import {
   BarChart2,
   Users,
   MapPin,
-  Ticket
+  Ticket,
+  Smartphone
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -70,9 +71,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const canSeeAccounting = isAdmin || (accountingEnabled && role === "cashier");
   const canSeeKDS = role === "owner" || role === "manager" || role === "kitchen";
   const canSeeReports = role === "owner" || role === "manager";
+  const canSeePalm = role === "owner" || role === "manager" || role === "waiter";
 
   const navItems = [
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
+    ...(canSeePalm ? [{ to: "/palm", icon: Smartphone, label: "Atendimento" }] : []),
     { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
