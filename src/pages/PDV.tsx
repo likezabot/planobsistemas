@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PDVOrderList } from "@/components/orders/pdv/PDVOrderList";
 import { PDVOrderDetails } from "@/components/orders/pdv/PDVOrderDetails";
 import { PDVProductSelector } from "@/components/orders/pdv/PDVProductSelector";
+import { CashSessionBar } from "@/components/orders/pdv/CashSessionBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
