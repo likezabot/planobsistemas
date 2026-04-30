@@ -100,8 +100,9 @@ export function SplitBillDialog({
         .order("created_at", { ascending: true });
       if (ierr) throw ierr;
       setItems((its ?? []) as unknown as ItemLite[]);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
