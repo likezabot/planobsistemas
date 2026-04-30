@@ -5,12 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Printer, ChefHat, Wallet, Trash2, Plus, ClipboardList } from "lucide-react";
+import { Printer, ChefHat, Wallet, Trash2, Plus, ClipboardList, Split } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendOrderToKitchen, requestAccountPrint, cancelOrderItem } from "@/lib/orders/queries";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { PaymentDialog } from "./PaymentDialog";
+import { SplitBillDialog } from "./SplitBillDialog";
 
 interface PDVOrderDetailsProps {
   orderId: string | null;
