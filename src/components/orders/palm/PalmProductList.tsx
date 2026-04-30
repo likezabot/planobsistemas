@@ -109,7 +109,7 @@ export const PalmProductList = ({ orderId, onAdded }: PalmProductListProps) => {
         </div>
       </div>
 
-      <div className="p-4 grid grid-cols-1 gap-3 overflow-y-auto">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto">
         {filteredProducts?.map((p) => (
           <Button
             key={p.id}

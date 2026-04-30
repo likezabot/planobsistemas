@@ -30,7 +30,7 @@ export const PalmHome = () => {
   };
 
   return (
-    <div className="p-4 grid grid-cols-1 gap-4">
+    <div className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
       <Button
         variant="outline"
         className="h-32 flex flex-col gap-3 text-lg font-semibold border-2"
