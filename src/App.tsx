@@ -16,6 +16,7 @@ import PrintControl from "./pages/PrintControl.tsx";
 import Accounting from "./pages/Accounting.tsx";
 import KDS from "./pages/KDS.tsx";
 import Reports from "./pages/Reports.tsx";
+import CashReport from "./pages/CashReport.tsx";
 import Customers from "./pages/Customers.tsx";
 import DeliverySettings from "./pages/DeliverySettings.tsx";
 import Coupons from "./pages/Coupons.tsx";
@@ -85,6 +86,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={['owner', 'manager']}>
                     <Reports />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/relatorios/caixa"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager']}>
+                    <CashReport />
                   </ProtectedRoute>
                 }
               />

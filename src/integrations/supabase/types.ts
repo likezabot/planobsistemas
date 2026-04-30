@@ -1633,6 +1633,29 @@ export type Database = {
         Args: { _restaurant_id: string }
         Returns: Json
       }
+      get_cash_sessions_report: {
+        Args: { _from: string; _restaurant_id: string; _to: string }
+        Returns: {
+          bleeds_cents: number
+          closed_at: string
+          counted_amount_cents: number
+          difference_cents: number
+          expected_amount_cents: number
+          notes: string
+          opened_at: string
+          opening_amount_cents: number
+          sales_card_cents: number
+          sales_money_cents: number
+          sales_other_cents: number
+          sales_pix_cents: number
+          sales_total_cents: number
+          session_id: string
+          status: string
+          supplies_cents: number
+          user_id: string
+          user_name: string
+        }[]
+      }
       get_customer_summary: { Args: { _restaurant_id: string }; Returns: Json }
       get_dashboard_stats: {
         Args: { _days_back: number; _restaurant_id: string }
