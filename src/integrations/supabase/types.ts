@@ -1525,6 +1525,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _create_public_order_impl: {
+        Args: {
+          _address?: string
+          _coupon_code?: string
+          _customer_name: string
+          _customer_phone: string
+          _delivery_zone_id?: string
+          _idempotency_key: string
+          _items: Json
+          _notes?: string
+          _order_type: Database["public"]["Enums"]["order_type"]
+          _payment_method: Database["public"]["Enums"]["payment_method"]
+          _restaurant_slug: string
+        }
+        Returns: Json
+      }
       add_items_to_order: {
         Args: { _items: Json; _order_id: string }
         Returns: Json
@@ -1552,12 +1568,10 @@ export type Database = {
         Args: { _allowed_roles: string[]; _restaurant_id: string }
         Returns: boolean
       }
-      claim_print_job:
-        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
-        | {
-            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
-            Returns: boolean
-          }
+      claim_print_job: {
+        Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+        Returns: boolean
+      }
       close_cash_session: {
         Args: {
           _cash_session_id: string
@@ -1573,12 +1587,10 @@ export type Database = {
         }
         Returns: undefined
       }
-      complete_print_job:
-        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
-        | {
-            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
-            Returns: boolean
-          }
+      complete_print_job: {
+        Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+        Returns: boolean
+      }
       create_counter_order: {
         Args: { _restaurant_id: string }
         Returns: string
@@ -1618,20 +1630,15 @@ export type Database = {
         Returns: Json
       }
       export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
-      fail_print_job:
-        | {
-            Args: { p_agent_id: string; p_error: string; p_job_id: string }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              p_agent_id: string
-              p_error: string
-              p_job_id: string
-              p_secret_key: string
-            }
-            Returns: boolean
-          }
+      fail_print_job: {
+        Args: {
+          p_agent_id: string
+          p_error: string
+          p_job_id: string
+          p_secret_key: string
+        }
+        Returns: boolean
+      }
       get_active_orders_summary: {
         Args: { _restaurant_id: string }
         Returns: Json
