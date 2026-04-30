@@ -1796,6 +1796,10 @@ export type Database = {
         Args: { _order_id: string; _percent: number }
         Returns: Json
       }
+      split_order_by_items: {
+        Args: { _items: Json; _order_id: string }
+        Returns: Json
+      }
       split_order_equal: {
         Args: { _order_id: string; _parts: number }
         Returns: Json
