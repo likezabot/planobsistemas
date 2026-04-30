@@ -63,10 +63,11 @@ export function OpenCashDialog({
       toast({ title: "Caixa aberto", description: "Sessão iniciada com sucesso." });
       onOpened();
       onOpenChange(false);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro ao abrir caixa",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {
