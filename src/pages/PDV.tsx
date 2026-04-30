@@ -93,6 +93,8 @@ export default function PDV() {
       )}
 
       <div className="flex-1 grid grid-cols-12 gap-6 overflow-hidden">
+        {/* Left Area: Filters and Search */}
+        <div className="col-span-3 border-r pr-2 flex flex-col gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
             <Input 
