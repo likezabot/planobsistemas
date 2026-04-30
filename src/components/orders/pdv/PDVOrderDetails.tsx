@@ -5,8 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Printer, ChefHat, CreditCard, DollarSign, XCircle, Trash2, Plus } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { Printer, ChefHat, CreditCard, DollarSign, XCircle, Trash2, Plus, ClipboardList } from "lucide-react";
+import { formatCurrency, cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { sendOrderToKitchen, closeOrder, requestAccountPrint, cancelOrderItem } from "@/lib/orders/queries";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
@@ -197,5 +197,3 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
     </div>
   );
 }
-
-import { ClipboardList } from "lucide-react";
