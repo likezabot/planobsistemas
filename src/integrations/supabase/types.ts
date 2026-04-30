@@ -1525,22 +1525,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      _create_public_order_impl: {
-        Args: {
-          _address?: string
-          _coupon_code?: string
-          _customer_name: string
-          _customer_phone: string
-          _delivery_zone_id?: string
-          _idempotency_key: string
-          _items: Json
-          _notes?: string
-          _order_type: Database["public"]["Enums"]["order_type"]
-          _payment_method: Database["public"]["Enums"]["payment_method"]
-          _restaurant_slug: string
-        }
-        Returns: Json
-      }
       add_items_to_order: {
         Args: { _items: Json; _order_id: string }
         Returns: Json
