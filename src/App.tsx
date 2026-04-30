@@ -130,7 +130,7 @@ const App = () => (
               <Route
                 path="/palm/*"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['owner', 'manager', 'waiter', 'cashier']}>
                     <Palm />
                   </ProtectedRoute>
                 }
