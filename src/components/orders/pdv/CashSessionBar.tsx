@@ -66,13 +66,22 @@ export function CashSessionBar({ restaurantId }: CashSessionBarProps) {
                 Troco: <strong>{formatCurrency(session.opening_amount_cents / 100)}</strong>
               </span>
             </>
-          ) : (
+          ) : cashRequired ? (
             <>
               <Badge variant="outline" className="bg-muted text-muted-foreground">
                 <Lock className="w-3 h-3 mr-1" /> Caixa fechado
               </Badge>
               <span className="text-xs text-muted-foreground">
                 Vendas em dinheiro não serão vinculadas a uma sessão até abrir o caixa.
+              </span>
+            </>
+          ) : (
+            <>
+              <Badge variant="outline" className="bg-sky-50 text-sky-700 border-sky-200">
+                Operando sem caixa
+              </Badge>
+              <span className="text-xs text-muted-foreground">
+                Abertura de caixa é opcional neste restaurante.
               </span>
             </>
           )}
