@@ -1552,10 +1552,12 @@ export type Database = {
         Args: { _allowed_roles: string[]; _restaurant_id: string }
         Returns: boolean
       }
-      claim_print_job: {
-        Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
-        Returns: boolean
-      }
+      claim_print_job:
+        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
+        | {
+            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+            Returns: boolean
+          }
       close_cash_session: {
         Args: {
           _cash_session_id: string
@@ -1571,10 +1573,12 @@ export type Database = {
         }
         Returns: undefined
       }
-      complete_print_job: {
-        Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
-        Returns: boolean
-      }
+      complete_print_job:
+        | { Args: { p_agent_id: string; p_job_id: string }; Returns: boolean }
+        | {
+            Args: { p_agent_id: string; p_job_id: string; p_secret_key: string }
+            Returns: boolean
+          }
       create_counter_order: {
         Args: { _restaurant_id: string }
         Returns: string
@@ -1614,15 +1618,20 @@ export type Database = {
         Returns: Json
       }
       export_catalog: { Args: { _restaurant_id: string }; Returns: Json }
-      fail_print_job: {
-        Args: {
-          p_agent_id: string
-          p_error: string
-          p_job_id: string
-          p_secret_key: string
-        }
-        Returns: boolean
-      }
+      fail_print_job:
+        | {
+            Args: { p_agent_id: string; p_error: string; p_job_id: string }
+            Returns: boolean
+          }
+        | {
+            Args: {
+              p_agent_id: string
+              p_error: string
+              p_job_id: string
+              p_secret_key: string
+            }
+            Returns: boolean
+          }
       get_active_orders_summary: {
         Args: { _restaurant_id: string }
         Returns: Json
