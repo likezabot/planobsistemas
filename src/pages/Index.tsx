@@ -30,6 +30,8 @@ interface MemberRow {
   user_id: string;
   role: AppRole;
   created_at: string;
+  full_name: string | null;
+  email: string | null;
 }
 
 export default function Index() {
@@ -45,9 +47,7 @@ export default function Index() {
     if (!currentRestaurantId) return;
     setLoadingMembers(true);
     supabase
-      .from("restaurant_members")
-      .select("id, user_id, role, created_at")
-      .eq("restaurant_id", currentRestaurantId)
+      .rpc("get_restaurant_team", { _restaurant_id: currentRestaurantId })
       .then(({ data, error }) => {
         if (error) console.error(error);
         setMembers((data as MemberRow[]) ?? []);
@@ -193,19 +193,23 @@ export default function Index() {
                 </div>
               ) : (
                 <div className="divide-y divide-border">
-                  {members.map((m) => (
-                    <div key={m.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-white font-bold text-xs">
-                          {m.user_id.slice(0, 1).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-secondary truncate w-32">{m.user_id.slice(0, 12)}</p>
-                          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{m.role}</p>
+                  {members.map((m) => {
+                    const displayName = m.full_name?.trim() || m.email || `Usuário ${m.user_id.slice(0, 6)}`;
+                    const initial = (displayName[0] || "?").toUpperCase();
+                    return (
+                      <div key={m.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-white font-bold text-xs shrink-0">
+                            {initial}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-secondary truncate" title={displayName}>{displayName}</p>
+                            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">{m.role}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
               <div className="p-4">

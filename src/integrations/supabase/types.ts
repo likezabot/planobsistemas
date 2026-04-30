@@ -1737,6 +1737,17 @@ export type Database = {
           timezone: string
         }[]
       }
+      get_restaurant_team: {
+        Args: { _restaurant_id: string }
+        Returns: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
       has_any_role_in_restaurant: {
         Args: {
           _restaurant_id: string

@@ -9,7 +9,7 @@ const Palm = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col max-w-md mx-auto border-x shadow-sm">
+    <div className="min-h-screen bg-gray-50 flex flex-col w-full">
       <header className="bg-white border-b px-4 py-3 sticky top-0 z-10 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Routes>
