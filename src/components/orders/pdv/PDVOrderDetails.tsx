@@ -74,16 +74,9 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
     }
   };
 
-  const handleCloseOrder = async (method: 'money' | 'card' | 'pix') => {
-    if (!orderId) return;
-    try {
-      await closeOrder(orderId, method);
-      toast({ title: "Fechado", description: "Pedido encerrado com sucesso." });
-      setOrder(null);
-      onRefresh();
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
-    }
+  const handlePaid = () => {
+    fetchOrderDetails();
+    onRefresh();
   };
 
   const handleCancelItem = async (itemId: string) => {
