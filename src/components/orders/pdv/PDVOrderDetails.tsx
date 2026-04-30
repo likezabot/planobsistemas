@@ -45,7 +45,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
     if (error) {
       console.error(error);
     } else {
-      setOrder(data);
+      setOrder(data as unknown as OrderWithItems);
     }
     setLoading(false);
   };
