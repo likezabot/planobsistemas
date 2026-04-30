@@ -109,7 +109,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
 
   if (loading && !order) return <div className="p-4">Carregando...</div>;
 
-  const hasDraftItems = order?.order_items?.some((i: any) => i.status === 'draft');
+  const hasDraftItems = order?.order_items?.some((i: OrderItem) => i.status === 'draft');
   const role = currentMembership?.role;
   const isAuthorizedToCancelAny = role === 'owner' || role === 'manager';
 
