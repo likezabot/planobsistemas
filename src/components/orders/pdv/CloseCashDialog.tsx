@@ -73,7 +73,7 @@ export function CloseCashDialog({
           .eq("cash_session_id", session.id)
           .eq("payment_method", "money");
         const salesMoney = (payments ?? []).reduce(
-          (s, p: any) => s + (p.amount_cents ?? 0),
+          (s, p) => s + (p.amount_cents ?? 0),
           0,
         );
 
