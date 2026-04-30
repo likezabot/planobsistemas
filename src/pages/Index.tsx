@@ -47,9 +47,7 @@ export default function Index() {
     if (!currentRestaurantId) return;
     setLoadingMembers(true);
     supabase
-      .from("restaurant_members")
-      .select("id, user_id, role, created_at")
-      .eq("restaurant_id", currentRestaurantId)
+      .rpc("get_restaurant_team", { _restaurant_id: currentRestaurantId })
       .then(({ data, error }) => {
         if (error) console.error(error);
         setMembers((data as MemberRow[]) ?? []);
