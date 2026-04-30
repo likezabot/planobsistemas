@@ -42,7 +42,7 @@ export function PDVProductSelector({ orderId, open, onOpenChange, onSuccess, res
     }
   }, [open, restaurantId]);
 
-  const handleAddProduct = async (product: any) => {
+  const handleAddProduct = async (product: Product) => {
     try {
       await addItemsToOrder(orderId, [{
         product_id: product.id,
