@@ -106,6 +106,15 @@ export function PaymentDialog({
       setPaymentStatus(order.payment_status ?? "open");
       setPayments(list);
 
+      if (currentRestaurantId) {
+        try {
+          const s = await getOpenCashSession(currentRestaurantId);
+          setHasOpenSession(!!s);
+        } catch {
+          setHasOpenSession(false);
+        }
+      }
+
       const newRemaining = Math.max(total - paid, 0);
       setAmountInput(formatInput(newRemaining));
       setTenderedInput(formatInput(newRemaining));
