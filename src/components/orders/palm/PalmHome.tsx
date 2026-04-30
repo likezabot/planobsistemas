@@ -8,15 +8,15 @@ import { useState } from "react";
 
 export const PalmHome = () => {
   const navigate = useNavigate();
-  const { restaurant } = useRestaurant();
+  const { currentRestaurantId } = useRestaurant();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
   const handleCounterOrder = async () => {
-    if (!restaurant) return;
+    if (!currentRestaurantId) return;
     setLoading(true);
     try {
-      const orderId = await createCounterOrder(restaurant.id);
+      const orderId = await createCounterOrder(currentRestaurantId);
       navigate(`/palm/order/${orderId}`);
     } catch (error) {
       toast({
