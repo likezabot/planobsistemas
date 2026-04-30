@@ -20,7 +20,7 @@ interface PDVProductSelectorProps {
 
 export function PDVProductSelector({ orderId, open, onOpenChange, onSuccess, restaurantId }: PDVProductSelectorProps) {
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const { toast } = useToast();
 
