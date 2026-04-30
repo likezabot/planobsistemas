@@ -28,7 +28,7 @@ const Palm = () => {
         </div>
       </header>
 
-      <main className="flex-1 w-full md:max-w-2xl lg:max-w-4xl mx-auto bg-white md:shadow-sm md:border-x overflow-y-auto pb-20">
+      <main className="flex-1 w-full md:max-w-2xl lg:max-w-5xl mx-auto bg-white overflow-y-auto pb-20 shadow-sm md:shadow-none lg:shadow-sm md:border-x-0 lg:border-x">
         <Routes>
           <Route path="/" element={<PalmHome />} />
           <Route path="/tables" element={<PalmTableMap />} />
