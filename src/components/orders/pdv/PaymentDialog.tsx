@@ -100,7 +100,7 @@ export function PaymentDialog({
       const list = await listOrderPayments(orderId);
 
       const total = order.total_cents ?? 0;
-      const paid = (order as any).paid_amount_cents ?? 0;
+      const paid = order.paid_amount_cents ?? 0;
       setTotalCents(total);
       setPaidCents(paid);
       setPaymentStatus(order.payment_status ?? "open");
