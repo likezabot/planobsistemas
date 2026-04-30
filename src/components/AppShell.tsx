@@ -27,7 +27,8 @@ import {
   MapPin,
   Ticket,
   Smartphone,
-  Wallet
+  Wallet,
+  Settings2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
