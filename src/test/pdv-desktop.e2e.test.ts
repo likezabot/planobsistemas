@@ -106,7 +106,8 @@ d('PDV Desktop Block F3 - E2E', () => {
     expect(printJobId).toBeDefined();
 
     const { data: job } = await admin.from('print_jobs').select('*').eq('id', printJobId).single();
-    expect(job.type).toBe('account');
+    expect(job.source).toBe('manual');
+    expect(job.payload.type).toBe('account');
   });
 
   it('cashier CANNOT cancel sent items', async () => {
