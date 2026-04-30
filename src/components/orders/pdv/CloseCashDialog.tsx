@@ -73,7 +73,7 @@ export function CloseCashDialog({
           .eq("cash_session_id", session.id)
           .eq("payment_method", "money");
         const salesMoney = (payments ?? []).reduce(
-          (s, p: any) => s + (p.amount_cents ?? 0),
+          (s, p) => s + (p.amount_cents ?? 0),
           0,
         );
 
@@ -81,10 +81,11 @@ export function CloseCashDialog({
           session.opening_amount_cents + supplies - bleeds + salesMoney;
         setPreview({ supplies, bleeds, salesMoney, expected });
         setCounted((expected / 100).toFixed(2).replace(".", ","));
-      } catch (e: any) {
+      } catch (e: unknown) {
+        const error = e as Error;
         toast({
           title: "Erro",
-          description: e.message,
+          description: error.message,
           variant: "destructive",
         });
       }
@@ -117,10 +118,11 @@ export function CloseCashDialog({
         description: "Sessão encerrada com sucesso.",
       });
       onClosed();
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro ao fechar caixa",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {

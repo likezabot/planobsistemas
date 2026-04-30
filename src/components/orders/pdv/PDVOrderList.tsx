@@ -4,11 +4,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/utils";
+import { PDVActiveOrdersSummary, PDVTableSummary, PDVOrderSummary } from "@/lib/orders/queries";
+import { SelectedOrder } from "@/pages/PDV";
 
 interface PDVOrderListProps {
-  data: any;
+  data: PDVActiveOrdersSummary | null;
   selectedOrderId: string | null;
-  onSelectOrder: (order: any) => void;
+  onSelectOrder: (order: SelectedOrder) => void;
 }
 
 export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderListProps) {
@@ -24,7 +26,7 @@ export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderL
         <ScrollArea className="flex-1 pr-4">
           <TabsContent value="tables" className="m-0">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {data?.tables?.map((table: any) => (
+              {data?.tables?.map((table: PDVTableSummary) => (
                 <Card 
                   key={table.id}
                   className={cn(
@@ -52,7 +54,7 @@ export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderL
 
           <TabsContent value="counter" className="m-0">
             <div className="space-y-2">
-              {data?.counter_orders?.map((order: any) => (
+              {data?.counter_orders?.map((order: PDVOrderSummary) => (
                 <Card 
                   key={order.id}
                   className={cn(
@@ -78,7 +80,7 @@ export function PDVOrderList({ data, selectedOrderId, onSelectOrder }: PDVOrderL
 
           <TabsContent value="delivery" className="m-0">
             <div className="space-y-2">
-              {data?.delivery_orders?.map((order: any) => (
+              {data?.delivery_orders?.map((order: PDVOrderSummary) => (
                 <Card 
                   key={order.id}
                   className={cn(

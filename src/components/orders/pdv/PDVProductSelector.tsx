@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Loader2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { addItemsToOrder } from "@/lib/orders/queries";
+import { addItemsToOrder, Product } from "@/lib/orders/queries";
 import { useToast } from "@/hooks/use-toast";
 
 interface PDVProductSelectorProps {
@@ -20,7 +20,7 @@ interface PDVProductSelectorProps {
 
 export function PDVProductSelector({ orderId, open, onOpenChange, onSuccess, restaurantId }: PDVProductSelectorProps) {
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const { toast } = useToast();
 
@@ -42,7 +42,7 @@ export function PDVProductSelector({ orderId, open, onOpenChange, onSuccess, res
     }
   }, [open, restaurantId]);
 
-  const handleAddProduct = async (product: any) => {
+  const handleAddProduct = async (product: Product) => {
     try {
       await addItemsToOrder(orderId, [{
         product_id: product.id,

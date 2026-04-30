@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
-import { getActiveOrdersSummary, createCounterOrder } from "@/lib/orders/queries";
+import { getActiveOrdersSummary, createCounterOrder, PDVActiveOrdersSummary } from "@/lib/orders/queries";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, LayoutDashboard, History, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,12 +11,21 @@ import { CashSessionBar } from "@/components/orders/pdv/CashSessionBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+export interface SelectedOrder {
+  id: string;
+  order_id?: string;
+  type: 'counter' | 'table' | 'delivery';
+  name?: string;
+  customer_name?: string;
+  status?: string;
+}
+
 export default function PDV() {
   const { currentRestaurantId } = useRestaurant();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
-  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [data, setData] = useState<PDVActiveOrdersSummary | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<SelectedOrder | null>(null);
   const [productSelectorOpen, setProductSelectorOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -106,7 +115,7 @@ export default function PDV() {
           </div>
           <PDVOrderList 
             data={data} 
-            selectedOrderId={selectedOrder?.order_id || selectedOrder?.id} 
+            selectedOrderId={selectedOrder?.order_id || selectedOrder?.id || null} 
             onSelectOrder={setSelectedOrder} 
           />
         </div>

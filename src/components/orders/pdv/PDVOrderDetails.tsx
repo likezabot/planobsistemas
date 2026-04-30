@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Printer, ChefHat, Wallet, Trash2, Plus, ClipboardList, Split } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { sendOrderToKitchen, requestAccountPrint, cancelOrderItem } from "@/lib/orders/queries";
+import { sendOrderToKitchen, requestAccountPrint, cancelOrderItem, OrderWithItems, OrderItem } from "@/lib/orders/queries";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { PaymentDialog } from "./PaymentDialog";
 import { SplitBillDialog } from "./SplitBillDialog";
@@ -22,7 +22,7 @@ interface PDVOrderDetailsProps {
 export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: PDVOrderDetailsProps) {
   const { toast } = useToast();
   const { currentMembership } = useRestaurant();
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [loading, setLoading] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [splitOpen, setSplitOpen] = useState(false);
@@ -45,7 +45,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
     if (error) {
       console.error(error);
     } else {
-      setOrder(data);
+      setOrder(data as unknown as OrderWithItems);
     }
     setLoading(false);
   };
@@ -107,9 +107,10 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
     );
   }
 
-  if (loading && !order) return <div className="p-4">Carregando...</div>;
+  if (loading && !order) return <div className="p-4 flex items-center justify-center h-full"><p className="text-muted-foreground">Carregando...</p></div>;
+  if (!order) return null;
 
-  const hasDraftItems = order?.order_items?.some((i: any) => i.status === 'draft');
+  const hasDraftItems = order?.order_items?.some((i: OrderItem) => i.status === 'draft');
   const role = currentMembership?.role;
   const isAuthorizedToCancelAny = role === 'owner' || role === 'manager';
 
@@ -127,7 +128,7 @@ export function PDVOrderDetails({ orderId, onRefresh, onOpenProductSelector }: P
 
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {order.order_items?.map((item: any) => (
+          {order.order_items?.map((item: OrderItem) => (
             <div key={item.id} className={cn("flex justify-between items-start", item.status === 'cancelled' && "opacity-40 grayscale")}>
               <div className="flex-1">
                 <div className="flex items-center gap-2">

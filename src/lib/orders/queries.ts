@@ -2,11 +2,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
 import { startOfDay, endOfDay, subDays } from "date-fns";
 
+export interface OrderItemCustomization {
+  notes?: string;
+  [key: string]: any;
+}
+
 export type Order = Database['public']['Tables']['orders']['Row'];
-export type OrderItem = Database['public']['Tables']['order_items']['Row'] & {
+export type OrderItem = Omit<Database['public']['Tables']['order_items']['Row'], 'customization'> & {
   product?: {
     name: string;
   };
+  customization: OrderItemCustomization | null;
 };
 
 export type OrderWithItems = Order & {
@@ -14,6 +20,8 @@ export type OrderWithItems = Order & {
   delivery_zone?: { name: string } | null;
   table?: { name: string } | null;
 };
+
+export type Product = Database['public']['Tables']['products']['Row'];
 
 export type DiningTable = Database['public']['Tables']['dining_tables']['Row'];
 
@@ -127,17 +135,35 @@ export const updateOrderStatus = async (orderId: string, newStatus: Order['statu
   if (error) throw error;
 };
 
-export const getActiveOrdersSummary = async (restaurantId: string) => {
+export interface PDVTableSummary {
+  id: string;
+  name: string;
+  status: 'available' | 'occupied';
+  order_id: string | null;
+  total_cents: number;
+}
+
+export interface PDVOrderSummary {
+  id: string;
+  customer_name: string | null;
+  opened_at: string;
+  total_cents: number;
+  status: string;
+}
+
+export interface PDVActiveOrdersSummary {
+  tables: PDVTableSummary[];
+  counter_orders: PDVOrderSummary[];
+  delivery_orders: PDVOrderSummary[];
+}
+
+export const getActiveOrdersSummary = async (restaurantId: string): Promise<PDVActiveOrdersSummary> => {
   const { data, error } = await supabase.rpc('get_active_orders_summary', {
     _restaurant_id: restaurantId
   });
 
   if (error) throw error;
-  return data as {
-    tables: any[];
-    counter_orders: any[];
-    delivery_orders: any[];
-  };
+  return data as unknown as PDVActiveOrdersSummary;
 };
 
 export const requestAccountPrint = async (orderId: string) => {

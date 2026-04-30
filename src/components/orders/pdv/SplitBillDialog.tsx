@@ -100,8 +100,9 @@ export function SplitBillDialog({
         .order("created_at", { ascending: true });
       if (ierr) throw ierr;
       setItems((its ?? []) as unknown as ItemLite[]);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -138,8 +139,9 @@ export function SplitBillDialog({
       const r = await splitOrderEqual(orderId, parts);
       setEqualPreview(r);
       setPartsPaid(0);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     }
   };
 
@@ -173,10 +175,11 @@ export function SplitBillDialog({
         });
         await refresh();
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {
@@ -216,8 +219,9 @@ export function SplitBillDialog({
     try {
       const r = await splitOrderByItems(orderId, list);
       setItemsPreview(r);
-    } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    } catch (e: unknown) {
+      const error = e as Error;
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
     }
   };
 
@@ -252,10 +256,11 @@ export function SplitBillDialog({
         setItemsPreview(null);
         await refresh();
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {
