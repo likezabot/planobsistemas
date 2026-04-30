@@ -71,12 +71,14 @@ export function PaymentDialog({
   onPaid,
 }: PaymentDialogProps) {
   const { toast } = useToast();
+  const { currentRestaurantId } = useRestaurant();
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [totalCents, setTotalCents] = useState(0);
   const [paidCents, setPaidCents] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState<string>("open");
   const [payments, setPayments] = useState<OrderPayment[]>([]);
+  const [hasOpenSession, setHasOpenSession] = useState(true);
 
   const [method, setMethod] = useState<PaymentMethod>("money");
   const [amountInput, setAmountInput] = useState("0,00");
