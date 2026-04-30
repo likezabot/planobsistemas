@@ -2,11 +2,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
 import { startOfDay, endOfDay, subDays } from "date-fns";
 
+export interface OrderItemCustomization {
+  notes?: string;
+  [key: string]: any;
+}
+
 export type Order = Database['public']['Tables']['orders']['Row'];
-export type OrderItem = Database['public']['Tables']['order_items']['Row'] & {
+export type OrderItem = Omit<Database['public']['Tables']['order_items']['Row'], 'customization'> & {
   product?: {
     name: string;
   };
+  customization: OrderItemCustomization | null;
 };
 
 export type OrderWithItems = Order & {
