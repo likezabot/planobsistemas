@@ -127,17 +127,35 @@ export const updateOrderStatus = async (orderId: string, newStatus: Order['statu
   if (error) throw error;
 };
 
-export const getActiveOrdersSummary = async (restaurantId: string) => {
+export interface PDVTableSummary {
+  id: string;
+  name: string;
+  status: 'available' | 'occupied';
+  order_id: string | null;
+  total_cents: number;
+}
+
+export interface PDVOrderSummary {
+  id: string;
+  customer_name: string | null;
+  opened_at: string;
+  total_cents: number;
+  status: string;
+}
+
+export interface PDVActiveOrdersSummary {
+  tables: PDVTableSummary[];
+  counter_orders: PDVOrderSummary[];
+  delivery_orders: PDVOrderSummary[];
+}
+
+export const getActiveOrdersSummary = async (restaurantId: string): Promise<PDVActiveOrdersSummary> => {
   const { data, error } = await supabase.rpc('get_active_orders_summary', {
     _restaurant_id: restaurantId
   });
 
   if (error) throw error;
-  return data as {
-    tables: any[];
-    counter_orders: any[];
-    delivery_orders: any[];
-  };
+  return data as unknown as PDVActiveOrdersSummary;
 };
 
 export const requestAccountPrint = async (orderId: string) => {
