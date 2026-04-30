@@ -123,6 +123,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/configuracoes/restaurante"
+                element={
+                  <ProtectedRoute allowedRoles={['owner', 'manager']}>
+                    <RestaurantSettings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/impressao"
                 element={
                   <ProtectedRoute>
