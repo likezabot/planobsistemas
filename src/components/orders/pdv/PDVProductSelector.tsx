@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Loader2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
-import { addItemsToOrder } from "@/lib/orders/queries";
+import { addItemsToOrder, Product } from "@/lib/orders/queries";
 import { useToast } from "@/hooks/use-toast";
 
 interface PDVProductSelectorProps {
