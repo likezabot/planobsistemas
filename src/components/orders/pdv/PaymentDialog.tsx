@@ -123,7 +123,7 @@ export function PaymentDialog({
     } finally {
       setLoading(false);
     }
-  }, [orderId, toast]);
+  }, [orderId, toast, currentRestaurantId]);
 
   useEffect(() => {
     if (open) {
