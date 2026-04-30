@@ -79,10 +79,11 @@ export function CashMovementDialog({
       toast({ title: `${title} registrada`, description: "Movimento salvo no caixa." });
       onRegistered();
       onOpenChange(false);
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {
