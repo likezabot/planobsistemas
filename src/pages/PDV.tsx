@@ -62,7 +62,7 @@ export default function PDV() {
             <p>Pedido: {selectedOrder.order_id || 'Nenhum'}</p>
             <div className="mt-4 flex gap-2">
               <Button onClick={() => requestAccountPrint(selectedOrder.order_id)}>Imprimir Conta</Button>
-              <Button variant="destructive" onClick={() => closeOrder(selectedOrder.order_id, 'cash')}>Fechar Pedido (Dinheiro)</Button>
+              <Button variant="destructive" onClick={() => closeOrder(selectedOrder.order_id, 'money')}>Fechar Pedido (Dinheiro)</Button>
             </div>
           </div>
         ) : <p>Selecione uma mesa ou comando.</p>}
