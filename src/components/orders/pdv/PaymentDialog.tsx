@@ -29,7 +29,9 @@ import {
   type OrderPayment,
   type PaymentMethod,
 } from "@/lib/orders/paymentsQueries";
-import { CreditCard, DollarSign, Loader2, Smartphone, Globe } from "lucide-react";
+import { getOpenCashSession } from "@/lib/cash/queries";
+import { useRestaurant } from "@/lib/auth/RestaurantProvider";
+import { CreditCard, DollarSign, Loader2, Smartphone, Globe, AlertCircle } from "lucide-react";
 
 interface PaymentDialogProps {
   open: boolean;
