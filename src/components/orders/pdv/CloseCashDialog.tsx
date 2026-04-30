@@ -118,10 +118,11 @@ export function CloseCashDialog({
         description: "Sessão encerrada com sucesso.",
       });
       onClosed();
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const error = e as Error;
       toast({
         title: "Erro ao fechar caixa",
-        description: e.message,
+        description: error.message,
         variant: "destructive",
       });
     } finally {
