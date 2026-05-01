@@ -316,8 +316,18 @@ export default function ProductsTab() {
               ))
             ) : normalProducts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center text-muted-foreground text-sm">
-                  Nenhum produto encontrado.
+                <TableCell colSpan={6}>
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <BookOpen className="w-12 h-12 text-muted-foreground/30 mb-4" />
+                    <p className="text-base font-bold text-secondary"> Nenhum produto ainda </p>
+                    <p className="text-sm text-muted-foreground mt-1 mb-6"> Comece adicionando seu primeiro produto ao catálogo. </p>
+                    {canEdit && (
+                      <Button size="sm" onClick={() => { setSelectedProduct(null); setSheetOpen(true); }}>
+                        <Plus className="w-4 h-4 mr-1.5" />
+                        Adicionar Produto
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (

@@ -165,9 +165,10 @@ export default function PrintControlPage() {
               {["active", "printed", "all"].map((tab) => (
                 <TabsContent key={tab} value={tab} className="animate-in fade-in duration-300">
                   {filteredJobs(tab).length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-xl border border-dashed border-border">
-                      <Printer className="w-12 h-12 mx-auto mb-4 opacity-10 text-secondary" />
-                      <p className="text-muted-foreground text-sm">Nenhum job encontrado.</p>
+                    <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-border">
+                      <Printer className="w-12 h-12 text-muted-foreground/30 mb-4" />
+                      <p className="text-base font-bold text-secondary"> Nenhum job ainda </p>
+                      <p className="text-sm text-muted-foreground mt-1 mb-6"> A fila de impressão aparecerá aqui conforme novos pedidos forem realizados. </p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
