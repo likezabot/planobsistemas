@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { 
   Search, 
   User, 
+  Users,
   MessageCircle, 
   History, 
   ArrowUpDown,
