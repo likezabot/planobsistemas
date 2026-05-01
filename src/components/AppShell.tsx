@@ -1,4 +1,5 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { useRestaurant } from "@/lib/auth/RestaurantProvider";
 import { Button } from "@/components/ui/button";
@@ -39,9 +40,10 @@ interface NavItemProps {
   label: string;
   active?: boolean;
   onClick?: () => void;
+  badge?: ReactNode;
 }
 
-function NavItem({ to, icon: Icon, label, active, onClick }: NavItemProps) {
+function NavItem({ to, icon: Icon, label, active, onClick, badge }: NavItemProps) {
   return (
     <Link
       to={to}
@@ -49,13 +51,14 @@ function NavItem({ to, icon: Icon, label, active, onClick }: NavItemProps) {
       className={cn(
         "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group",
         active 
-          ? "bg-primary text-white font-bold" 
+          ? "bg-primary/15 text-primary font-bold border-l-2 border-primary rounded-l-none" 
           : "text-sidebar-foreground/50 hover:bg-sidebar-accent hover:text-white"
       )}
     >
-      <Icon className={cn("w-4 h-4", active ? "text-white" : "group-hover:text-white")} />
+      <Icon className={cn("w-4 h-4", active ? "text-primary" : "group-hover:text-white")} />
       <span className="text-sm">{label}</span>
-      {active && <ChevronRight className="ml-auto w-3.5 h-3.5 opacity-40" />}
+      {badge}
+      {active && !badge && <ChevronRight className="ml-auto w-3.5 h-3.5 opacity-40" />}
     </Link>
   );
 }
@@ -65,6 +68,43 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { memberships, currentRestaurantId, currentMembership, setCurrentRestaurantId } = useRestaurant();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [newOrdersCount, setNewOrdersCount] = useState(0);
+
+  useEffect(() => {
+    if (!currentRestaurantId) return;
+
+    const fetchNewOrdersCount = async () => {
+      const { count } = await supabase
+        .from('orders')
+        .select('id', { count: 'exact', head: true })
+        .eq('restaurant_id', currentRestaurantId)
+        .eq('status', 'new');
+      
+      setNewOrdersCount(count || 0);
+    };
+
+    fetchNewOrdersCount();
+
+    const channel = supabase
+      .channel('new-orders-count')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'orders',
+          filter: `restaurant_id=eq.${currentRestaurantId}`,
+        },
+        () => {
+          fetchNewOrdersCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentRestaurantId]);
 
   const accountingEnabled = currentMembership?.restaurants.accounting_reports_enabled ?? false;
   const role = currentMembership?.role;
@@ -80,7 +120,16 @@ export function AppShell({ children }: { children: ReactNode }) {
     { to: "/", icon: LayoutDashboard, label: "Dashboard" },
     ...(canSeePalm ? [{ to: "/palm", icon: Smartphone, label: "Atendimento" }] : []),
     ...(canSeePDV ? [{ to: "/pdv", icon: Ticket, label: "PDV" }] : []),
-    { to: "/pedidos", icon: ClipboardList, label: "Pedidos" },
+    { 
+      to: "/pedidos", 
+      icon: ClipboardList, 
+      label: "Pedidos",
+      badge: newOrdersCount > 0 && (
+        <span className="ml-auto bg-primary text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          {newOrdersCount > 9 ? '9+' : newOrdersCount}
+        </span>
+      )
+    },
     { to: "/catalogo", icon: BookOpen, label: "Cardápio" },
     { to: "/impressao", icon: Printer, label: "Impressão" },
     ...(canSeeKDS ? [{ to: "/kds", icon: ChefHat, label: "Cozinha" }] : []),

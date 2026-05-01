@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { 
   Search, 
   User, 
+  Users,
   MessageCircle, 
   History, 
   ArrowUpDown,
@@ -148,9 +149,10 @@ export default function Customers() {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : filteredAndSortedCustomers.length === 0 ? (
-          <div className="bg-white border-2 border-dashed border-border p-20 text-center rounded-2xl opacity-40">
-            <User className="w-12 h-12 mx-auto mb-4" />
-            <p className="font-bold text-lg">Nenhum cliente encontrado</p>
+          <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-border">
+            <Users className="w-12 h-12 text-muted-foreground/30 mb-4" />
+            <p className="text-base font-bold text-secondary"> Nenhum cliente ainda </p>
+            <p className="text-sm text-muted-foreground mt-1 mb-6"> Seus clientes aparecerão aqui assim que realizarem o primeiro pedido. </p>
           </div>
         ) : (
           <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">

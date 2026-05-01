@@ -202,10 +202,14 @@ export default function Coupons() {
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : !coupons || coupons.length === 0 ? (
-          <div className="bg-white border-2 border-dashed border-border p-20 text-center rounded-2xl opacity-40">
-            <Ticket className="w-12 h-12 mx-auto mb-4" />
-            <p className="font-bold text-lg">Nenhum cupom cadastrado</p>
-            <p className="text-sm">Crie cupons para oferecer descontos no seu cardápio público.</p>
+          <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-border">
+            <Ticket className="w-12 h-12 text-muted-foreground/30 mb-4" />
+            <p className="text-base font-bold text-secondary"> Nenhum cupom ainda </p>
+            <p className="text-sm text-muted-foreground mt-1 mb-6"> Crie cupons para oferecer descontos no seu cardápio e fidelizar clientes. </p>
+            <Button size="sm" onClick={handleCreate}>
+              <Plus className="w-4 h-4 mr-1.5" />
+              Criar Primeiro Cupom
+            </Button>
           </div>
         ) : (
           <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
