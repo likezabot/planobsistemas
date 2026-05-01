@@ -97,7 +97,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 
   return (
-    <div className="flex min-h-screen bg-white text-foreground font-sans relative">
+    <div className="flex min-h-screen bg-transparent text-foreground font-sans relative">
       {/* Mobile Overlay - Solid Tint */}
       {isSidebarOpen && (
         <div 
@@ -181,7 +181,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-white">
+      <div className="flex-1 flex flex-col min-w-0 bg-transparent">
         <header className="h-14 border-b border-border bg-white flex items-center px-4 lg:hidden sticky top-0 z-30 shadow-sm">
           <Button variant="ghost" size="icon" className="rounded-lg" onClick={() => setIsSidebarOpen(true)}>
             <Menu className="w-5 h-5" />
@@ -191,7 +191,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-white">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-transparent">
           <div className="max-w-[1400px] mx-auto">
             {children}
           </div>
