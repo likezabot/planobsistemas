@@ -40,9 +40,10 @@ interface NavItemProps {
   label: string;
   active?: boolean;
   onClick?: () => void;
+  badge?: ReactNode;
 }
 
-function NavItem({ to, icon: Icon, label, active, onClick }: NavItemProps) {
+function NavItem({ to, icon: Icon, label, active, onClick, badge }: NavItemProps) {
   return (
     <Link
       to={to}
@@ -50,13 +51,14 @@ function NavItem({ to, icon: Icon, label, active, onClick }: NavItemProps) {
       className={cn(
         "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group",
         active 
-          ? "bg-primary text-white font-bold" 
+          ? "bg-primary/15 text-primary font-bold border-l-2 border-primary rounded-l-none" 
           : "text-sidebar-foreground/50 hover:bg-sidebar-accent hover:text-white"
       )}
     >
-      <Icon className={cn("w-4 h-4", active ? "text-white" : "group-hover:text-white")} />
+      <Icon className={cn("w-4 h-4", active ? "text-primary" : "group-hover:text-white")} />
       <span className="text-sm">{label}</span>
-      {active && <ChevronRight className="ml-auto w-3.5 h-3.5 opacity-40" />}
+      {badge}
+      {active && !badge && <ChevronRight className="ml-auto w-3.5 h-3.5 opacity-40" />}
     </Link>
   );
 }
