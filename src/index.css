@@ -9,6 +9,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%; /* Pure White */
+    --surface: 220 20% 97%;
     --foreground: 215 50% 15%;
 
     --card: 0 0% 100%;
@@ -110,7 +111,7 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-[hsl(var(--surface))] text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
